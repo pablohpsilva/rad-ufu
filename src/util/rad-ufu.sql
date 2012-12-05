@@ -10,6 +10,9 @@ CREATE TABLE multiplicador(
 	multiplicador_nome 		varchar (30),
 	multiplicador_valor 	smallint,
 	multiplicador_limite	smallint
+	multiplicador_tipo_atividade    int,
+	FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_codigo)
+	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE tipo(
