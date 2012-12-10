@@ -5,35 +5,35 @@ CREATE TABLE categoria(
 );
 
 CREATE TABLE multiplicador(
-	multiplicador_id 				serial PRIMARY KEY,
-	multiplicador_nome 				varchar (30),
-	multiplicador_valor 			smallint,
-	multiplicador_limite			smallint
+	multiplicador_id 		serial PRIMARY KEY,
+	multiplicador_nome 		varchar (30),
+	multiplicador_valor 		smallint,
+	multiplicador_limite		smallint
 	multiplicador_tipo_atividade    int,
 	FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_codigo)
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE tipo(
-	tipo_codigo 				serial PRIMARY KEY,
-	tipo_categoria 				int,
-	tipo_descricao 				varchar(255),
-	tipo_pontuacao 				smallint,
-	tipo_pontuacaoreferencia 	smallint,
+	tipo_codigo 			serial PRIMARY KEY,
+	tipo_categoria 			int,
+	tipo_descricao 			varchar(255),
+	tipo_pontuacao 			smallint,
+	tipo_pontuacaoreferencia	smallint,
 	tipo_pontuacaolimite 		smallint,
 	FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_nome)
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE atividade(
-	atividade_id			serial PRIMARY KEY,
-	atividade_tipo			int NOT NULL,
+	atividade_id		serial PRIMARY KEY,
+	atividade_tipo		int NOT NULL,
 	atividade_descricao 	varchar(255) NOT NULL,
 	atividade_datainicio 	date,
-	atividade_datafim 		date,
-	atividade_professor		integer NOT NULL,
+	atividade_datafim 	date,
+	atividade_professor	bigint NOT NULL,
 	FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_codigo),
-	FOREIGN KEY (atividade_professor) REFERENCES tipo(professor_siape),
+	FOREIGN KEY (atividade_professor) REFERENCES professor(professor_siape),
 );
 
 CREATE TABLE comprovante(
@@ -43,7 +43,8 @@ CREATE TABLE comprovante(
 );
 
 CREATE TABLE professor(
-	professor_siape		integer PRIMARY KEY,
+	professor_siape		bigint PRIMARY KEY,
+	professor_ativo		smallint,
 	professor_nome 		varchar(30) NOT NULL,
 	professor_sobrenome	varchar(30) NOT NULL,
 	professor_usuario	varchar(15) NOT NULL,
