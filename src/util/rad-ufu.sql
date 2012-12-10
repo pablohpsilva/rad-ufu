@@ -22,7 +22,6 @@ CREATE TABLE tipo(
 	tipo_pontuacaoreferencia	smallint,
 	tipo_pontuacaolimite 		smallint,
 	FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_nome)
-	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE multiplicador(
