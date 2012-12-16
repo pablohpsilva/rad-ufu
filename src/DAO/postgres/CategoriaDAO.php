@@ -5,7 +5,7 @@ namespace DAO;
 use \PDO,
     model\Categoria,
     DAO\Connection,
-    DAO\IDAO,
+    DAO\ICategoriaDAO,
     DAO\Exception,
     DAO\NotFoundException;
 
