@@ -5,7 +5,7 @@ namespace DAO;
 use \PDO,
     model\Multiplicador,
     DAO\Connection,
-    DAO\IProfessorDAO,
+    DAO\IMultiplicadorDAO,
     DAO\Exception,
     DAO\NotFoundException;
 
