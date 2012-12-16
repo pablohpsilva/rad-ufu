@@ -33,8 +33,8 @@ interface IProfessorDAO {
     public function read($name);
 
     /**
-     * Recupera todas as bandas
-     * @return array bandas encontradas
+     * Recupera todas as professores
+     * @return array professores encontradas
      * @throws DAOException
      */
     public function getAll();
