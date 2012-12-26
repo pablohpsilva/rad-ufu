@@ -112,11 +112,11 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
 
                 $m = new Multiplicador();
-                $m->setId($result['multiplicador_id']);
-                $m->setNome($result['multiplicador_nome']);
-                $m->setValor($result['multiplicador_valor']);
-                $m->setlimite($result['multiplicador_limite']);
-                $m->setTipoAtividade($result['multiplicador_tipo_atividade']);
+                $m->setId($row['multiplicador_id']);
+                $m->setNome($row['multiplicador_nome']);
+                $m->setValor($row['multiplicador_valor']);
+                $m->setlimite($row['multiplicador_limite']);
+                $m->setTipoAtividade($row['multiplicador_tipo_atividade']);
 
                 $mult[] = $m;
             }
@@ -132,7 +132,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
         }
     }
 
-    public function update(Multiplicador $prof){
+    public function update(Multiplicador $mult){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
@@ -152,7 +152,6 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
             throw new Exception("Ao atualizar Multiplicador:\t"
                 . $ex->getMessage(), 0, $ex);
         }
-    }
     }
 
     public function delete($id){

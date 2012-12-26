@@ -88,12 +88,12 @@ class TipoDAO implements ITipoDAO{
             $tipo = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
                 $t = new Tipo();
-                $t->setCodigo($result['tipo_codigo']);
-                $t->setCategoria($result['tipo_categoria']);
-                $t->setDescricao($result['tipo_descricao']);
-                $t->setPontuacao($result['tipo_pontuacao']);
-                $t->setPontuacaoReferencia($result['tipo_pontuacaoreferencia']);
-                $t->setPontuacaoLimite($result['tipo_pontuacaolimite']);
+                $t->setCodigo($row['tipo_codigo']);
+                $t->setCategoria($row['tipo_categoria']);
+                $t->setDescricao($row['tipo_descricao']);
+                $t->setPontuacao($row['tipo_pontuacao']);
+                $t->setPontuacaoReferencia($row['tipo_pontuacaoreferencia']);
+                $t->setPontuacaoLimite($row['tipo_pontuacaolimite']);
 
                 $tipo[] = $t;
             }

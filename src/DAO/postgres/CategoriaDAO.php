@@ -62,7 +62,7 @@ class CategoriaDAO implements ICategoriaDAO{
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
 
                 $c = new Categoria();
-                $c->setNome($result['categoria_nome']);
+                $c->setNome($row['categoria_nome']);
 
                 $cat[] = $c;
             }
@@ -73,7 +73,7 @@ class CategoriaDAO implements ICategoriaDAO{
                 return $cat;
 
         } catch (PDOException $ex) {
-            throw new Exception("Erro ao listar todos as categorias:\t"
+            throw new Exception("Erro ao listar todas as categorias:\t"
                 . $ex->getMessage());
         }
     }
