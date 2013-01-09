@@ -2,7 +2,7 @@ CREATE DATABASE RADUFU;
 
 CREATE TABLE professor(
 	professor_siape		bigint PRIMARY KEY,
-	professor_ativo		boolean DEFAULT 1, -- 0 para inativo. 1 para ativo.
+	professor_ativo		boolean DEFAULT true, -- false para inativo. true para ativo.
 	professor_nome 		varchar(30) NOT NULL,
 	professor_sobrenome	varchar(30) NOT NULL,
 	professor_usuario	varchar(15) NOT NULL,

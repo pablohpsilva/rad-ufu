@@ -1,13 +1,21 @@
 <?php
 
-namespace DAO;
-
+//namespace DAO;
+/*
 use \PDO,
     model\Professor,
     DAO\Connection,
     DAO\IProfessorDAO,
     DAO\Exception,
     DAO\NotFoundException;
+*/
+
+//use  model\Professor;
+    require_once(__DIR__.'/../../model/Professor.php');
+    require_once(__DIR__.'/../IProfessorDAO.php');
+    require_once(__DIR__.'/../Connection.php');
+    require_once(__DIR__.'/../Exception.php');
+    require_once(__DIR__.'/../NotFoundException.php');
 
 class ProfessorDAO implements IProfessorDAO{
 
@@ -158,7 +166,6 @@ class ProfessorDAO implements IProfessorDAO{
                 . $ex->getMessage(), 0, $ex);
         }
     }
-    }
 
     public function delete($siape){
         try {
@@ -175,6 +182,7 @@ class ProfessorDAO implements IProfessorDAO{
                 . $ex->getMessage(), 0, $ex);
         }
     }
+    
 }
 
 ?>

@@ -1,8 +1,8 @@
 <?php
 
-namespace DAO;
+//namespace DAO;
 
-use model\Professor;
+//use model\Professor;
 
 /**
  * Interface para CRUD basico

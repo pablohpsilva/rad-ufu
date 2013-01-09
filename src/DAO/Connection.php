@@ -1,8 +1,8 @@
 <?php
 
-namespace DAO;
+//namespace DAO;
 
-use \PDO;
+//use \PDO;
 
 class Connection {
 
