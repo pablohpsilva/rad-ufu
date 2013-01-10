@@ -1,8 +1,11 @@
 <?php
-
+/*
 namespace DAO;
 
 use model\Categoria;
+*/
+
+require_once(__DIR__ . '/../model/Categoria.php');
 
 /**
  * Interface para CRUD basico
@@ -36,7 +39,7 @@ interface ICategoriaDAO {
      * @param categoria $cat
      * @throws DAOException
      */
-    public function update(Categoria $cat);
+    //public function update(Categoria $cat);
 
     /**
      * Removeo categoria do BD

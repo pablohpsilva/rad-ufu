@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace DAO;
 
 use \PDO,
@@ -8,6 +8,11 @@ use \PDO,
     DAO\ITipoDAO,
     DAO\Exception,
     DAO\NotFoundException;
+*/
+    require_once(__DIR__.'/../ITipoDAO.php');
+    require_once(__DIR__.'/../Connection.php');
+    require_once(__DIR__.'/../Exception.php');
+    require_once(__DIR__.'/../NotFoundException.php');
 
 class TipoDAO implements ITipoDAO{
 
@@ -130,7 +135,6 @@ class TipoDAO implements ITipoDAO{
             throw new Exception("Ao atualizar Tipo:\t"
                 . $ex->getMessage(), 0, $ex);
         }
-    }
     }
 
     public function delete($codigo){

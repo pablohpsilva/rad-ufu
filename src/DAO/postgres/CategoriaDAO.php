@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace DAO;
 
 use \PDO,
@@ -8,6 +8,11 @@ use \PDO,
     DAO\ICategoriaDAO,
     DAO\Exception,
     DAO\NotFoundException;
+*/
+    require_once(__DIR__ . '/../ICategoriaDAO.php');
+    require_once(__DIR__.'/../Connection.php');
+    require_once(__DIR__.'/../Exception.php');
+    require_once(__DIR__.'/../NotFoundException.php');
 
 class CategoriaDAO implements ICategoriaDAO{
 
@@ -20,8 +25,9 @@ class CategoriaDAO implements ICategoriaDAO{
     public function post(Categoria $cat){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
-            $stm->bindParam(':categoria_nome', $nome);
-            $res = $stm->execute();
+            $res = $stm->execute(array(
+                    ':categoria_nome' => $cat->getNome()
+                ));
 
             if(!$res)
                 throw new Exception("Categoria não foi criada:\t"
@@ -77,7 +83,7 @@ class CategoriaDAO implements ICategoriaDAO{
                 . $ex->getMessage());
         }
     }
-
+/*
     public function update(Categoria $cat){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
@@ -93,8 +99,7 @@ class CategoriaDAO implements ICategoriaDAO{
                 . $ex->getMessage(), 0, $ex);
         }
     }
-    }
-
+*/
     public function delete($nome){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_DELETE);

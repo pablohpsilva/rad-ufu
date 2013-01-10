@@ -1,8 +1,10 @@
 <?php
-
+/*
 namespace DAO;
 
 use model\Tipo;
+*/
+require_once(__DIR__.'/../model/Tipo.php');
 
 /**
  * Interface para CRUD basico
