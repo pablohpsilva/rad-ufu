@@ -19,6 +19,14 @@ interface IComprovanteDAO {
     public function post(Comprovante $comp);
 
     /**
+     * Recupera o comprovante a partir do id
+     * @param type $arquivo
+     * @return Comprovante O comprovante encontrado
+     * @throws DAOException
+     */
+    public function get($id);
+
+    /**
      * Recupera o comprovante a partir do arquivo
      * @param type $arquivo
      * @return Comprovante O comprovante encontrado

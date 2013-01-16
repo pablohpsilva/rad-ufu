@@ -31,11 +31,11 @@ class TipoDAO implements ITipoDAO{
             tipo_pontuacao = :tipo_pontuacao,
             tipo_pontuacaoreferencia = :tipo_pontuacaoreferencia,
             tipo_pontuacaolimite = :tipo_pontuacaolimite
-            WHERE tipo_codigo = :tipo_codigo;';
+            WHERE tipo_id = :tipo_id;';
 
-    const SQL_GET = 'SELECT * FROM Tipo WHERE tipo_codigo = :tipo_codigo;';
+    const SQL_GET = 'SELECT * FROM Tipo WHERE tipo_id = :tipo_id;';
     const SQL_READ_ALL = 'SELECT * FROM Tipo;';
-    const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_codigo = :tipo_codigo;';
+    const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_id = :tipo_id;';
 
     public function post(Tipo $tipo){
         try {
@@ -58,16 +58,16 @@ class TipoDAO implements ITipoDAO{
         }
     }
 
-    public function get($codigo){
+    public function get($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
-            $stm->bindParam(':tipo_codigo', $codigo);
+            $stm->bindParam(':tipo_id', $id);
             $stm->execute();
             $result = $stm->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
                 $tipo = new Tipo();
-                $tipo->setCodigo($result['tipo_codigo']);
+                $tipo->setId($result['tipo_id']);
                 $tipo->setCategoria($result['tipo_categoria']);
                 $tipo->setDescricao($result['tipo_descricao']);
                 $tipo->setPontuacao($result['tipo_pontuacao']);
@@ -93,7 +93,7 @@ class TipoDAO implements ITipoDAO{
             $tipo = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
                 $t = new Tipo();
-                $t->setCodigo($row['tipo_codigo']);
+                $t->setId($row['tipo_id']);
                 $t->setCategoria($row['tipo_categoria']);
                 $t->setDescricao($row['tipo_descricao']);
                 $t->setPontuacao($row['tipo_pontuacao']);
@@ -102,6 +102,7 @@ class TipoDAO implements ITipoDAO{
 
                 $tipo[] = $t;
             }
+            unset($t);
 
             if (empty($tipo))
                 throw new NotFoundException();
@@ -119,7 +120,7 @@ class TipoDAO implements ITipoDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
-                ':tipo_codigo' =>$tipo->getCodigo(),
+                ':tipo_id' =>$tipo->getId(),
                 ':tipo_categoria' =>$tipo->getCategoria(),
                 ':tipo_descricao' =>$tipo->getDescricao(),
                 ':tipo_pontuacao' =>$tipo->getPontuacao(),
@@ -137,10 +138,10 @@ class TipoDAO implements ITipoDAO{
         }
     }
 
-    public function delete($codigo){
+    public function delete($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_DELETE);
-            $stm->bindParam(':tipo_codigo', $codigo);
+            $stm->bindParam(':tipo_id', $id);
             $stm->execute();
 
             if (!$stm->rowCount() > 0)

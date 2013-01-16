@@ -120,6 +120,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
 
                 $mult[] = $m;
             }
+            unset($m);
 
             if (empty($mult))
                 throw new NotFoundException();

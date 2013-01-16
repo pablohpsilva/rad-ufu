@@ -95,6 +95,7 @@ class AtividadeDAO implements IAtividadeDAO{
 
                 $ativ[] = $a;
             }
+            unset($a);
 
             if (empty($ativ))
                 throw new NotFoundException();

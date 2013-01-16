@@ -20,7 +20,7 @@ use \PDO,
 class ProfessorDAO implements IProfessorDAO{
 
     const SQL_POST = 'INSERT INTO Professor VALUES(
-            :professor_siape,
+            :professor_id,
              DEFAULT,
             :professor_nome,
             :professor_sobrenome,
@@ -33,19 +33,19 @@ class ProfessorDAO implements IProfessorDAO{
             professor_nome = :professor_nome, 
             professor_sobrenome = :professor_sobrenome, 
             professor_senha = :professor_senha 
-            WHERE professor_siape = :professor_siape;';
+            WHERE professor_id = :professor_id;';
 
-    const SQL_GET = 'SELECT * FROM Professor WHERE professor_siape = :professor_siape;';
+    const SQL_GET = 'SELECT * FROM Professor WHERE professor_id = :professor_id;';
     const SQL_READ = 'SELECT * FROM Professor WHERE professor_usuario = :professor_usuario;';
     const SQL_READ_ALL = 'SELECT * FROM Professor;';
-    const SQL_DELETE = 'DELETE FROM Professor WHERE professor_siape = :professor_siape;';
+    const SQL_DELETE = 'DELETE FROM Professor WHERE professor_id = :professor_id;';
 
     public function post(Professor $prof){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
-                ':professor_siape' =>$prof->getSiape(),
+                ':professor_id' =>$prof->getId(),
                 ':professor_nome' =>$prof->getNome(),
                 ':professor_sobrenome' =>$prof->getSobrenome(),
                 ':professor_usuario' =>$prof->getUsuario(),
@@ -61,16 +61,16 @@ class ProfessorDAO implements IProfessorDAO{
         }
     }
 
-    public function get($siape){
+    public function get($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
-            $stm->bindParam(':professor_siape', $siape);
+            $stm->bindParam(':professor_id', $id);
             $stm->execute();
             $result = $stm->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
                 $prof = new Professor();
-                $prof->setSiape($result['professor_siape']);
+                $prof->setId($result['professor_id']);
                 $prof->setAtivo($result['professor_ativo']);
                 $prof->setNome($result['professor_nome']);
                 $prof->setSobrenome($result['professor_sobrenome']);
@@ -83,7 +83,7 @@ class ProfessorDAO implements IProfessorDAO{
             throw new NotFoundException();
 
         } catch (PDOException $ex) {
-            throw new Exception("Ao procurar o Professor por siape:\t"
+            throw new Exception("Ao procurar o Professor por id:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }
@@ -97,7 +97,7 @@ class ProfessorDAO implements IProfessorDAO{
 
             if ($result) {
                 $prof = new Professor();
-                $prof->setSiape($result['professor_siape']);
+                $prof->setId($result['professor_id']);
                 $prof->setAtivo($result['professor_ativo']);
                 $prof->setNome($result['professor_nome']);
                 $prof->setSobrenome($result['professor_sobrenome']);
@@ -124,7 +124,7 @@ class ProfessorDAO implements IProfessorDAO{
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
 
                 $p = new Professor();
-                $p->setSiape($row['professor_siape']);
+                $p->setId($row['professor_id']);
                 $p->setAtivo($row['professor_ativo']);
                 $p->setNome($row['professor_nome']);
                 $p->setSobrenome($row['professor_sobrenome']);
@@ -150,7 +150,7 @@ class ProfessorDAO implements IProfessorDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
-                ':professor_siape' =>$prof->getSiape(),
+                ':professor_id' =>$prof->getId(),
                 ':professor_ativo' =>$prof->getAtivo(),
                 ':professor_nome' =>$prof->getNome(),
                 ':professor_sobrenome' =>$prof->getSobrenome(),
@@ -167,10 +167,10 @@ class ProfessorDAO implements IProfessorDAO{
         }
     }
 
-    public function delete($siape){
+    public function delete($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_DELETE);
-            $stm->bindParam(':professor_siape', $siape);
+            $stm->bindParam(':professor_id', $id);
             $stm->execute();
 
             if (!$stm->rowCount() > 0)

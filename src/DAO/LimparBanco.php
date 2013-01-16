@@ -4,63 +4,66 @@ require_once(__DIR__ . '/Connection.php');
 
 class LimparBanco{
 	const prof = "CREATE TABLE professor(
-			professor_siape		bigint PRIMARY KEY,
-			professor_ativo		boolean DEFAULT true,
-			professor_nome 		varchar(30) NOT NULL,
-			professor_sobrenome	varchar(30) NOT NULL,
-			professor_usuario	varchar(15) NOT NULL,
-			professor_senha		varchar(40) NOT NULL,
-			UNIQUE(professor_usuario)
-			);";
+		professor_id		BIGINT NOT NULL,
+		professor_ativo		BOOLEAN DEFAULT TRUE,
+		professor_nome 		VARCHAR(30) NOT NULL,
+		professor_sobrenome	VARCHAR(30) NOT NULL,
+		professor_usuario	VARCHAR(15) NOT NULL,
+		professor_senha		VARCHAR(40) NOT NULL,
+		UNIQUE(professor_usuario),
+		CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
+	);";
 
 	const cate = "CREATE TABLE categoria(
-			categoria_nome 	varchar(30) PRIMARY KEY
-			);";
+		categoria_id	SERIAL NOT NULL,
+		categoria_nome 	VARCHAR(30),
+		CONSTRAINT const_categoria_primary PRIMARY KEY(categoria_id)
+	);";
 
 	const tipo = "CREATE TABLE tipo(
-			tipo_codigo 			serial PRIMARY KEY,
-			tipo_categoria 			varchar(30),
-			tipo_descricao 			varchar(255),
-			tipo_pontuacao 			smallint,
-			tipo_pontuacaoreferencia	smallint,
-			tipo_pontuacaolimite 		smallint,
-			FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_nome)
-			);";
+		tipo_id 			SERIAL NOT NULL,
+		tipo_categoria 			INTEGER NOT NULL,
+		tipo_descricao 			VARCHAR(255) NOT NULL,
+		tipo_pontuacao 			SMALLINT,
+		tipo_pontuacaoreferencia	SMALLINT,
+		tipo_pontuacaolimite 		SMALLINT,
+		CONSTRAINT const_tipo_primary PRIMARY KEY(tipo_id),
+		CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id)
+	);";
 
 	const mult = "CREATE TABLE multiplicador(
-			multiplicador_id 		serial PRIMARY KEY,
-			multiplicador_nome 		varchar (30),
-			multiplicador_valor 		smallint,
-			multiplicador_limite		smallint,
-			multiplicador_tipo_atividade    int,
-			FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_codigo)
-			ON UPDATE CASCADE ON DELETE CASCADE
-			);";
+		multiplicador_id 		SERIAL NOT NULL,
+		multiplicador_nome 		VARCHAR (30),
+		multiplicador_valor 		SMALLINT,
+		multiplicador_limite		SMALLINT,
+		multiplicador_tipo_atividade    INTEGER NOT NULL,
+		CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id),
+		CONSTRAINT const_multiplicador_foreign FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_codigo)
+		ON UPDATE CASCADE ON DELETE CASCADE
+	);";
 
 	const ativ = "CREATE TABLE atividade(
-			atividade_id		serial PRIMARY KEY,
-			atividade_tipo		int NOT NULL,
-			atividade_descricao 	varchar(255) NOT NULL,
-			atividade_datainicio 	date,
-			atividade_datafim 	date,
-			atividade_professor	bigint NOT NULL,
-			FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_codigo),
-			FOREIGN KEY (atividade_professor) REFERENCES professor(professor_siape)
-			);";
+		atividade_id		SERIAL NOT NULL,
+		atividade_tipo		INTEGER NOT NULL,
+		atividade_descricao 	VARCHAR(255) NOT NULL,
+		atividade_datainicio 	DATE,
+		atividade_datafim 	DATE,
+		atividade_professor	BIGINT NOT NULL,
+		CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id),
+		CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_codigo),
+		CONSTRAINT const_atividade_foreign2 FOREIGN KEY (atividade_professor) REFERENCES professor(professor_siape)
+	);";
 
 	const comp = "CREATE TABLE comprovante(
-			comprovante_arquivo 	varchar(300) PRIMARY KEY,
-			comprovante_atividade 	integer,
-			FOREIGN KEY (comprovante_atividade) REFERENCES atividade(atividade_id)
-			);";
+		comprovante_id 			SERIAL NOT NULL,
+		comprovante_arquivo 	VARCHAR(300),
+		comprovante_atividade 	INTEGER NOT NULL,
+		CONSTRAINT const_comprovante_primary PRIMARY KEY(comprovante_id),
+		CONSTRAINT const_comprovante_foreign FOREIGN KEY(comprovante_atividade) REFERENCES atividade(atividade_id)
+	);";
 
 
-	const del_prof = "drop table professor;";
-	const del_cate = "drop table categoria;";
-	const del_tipo = "drop table tipo;";
-	const del_mult = "drop table multiplicador;";
-	const del_ativ = "drop table atividade;";
-	const del_comp = "drop table comprovante;";
+	const del = "DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;";
 
 	public static function limpar(){
 		echo "########################<br/>";
@@ -68,17 +71,7 @@ class LimparBanco{
 		echo "####### Limpando tudo! #######<br/>";
 		echo "########################<br/>";
 
-		$stm = Connection::Instance()->get()->prepare(self::del_comp);
-		$stm->execute();
-		$stm = Connection::Instance()->get()->prepare(self::del_ativ);
-		$stm->execute();
-		$stm = Connection::Instance()->get()->prepare(self::del_mult);
-		$stm->execute();
-		$stm = Connection::Instance()->get()->prepare(self::del_tipo);
-		$stm->execute();
-		$stm = Connection::Instance()->get()->prepare(self::del_cate);
-		$stm->execute();
-		$stm = Connection::Instance()->get()->prepare(self::del_prof);
+		$stm = Connection::Instance()->get()->prepare(self::del);
 		$stm->execute();
 		
 

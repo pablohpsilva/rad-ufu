@@ -20,6 +20,14 @@ interface ICategoriaDAO {
     public function post(Categoria $cat);
 
     /**
+     * Recupera o categoria a partir do id
+     * @param type $name
+     * @return categoria A categoria encontrada
+     * @throws DAOException
+     */
+    public function get($name);
+
+    /**
      * Recupera o categoria a partir do nome
      * @param type $name
      * @return categoria A categoria encontrada

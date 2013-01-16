@@ -2,7 +2,7 @@
 
 //namespace model;
 
-class Multiplicador{
+class Multiplicador implements JsonSerializable{
 	private $id;
 	private $nome;
 	private $valor;
@@ -22,6 +22,16 @@ class Multiplicador{
 	public function setValor($input){$this->valor = $input;}
 	public function setLimite($input){$this->limite = $input;}
 	public function setTipoAtividade($input){$this->tipoatividade = $input;}
+
+	public function JsonSerialize() {
+        return [
+            'uri' => 'multiplicador/' . $this->getId(),
+            'nome' => $this->getNome(),
+            'valor' => $this->getValor(),
+            'limite' => $this->getLimite(),
+            'tipoatividade' => $this->getTipoAtividade()
+        ];
+    }
 }
 
 ?>
