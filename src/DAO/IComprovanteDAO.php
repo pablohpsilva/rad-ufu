@@ -1,9 +1,11 @@
 <?php
-
+/*
 namespace DAO;
 
 use model\Comprovante;
+*/
 
+require_once(__DIR__.'/../model/Comprovante.php');
 /**
  * Interface para CRUD basico
  */

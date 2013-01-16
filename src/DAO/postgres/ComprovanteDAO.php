@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace DAO;
 
 use \PDO,
@@ -8,6 +8,12 @@ use \PDO,
     DAO\IComprovanteDAO,
     DAO\Exception,
     DAO\NotFoundException;
+*/
+
+    require_once(__DIR__ . '/../IComprovanteDAO.php');
+    require_once(__DIR__.'/../Connection.php');
+    require_once(__DIR__.'/../Exception.php');
+    require_once(__DIR__.'/../NotFoundException.php');
 
 class ComprovanteDAO implements IComprovanteDAO{
 	const SQL_POST = 'INSERT INTO Comprovante VALUES(
