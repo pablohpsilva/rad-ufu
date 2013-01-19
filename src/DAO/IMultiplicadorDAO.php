@@ -1,8 +1,11 @@
 <?php
-
+/*
 namespace DAO;
 
 use model\Multiplicador;
+*/
+
+require_once(__DIR__.'/../model/Multiplicador.php');
 
 /**
  * Interface para CRUD basico

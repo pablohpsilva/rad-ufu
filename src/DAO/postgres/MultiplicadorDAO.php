@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace DAO;
 
 use \PDO,
@@ -8,6 +8,12 @@ use \PDO,
     DAO\IMultiplicadorDAO,
     DAO\Exception,
     DAO\NotFoundException;
+*/
+
+require_once(__DIR__.'/../IMultiplicadorDAO.php');
+require_once(__DIR__.'/../Connection.php');
+require_once(__DIR__.'/../Exception.php');
+require_once(__DIR__.'/../NotFoundException.php');
 
 class MultiplicadorDAO implements IMultiplicadorDAO{
 

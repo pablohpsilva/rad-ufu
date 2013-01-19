@@ -1,17 +1,18 @@
 <?php
 
-require_once(__DIR__.'/../DAO/postgres/CategoriaDAO.php');
+require_once(__DIR__.'/../DAO/postgres/DAO.php');
+//require_once(__DIR__.'/Service.php');
 
-class CategoriaService{
+class Service{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new CategoriaDAO();
+		$this->dao = new DAO();
 	}
 
 	public function createObject($input){
-		$this->obj = new Categoria();
+		$this->obj = new ();
 		$this->obj->setNome($input);
 		return $this->obj;
 	}
@@ -40,8 +41,25 @@ class CategoriaService{
 		return $jsonArray;
 	}
 
-	public function update($id, $input){
-		$this->dao->update(self::get($id)->setName($input));
+	public function update($id, $campo, $modificacao){
+		$this->obj = self::get($id);
+		switch (strtolower($campo)) {
+			case '':
+				$this->obj->set($modificacao);
+				break;
+			
+			default:
+				$this->obj->set($modificacao);
+				break;
+		}
+		$this->dao->update($this->obj);
+		unset($this->obj);
+	}
+
+	public function getDependency($id){
+		$idDep = self::get($id)->get();
+		$dependency = new Service();
+		return $dependency->get($idDep);
 	}
 
 	public function delete($input){
