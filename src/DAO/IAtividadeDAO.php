@@ -1,9 +1,11 @@
 <?php
-
+/*
 namespace DAO;
 
 use model\Atividade;
+*/
 
+require_once(__DIR__ . '/../model/Atividade.php');
 /**
  * Interface para CRUD basico
  */

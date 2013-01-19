@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace DAO;
 
 use \PDO,
@@ -8,6 +8,12 @@ use \PDO,
     DAO\IAtividadeDAO,
     DAO\Exception,
     DAO\NotFoundException;
+*/
+
+require_once(__DIR__ . '/../IAtividadeDAO.php');
+require_once(__DIR__.'/../Connection.php');
+require_once(__DIR__.'/../Exception.php');
+require_once(__DIR__.'/../NotFoundException.php');
 
 class AtividadeDAO implements IAtividadeDAO{
 	const SQL_POST = 'INSERT INTO Atividade VALUES(
@@ -129,7 +135,6 @@ class AtividadeDAO implements IAtividadeDAO{
             throw new Exception("Ao atualizar Atividade:\t"
                 . $ex->getMessage(), 0, $ex);
         }
-    }
     }
 
     public function delete($id){
