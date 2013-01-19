@@ -4,13 +4,6 @@ require_once(__DIR__.'/../DAO/postgres/AtividadeDAO.php');
 require_once(__DIR__.'/TipoService.php');
 require_once(__DIR__.'/ProfessorService.php');
 
-atividade_id		SERIAL NOT NULL,
-	atividade_tipo		INTEGER NOT NULL,
-	atividade_descricao 	VARCHAR(255) NOT NULL,
-	atividade_datainicio 	DATE,
-	atividade_datafim 	DATE,
-	atividade_professor	BIGINT NOT NULL,
-
 class AtividadeService{
 	private $dao;
 	private $obj;
@@ -33,8 +26,8 @@ class AtividadeService{
 		return $this->dao->get($input);
 	}
 
-	public function post($input){
-		$this->dao->post(self::createObject($input));
+	public function post($tipo, $descricao, $datainicio, $datafim, $professor){
+		$this->dao->post(self::createObject($tipo, $descricao, $datainicio, $datafim, $professor));
 		unset($this->obj);
 	}
 
@@ -53,21 +46,41 @@ class AtividadeService{
 	public function update($id, $campo, $modificacao){
 		$this->obj = self::get($id);
 		switch (strtolower($campo)) {
-			case '':
-				$this->obj->set($modificacao);
+			case 'tipo':
+				$this->obj->setTipo($modificacao);
+				break;
+			case 'descricao':
+				$this->obj->setDescricao($modificacao);
+				break;
+			case 'datainicio':
+				$this->obj->setDataInicio($modificacao);
+				break;
+			case 'datafim':
+				$this->obj->setDataFim($modificacao);
 				break;
 			
 			default:
-				$this->obj->set($modificacao);
+				$this->obj->setProfessor($modificacao);
 				break;
 		}
 		$this->dao->update($this->obj);
 		unset($this->obj);
 	}
 
-	public function getDependency($id){
-		$idDep = self::get($id)->get();
-		$dependency = new Service();
+	public function getDependency($id, $choose){
+		$idDep = null;
+		$dependency = null;
+		switch (strtolower($choose)) {
+			case 'tipo':
+				$idDep = self::get($id)->getTipo();
+				$dependency = new TipoService();
+				break;
+			
+			default:
+				$idDep = self::get($id)->getProfessor();
+				$dependency = new ProfessorService();
+				break;
+		}
 		return $dependency->get($idDep);
 	}
 
