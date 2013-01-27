@@ -15,12 +15,18 @@
 class SecurityService{
 	private function __construct(){}
 
+	private $banishedStrings = array("javascript", "[", "]", "{", "}", "&", "*", "(", ")", "$", "%", "#", "@", "!", "^", ",", "-", "_", "'", ";", ":", "?", "|", "+", "`", "~","\"");
+	
 	private static function verificarExistenciaXSS($input){
 		# Verifico se tenho palavras e caracteres chave: javascript, " [ ] { } & * ( ) $ % # @ ! ^ % , . - _ ' " ; : ? / \ | + ` ~  "
 		# Se tiver, deu merda. Pode parar que esses caracteres nem devem existir. Uma camada em JS sera implementada
 		# para nem ao menos deixar o usuario digitar os caracteres acima. Se o JS for desativado e o usuario tentar
 		# injetar codigo no campo, temos essa camada como uma "proteca" entre a interface e o real servico.
 		#	O retorno aqui sera TRUE se EXISTIR XSS e FALSE se NAO existir XSS.
+		foreach ($this->banishedStrings as $val) {
+			if(strpos($input,$val) != FALSE)
+				return TRUE;
+		}
 		return FALSE;
 	}
 
@@ -35,9 +41,23 @@ class SecurityService{
 			return FALSE;
 	}
 
-	private static function verificarExtensao($input){
+	private static function verificarExtensao($kind,$input){
+		# Exemplo: verificarExtensao("PDF","Folder/folder/file.pdf");
 		# Verifica-se tudo que vier depois de um ponto final " . ". Se tiver qualquer coisa depois
-		# do ponto final que nao seja igual a PDF
+		# do ponto final que nao seja igual a PDF. Retorna TRUE se tem erro na extensao.
+		$aux = explode(".", $input);
+		if(substr_count($input,".") > 1)
+			return TRUE;
+		if(strlen($aux[1]) > 3 || strlen($aux[1]) < 3)
+			return TRUE;
+		if(strcmp( strtolower($kind),strtolower($aux[1]) ) != 0)
+			return TRUE;
+		if(self::verificarCompressaoPorNumeros($aux[0]))
+			return TRUE;
+		else{
+			unset($aux);
+			return FALSE;
+		}
 	}
 
 	public static function sLogin($input){
@@ -61,10 +81,12 @@ class SecurityService{
 		return TRUE;
 	}
 
-	public static function sFile($input){
+	public static function sFile($input,$kind){
 		# Essa funcao sera responsavel por verificar o arquivo que entrara no sistema.
 		# Um comprovante. O seu tamanho deve ser ate 1Mb (tamanho pode oscilar para menos).
 		# 
+		if(self::verificarExtensao($kind,$input))
+			return FALSE;
 		if(self::verificarExistenciaXSS($input))
 			return FALSE;
 		if(self::verificarCompressaoPorNumeros($input))
@@ -74,7 +96,12 @@ class SecurityService{
 	}
 
 	public static function sField($input){
-		#
+		if(verificarExistenciaXSS($input))
+			return FALSE;
+		if(verificarCompressaoPorNumeros($input))
+			return FALSE;
+		else
+			return TRUE;
 	}
 }
 
