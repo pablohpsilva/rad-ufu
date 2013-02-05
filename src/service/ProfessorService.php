@@ -10,8 +10,9 @@ class ProfessorService{
 		$this->dao = new ProfessorDAO();
 	}
 
-	public function createObject($nome, $sobrenome, $usuario, $senha, $ativo = TRUE){
+	public function createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo = TRUE){
 		$this->obj = new Professor();
+		$this->obj->setId($siape);
 		$this->obj->setNome($nome);
 		$this->obj->setSobrenome($sobrenome);
 		$this->obj->setUsuario($usuario);
@@ -27,19 +28,19 @@ class ProfessorService{
 			return $this->dao->read($input);
 	}
 
-	public function post($nome, $sobrenome, $usuario, $senha){
-		$this->dao->post(self::createObject($nome, $sobrenome, $usuario, $senha, $ativo = TRUE));
+	public function post($siape, $nome, $sobrenome, $usuario, $senha){
+		$this->dao->post(self::createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo = TRUE));
 		unset($this->obj);
 	}
 
 	public function search($input){
-		return self::get($input)->JsonSerialize();
+		return self::get($input);
 	}
 
 	public function searchAll(){
 		$jsonArray = array();
 		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val->JsonSerialize();
+			$jsonArray[] = $val;
 		}
 		return $jsonArray;
 	}

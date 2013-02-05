@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__.'/../DAO/postgres/ComprovanteDAO.php');
-require_once(__DIR__.'/AtividadeService.php');
+#require_once(__DIR__.'/AtividadeService.php');
 
 class ComprovanteService{
 	private $dao;
@@ -31,13 +31,13 @@ class ComprovanteService{
 	}
 
 	public function search($input){
-		return self::get($input)->JsonSerialize();
+		return self::get($input);
 	}
 
 	public function searchAll(){
 		$jsonArray = array();
 		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val->JsonSerialize();
+			$jsonArray[] = $val;
 		}
 		return $jsonArray;
 	}
@@ -58,7 +58,7 @@ class ComprovanteService{
 	}
 
 	public function getDependency($id){
-		$idDep = self::get($id)->get();
+		$idDep = self::get($id)->getAtividade();
 		$dependency = new AtividadeService();
 		return $dependency->get($idDep);
 	}

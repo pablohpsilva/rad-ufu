@@ -15,7 +15,7 @@ class Atividade implements JsonSerializable{
     public function getTipo(){return $this->tipo;}
     public function getDescricao(){return $this->descricao;}
     public function getDataInicio(){return $this->datainicio;}
-    public function getaDataFim(){return $this->datafim;}
+    public function getDataFim(){return $this->datafim;}
     public function getProfessor(){return $this->professor;}
 
     /*SETTERS*/

@@ -29,19 +29,22 @@ class CategoriaService{
 	}
 
 	public function search($input){
-		return self::get($input)->JsonSerialize();
+		return self::get($input);
 	}
 
 	public function searchAll(){
 		$jsonArray = array();
 		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val->JsonSerialize();
+			$jsonArray[] = $val;
 		}
 		return $jsonArray;
 	}
 
 	public function update($id, $input){
-		$this->dao->update(self::get($id)->setName($input));
+		$this->obj = self::get($id);
+		$this->obj->setNome($input);
+		$this->dao->update($this->obj);
+		unset($this->obj);
 	}
 
 	public function delete($input){

@@ -99,7 +99,6 @@ class ComprovanteDAO implements IComprovanteDAO{
 
             $comp = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-
                 $c = new Comprovante();
                 $c->setId($result['comprovante_id']);
                 $c->setArquivo($row['comprovante_arquivo']);

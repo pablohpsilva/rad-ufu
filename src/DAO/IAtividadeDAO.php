@@ -27,6 +27,14 @@ interface IAtividadeDAO {
     public function get($id);
 
     /**
+     * Recupera o Atividade a partir do id
+     * @param type $id
+     * @return Atividade O Atividade encontrado
+     * @throws DAOException
+     */
+    public function read($idProfessor);
+
+    /**
      * Recupera todas as Atividadees
      * @return array Atividadees encontradas
      * @throws DAOException

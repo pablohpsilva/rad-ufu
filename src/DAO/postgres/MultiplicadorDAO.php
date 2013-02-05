@@ -116,7 +116,6 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
 
             $mult = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-
                 $m = new Multiplicador();
                 $m->setId($row['multiplicador_id']);
                 $m->setNome($row['multiplicador_nome']);

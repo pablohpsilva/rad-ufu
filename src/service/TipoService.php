@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__.'/../DAO/postgres/TipoDAO.php');
-require_once(__DIR__.'/CategoriaService.php');
+#require_once(__DIR__.'/CategoriaService.php');
 
 class TipoService{
 	private $dao;
@@ -31,13 +31,13 @@ class TipoService{
 	}
 
 	public function search($input){
-		return self::get($input)->JsonSerialize();
+		return self::get($input);
 	}
 
 	public function searchAll(){
 		$jsonArray = array();
 		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val->JsonSerialize();
+			$jsonArray[] = $val;
 		}
 		return $jsonArray;
 	}

@@ -122,7 +122,6 @@ class ProfessorDAO implements IProfessorDAO{
 
             $prof = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-
                 $p = new Professor();
                 $p->setId($row['professor_id']);
                 $p->setAtivo($row['professor_ativo']);

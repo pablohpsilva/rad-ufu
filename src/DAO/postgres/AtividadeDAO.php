@@ -32,6 +32,7 @@ class AtividadeDAO implements IAtividadeDAO{
 		atividade_professor = :atividade_professor
 		WHERE atividade_id = :atividade_id;';
 	const SQL_GET = 'SELECT * FROM Atividade WHERE atividade_id = :atividade_id;';
+    const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor;';
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
 
@@ -83,6 +84,36 @@ class AtividadeDAO implements IAtividadeDAO{
         }
     }
 
+    public function read($idProfessor){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
+            $stm->execute(array(':atividade_professor'=>$idProfessor));
+
+            $ativ = array();
+            while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $a = new Atividade();
+                $a->setId($row['atividade_id']);
+                $a->setTipo($row['atividade_tipo']);
+                $a->setDescricao($row['atividade_descricao']);
+                $a->setDataInicio($row['atividade_datainicio']);
+                $a->setDataFim($row['atividade_datafim']);
+                $a->setProfessor($row['atividade_professor']);
+
+                $ativ[] = $a;
+            }
+            unset($a);
+
+            if (empty($ativ))
+                throw new NotFoundException();
+            else
+                return $ativ;
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos as Atividade:\t'
+                . $ex->getMessage());
+        }
+    }
+
     public function getAll(){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET_ALL);
@@ -90,7 +121,6 @@ class AtividadeDAO implements IAtividadeDAO{
 
             $ativ = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-
                 $a = new Atividade();
                 $a->setId($row['atividade_id']);
                 $a->setTipo($row['atividade_tipo']);

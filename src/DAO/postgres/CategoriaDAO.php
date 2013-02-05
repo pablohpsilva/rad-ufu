@@ -27,7 +27,7 @@ class CategoriaDAO implements ICategoriaDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
             $res = $stm->execute(array(
-                    ':categoria_id' => $cat->getId(),
+                    #':categoria_id' => $cat->getId(),
                     ':categoria_nome' => $cat->getNome()
                 ));
 
@@ -91,7 +91,6 @@ class CategoriaDAO implements ICategoriaDAO{
 
             $cat = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-
                 $c = new Categoria();
                 $c->setId($row['categoria_id']);
                 $c->setNome($row['categoria_nome']);

@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__.'/../DAO/postgres/MultiplicadorDAO.php');
-require_once(__DIR__.'/TipoService.php');
+#require_once(__DIR__.'/TipoService.php');
 
 class MultiplicadorService{
 	private $dao;
@@ -26,20 +26,20 @@ class MultiplicadorService{
 		else
 			return $this->dao->read($input);
 	}
-
+	
 	public function post($nome, $valor, $limite, $tipo){
 		$this->dao->post(self::createObject($nome, $valor, $limite, $tipo));
 		unset($this->obj);
 	}
 
 	public function search($input){
-		return self::get($input)->JsonSerialize();
+		return self::get($input);
 	}
 
 	public function searchAll(){
 		$jsonArray = array();
 		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val->JsonSerialize();
+			$jsonArray[] = $val;
 		}
 		return $jsonArray;
 	}

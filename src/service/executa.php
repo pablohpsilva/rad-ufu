@@ -1,0 +1,19 @@
+<?php
+require_once(__DIR__.'/Application.php');
+$app = new Application();
+if(isset($_POST['listarAtividade'])){
+	#
+}
+else
+if(isset($_POST['criarAtividade'])){
+	#
+}
+else
+if(isset($_POST['deletarAtividade'])){
+	#
+}
+else
+if(isset($_POST['editarAtividade'])){
+	#
+}
+?>
