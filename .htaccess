@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    #todas requisições para o site são redirecionadas para a pasta public
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !testes/
+    RewriteCond %{REQUEST_URI} !public/
+    RewriteRule ^(.*)$ public/$0 [L]
+</IfModule>
+
+#
+# Para poder usar o redirect em /etc/apache2/sites-available/default colocar:
+#
+# <Directory /var/www/rad-ufu/>
+#     Options Indexes FollowSymLinks MultiViews
+#     AllowOverride all
+#     Order allow,deny
+#     allow from all
+# </Directory>
+#
