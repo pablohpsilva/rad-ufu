@@ -1,8 +1,13 @@
 <?php
+namespace RADUFU\Service;
 
+use RADUFU\DAO\postgres\MultiplicadorDAO,
+    RADUFU\Model\Multiplicador;
+
+/*
 require_once(__DIR__.'/../DAO/postgres/MultiplicadorDAO.php');
 #require_once(__DIR__.'/TipoService.php');
-
+*/
 class MultiplicadorService{
 	private $dao;
 	private $obj;

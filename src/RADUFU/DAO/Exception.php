@@ -1,6 +1,6 @@
 <?php
 
-namespace DAO;
+namespace RADUFU\DAO;
 
 /**
  * Exceção para erros que podem ser lançados pelos DAOs

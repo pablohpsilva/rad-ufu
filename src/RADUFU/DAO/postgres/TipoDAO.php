@@ -1,19 +1,19 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO\postgres;
 
 use \PDO,
-    model\Tipo,
-    DAO\Connection,
-    DAO\ITipoDAO,
-    DAO\Exception,
-    DAO\NotFoundException;
-*/
+    RADUFU\Model\Tipo,
+    RADUFU\DAO\Connection,
+    RADUFU\DAO\ITipoDAO,
+    RADUFU\DAO\Exception,
+    RADUFU\DAO\NotFoundException;
+
+/*
     require_once(__DIR__.'/../ITipoDAO.php');
     require_once(__DIR__.'/../Connection.php');
     require_once(__DIR__.'/../Exception.php');
     require_once(__DIR__.'/../NotFoundException.php');
-
+*/
 class TipoDAO implements ITipoDAO{
 
     const SQL_POST = 'INSERT INTO Tipo VALUES(

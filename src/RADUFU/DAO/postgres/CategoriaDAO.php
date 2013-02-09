@@ -1,19 +1,19 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO\postgres;
 
 use \PDO,
-    model\Categoria,
-    DAO\Connection,
-    DAO\ICategoriaDAO,
-    DAO\Exception,
-    DAO\NotFoundException;
-*/
+    RADUFU\Model\Categoria,
+    RADUFU\DAO\Connection,
+    RADUFU\DAO\ICategoriaDAO,
+    RADUFU\DAO\Exception,
+    RADUFU\DAO\NotFoundException;
+    
+/*
     require_once(__DIR__ . '/../ICategoriaDAO.php');
     require_once(__DIR__.'/../Connection.php');
     require_once(__DIR__.'/../Exception.php');
     require_once(__DIR__.'/../NotFoundException.php');
-
+*/
 class CategoriaDAO implements ICategoriaDAO{
 
     const SQL_POST = 'INSERT INTO Categoria VALUES(DEFAULT, :categoria_nome);';

@@ -1,7 +1,7 @@
 <?php
 namespace RADUFU\Resource;
 
-use RADUFU\service\ProfessorService,
+use RADUFU\Service\ProfessorService,
     Tonic\Resource,
     Tonic\Response;
 /*

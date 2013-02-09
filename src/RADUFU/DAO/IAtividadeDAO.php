@@ -1,7 +1,7 @@
 <?php
 namespace RADUFU\DAO;
 
-use model\Atividade;
+use RADUFU\Model\Atividade;
 
 //require_once(__DIR__ . '/../model/Atividade.php');
 /**

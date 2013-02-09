@@ -1,6 +1,6 @@
 <?php
 
-namespace DAO;
+namespace RADUFU\DAO;
 
 class NotFoundException extends Exception {
 

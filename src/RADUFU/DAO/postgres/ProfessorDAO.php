@@ -1,22 +1,21 @@
 <?php
-
 namespace RADUFU\DAO\postgres;
 
 use \PDO,
-    RADUFU\model\Professor,
+    RADUFU\Model\Professor,
     RADUFU\DAO\Connection,
     RADUFU\DAO\IProfessorDAO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
 
 
-//use  model\Professor;
+/*
     require_once(__DIR__.'/../../model/Professor.php');
     require_once(__DIR__.'/../IProfessorDAO.php');
     require_once(__DIR__.'/../Connection.php');
     require_once(__DIR__.'/../Exception.php');
     require_once(__DIR__.'/../NotFoundException.php');
-
+*/
 class ProfessorDAO implements IProfessorDAO{
 
     const SQL_POST = 'INSERT INTO Professor VALUES(

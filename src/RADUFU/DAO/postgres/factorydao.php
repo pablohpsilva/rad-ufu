@@ -1,6 +1,6 @@
 <?php
 
-namespace DAO\postgres;
+namespace RADUFU\DAO\postgres;
 
 /**
  * DAO factory para o postgres

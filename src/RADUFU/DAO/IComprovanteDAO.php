@@ -1,11 +1,7 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO;
 
-use model\Comprovante;
-*/
-
-require_once(__DIR__.'/../model/Comprovante.php');
+use RADUFU\Model\Comprovante;
 /**
  * Interface para CRUD basico
  */

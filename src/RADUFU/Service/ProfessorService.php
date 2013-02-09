@@ -1,6 +1,8 @@
 <?php
-
 namespace RADUFU\Service;
+
+use RADUFU\DAO\postgres\ProfessorDAO,
+    RADUFU\Model\Professor;
 
 /*
 require_once(__DIR__.'/../DAO/postgres/ProfessorDAO.php');

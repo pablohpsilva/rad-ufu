@@ -1,20 +1,19 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO\postgres;
 
 use \PDO,
-    model\Atividade,
-    DAO\Connection,
-    DAO\IAtividadeDAO,
-    DAO\Exception,
-    DAO\NotFoundException;
-*/
-
+    RADUFU\Model\Atividade,
+    RADUFU\DAO\Connection,
+    RADUFU\DAO\IAtividadeDAO,
+    RADUFU\DAO\Exception,
+    RADUFU\DAO\NotFoundException;
+    
+/*
 require_once(__DIR__ . '/../IAtividadeDAO.php');
 require_once(__DIR__.'/../Connection.php');
 require_once(__DIR__.'/../Exception.php');
 require_once(__DIR__.'/../NotFoundException.php');
-
+*/
 class AtividadeDAO implements IAtividadeDAO{
 	const SQL_POST = 'INSERT INTO Atividade VALUES(
 		DEFAULT,

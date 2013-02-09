@@ -1,8 +1,13 @@
 <?php
+namespace RADUFU\Service;
 
+use RADUFU\DAO\postgres\TipoDAO,
+    RADUFU\Model\Tipo;
+
+/*
 require_once(__DIR__.'/../DAO/postgres/TipoDAO.php');
 #require_once(__DIR__.'/CategoriaService.php');
-
+*/
 class TipoService{
 	private $dao;
 	private $obj;

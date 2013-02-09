@@ -1,4 +1,8 @@
 <?php
+namespace RADUFU\DAO;
+
+use \PDO,
+	RADUFU\DAO\Connection;
 
 require_once(__DIR__ . '/Connection.php');
 

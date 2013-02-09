@@ -1,8 +1,7 @@
 <?php
-
 namespace RADUFU\DAO;
 
-use RADUFU\model\Professor;
+use RADUFU\Model\Professor;
 
 /**
  * Interface para CRUD basico

@@ -1,12 +1,7 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO;
 
-use model\Multiplicador;
-*/
-
-require_once(__DIR__.'/../model/Multiplicador.php');
-
+use RADUFU\Model\Multiplicador;
 /**
  * Interface para CRUD basico
  */

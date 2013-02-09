@@ -1,8 +1,13 @@
 <?php
+namespace RADUFU\Service;
 
+use RADUFU\DAO\postgres\ComprovanteDAO,
+    RADUFU\Model\Comprovante;
+
+/*
 require_once(__DIR__.'/../DAO/postgres/ComprovanteDAO.php');
 #require_once(__DIR__.'/AtividadeService.php');
-
+*/
 class ComprovanteService{
 	private $dao;
 	private $obj;

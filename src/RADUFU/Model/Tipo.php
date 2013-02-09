@@ -1,6 +1,8 @@
 <?php
 
-//namespace model;
+namespace RADUFU\Model;
+
+use \JsonSerializable;
 
 class Tipo implements JsonSerializable{
 	private $id;

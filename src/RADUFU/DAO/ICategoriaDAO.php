@@ -1,11 +1,7 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO;
 
-use model\Categoria;
-*/
-
-require_once(__DIR__ . '/../model/Categoria.php');
+use RADUFU\Model\Categoria;
 
 /**
  * Interface para CRUD basico

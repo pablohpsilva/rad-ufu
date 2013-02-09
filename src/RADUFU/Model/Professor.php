@@ -1,6 +1,6 @@
 <?php
 
-namespace RADUFU\model;
+namespace RADUFU\Model;
 
 use \JsonSerializable;
 

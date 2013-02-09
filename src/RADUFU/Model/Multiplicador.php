@@ -1,6 +1,8 @@
 <?php
 
-//namespace model;
+namespace RADUFU\Model;
+
+use \JsonSerializable;
 
 class Multiplicador implements JsonSerializable{
 	private $id;

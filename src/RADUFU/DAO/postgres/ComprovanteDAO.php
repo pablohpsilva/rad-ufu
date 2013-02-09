@@ -1,20 +1,19 @@
 <?php
-/*
-namespace DAO;
+namespace RADUFU\DAO\postgres;
 
 use \PDO,
-    model\Comprovante,
-    DAO\Connection,
-    DAO\IComprovanteDAO,
-    DAO\Exception,
-    DAO\NotFoundException;
-*/
+    RADUFU\Model\Comprovante,
+    RADUFU\DAO\Connection,
+    RADUFU\DAO\IComprovanteDAO,
+    RADUFU\DAO\Exception,
+    RADUFU\DAO\NotFoundException;
 
+/*
     require_once(__DIR__ . '/../IComprovanteDAO.php');
     require_once(__DIR__.'/../Connection.php');
     require_once(__DIR__.'/../Exception.php');
     require_once(__DIR__.'/../NotFoundException.php');
-
+*/
 class ComprovanteDAO implements IComprovanteDAO{
 	const SQL_POST = 'INSERT INTO Comprovante VALUES(DEFAULT,:comprovante_arquivo,:comprovante_atividade);';
 	const SQL_UPDATE = 'UPDATE Comprovante SET

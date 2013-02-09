@@ -1,6 +1,7 @@
 <?php
+namespace RADUFU\Model;
 
-//namespace model;
+use \JsonSerializable;
 
 class Categoria implements JsonSerializable{
 	private $id;

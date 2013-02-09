@@ -1,9 +1,13 @@
 <?php
+namespace RADUFU\Service;
 
+use RADUFU\DAO\postgres\AtividadeDAO,
+    RADUFU\Model\Atividade;
+/*    
 require_once(__DIR__.'/../DAO/postgres/AtividadeDAO.php');
 #require_once(__DIR__.'/TipoService.php');
 #require_once(__DIR__.'/ProfessorService.php');
-
+*/
 class AtividadeService{
 	private $dao;
 	private $obj;
@@ -95,5 +99,4 @@ class AtividadeService{
 	}
 
 }
-
 ?>
