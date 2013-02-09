@@ -1,5 +1,8 @@
 <?php
+
 namespace RADUFU\Model;
+
+require_once(__DIR__."/../Autoloader.php");
 
 $teste = new Categoria();
 

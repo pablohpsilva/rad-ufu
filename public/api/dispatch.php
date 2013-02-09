@@ -1,10 +1,10 @@
 <?php
-require_once (__DIR__ . '/../../vendor/autoloader.php');
+require_once (__DIR__ . '/../../src/RADUFU/Autoloader.php');
 
 use Tonic\Response;
 
 $config = array(
-    'load' => array('../../../src/Resource/*.php')
+    'load' => array('../../src/RADUFU/Resource/*.php')
 );
 
 $app = new Tonic\Application($config);
