@@ -1,0 +1,5 @@
+{
+    "require": {
+        "peej/tonic": "3.0"
+    }
+}
