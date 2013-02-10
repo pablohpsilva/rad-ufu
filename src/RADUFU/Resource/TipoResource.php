@@ -1,37 +1,32 @@
 <?php
+
 namespace RADUFU\Resource;
 
 use RADUFU\Service\TipoService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
- * @uri /Service
+ * @uri /tipo
  * @uri /tipo/:id
  */
 class TipoResource extends Resource {
 
     private $tipoService = null;
 
-    public function __construct(){
-        $this->tipoService = new TipoService();
-    }
-
     /**
      * @method GET
-     * @provides application/json
      * @json
      * @param int $id
      * @return Tonic\Response
      */
     public function buscar($id = null) {
+        $this->tipoService = new TipoService();
         try {
             return new Response( Response::OK, $this->tipoService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
+        } catch (\RADUFU\DAO\NotFoundException $e) {
+            throw new \Tonic\NotFoundException();
         }
     }
 
@@ -42,7 +37,7 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function criar($descricao = null) {
-
+        $this->tipoService = new TipoService();
         if(!(isset($this->request->data->descricao)
             &&isset($this->request->data->categoria)
             &&isset($this->request->data->pontuacao)
@@ -50,7 +45,7 @@ class TipoResource extends Resource {
             &&isset($this->request->data->pontuacaolimite)))
             return new Response(Response::BADREQUEST);
         try {
-            $this->tipoService->post( 
+            $this->tipoService->post(
                     $this->request->data->categoria,
                     $descricao,
                     $this->request->data->pontuacao,
@@ -63,8 +58,8 @@ class TipoResource extends Resource {
                 'uri' => 'tipo/' . "CREATED"//$criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Tonic\Exception($e->getMessage());
         }
     }
 
@@ -75,7 +70,7 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
-
+        $this->tipoService = new TipoService();
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->campo)
@@ -83,17 +78,17 @@ class TipoResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->tipoService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (\RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Tonic\Exception($e->getMessage());
         }
 
     }
@@ -105,7 +100,7 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function remover($id = null) {
-
+        $this->tipoService = new TipoService();
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         try {
@@ -113,8 +108,8 @@ class TipoResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
-            throw new Tonic\Exception($e->getMessage());
+        } catch (\RADUFU\DAO\NotFoundException $e) {
+            throw new \Tonic\Exception($e->getMessage());
         }
     }
 
@@ -122,7 +117,6 @@ class TipoResource extends Resource {
      * Transforma as requisições json para array e as repostas array para json
      */
     protected function json() {
-
         $this->before(function ($request) {
             if ($request->contentType == 'application/json') {
                 $request->data = json_decode($request->data);

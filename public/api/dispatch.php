@@ -18,6 +18,7 @@ $request = new Tonic\Request();
 try {
     $resource = $app->getResource($request);
     #echo $resource; die;
+    #var_dump($resource); die;
 
     $response = $resource->exec();
 } catch (Tonic\NotFoundException $e) {

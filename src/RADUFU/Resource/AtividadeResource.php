@@ -5,10 +5,8 @@ use RADUFU\Service\AtividadeService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
- * @uri /Service
+ * @uri /atividade
  * @uri /atividade/:id
  */
 class AtividadeResource extends Resource {
@@ -32,7 +30,7 @@ class AtividadeResource extends Resource {
                 throw new Tonic\MethodNotAllowedException();
             return new Response( Response::OK, $this->atividadeService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -50,13 +48,13 @@ class AtividadeResource extends Resource {
                 throw new Tonic\MethodNotAllowedException();
             if(!(isset($this->request->data->escolha)))
                 return new Response(Response::BADREQUEST);
-            return new Response( 
+            return new Response(
                 Response::OK, $this->atividadeService->getDependency(
                     $id,
                     $this->request->data->escolha
                     ));
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -88,7 +86,7 @@ class AtividadeResource extends Resource {
                 'uri' => 'atividade/' . "CREATED"//$criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -108,16 +106,16 @@ class AtividadeResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->atividadeService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -138,7 +136,7 @@ class AtividadeResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

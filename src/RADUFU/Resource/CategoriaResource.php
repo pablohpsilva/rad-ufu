@@ -5,10 +5,8 @@ use RADUFU\Service\CategoriaService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
- * @uri /CategoriaService
+ * @uri /categoria
  * @uri /categoria/:id
  */
 class CategoriaResource extends Resource {
@@ -31,7 +29,7 @@ class CategoriaResource extends Resource {
             //$this->CategoriaService = new CategoriaService();
             return new Response( Response::OK, $this->categoriaService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -54,7 +52,7 @@ class CategoriaResource extends Resource {
                 'uri' => 'categoria/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -73,15 +71,15 @@ class CategoriaResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->CategoriaService->update(
-                    $id, 
+                    $id,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -102,7 +100,7 @@ class CategoriaResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

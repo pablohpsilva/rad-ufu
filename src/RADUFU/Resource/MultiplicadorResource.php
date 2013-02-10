@@ -5,10 +5,8 @@ use RADUFU\Service\MultiplicadorService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
- * @uri /Service
+ * @uri /multiplicador
  * @uri /multiplicador/:id
  */
 class MultiplicadorResource extends Resource {
@@ -30,7 +28,7 @@ class MultiplicadorResource extends Resource {
         try {
             return new Response( Response::OK, $this->multiplicadorService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -49,7 +47,7 @@ class MultiplicadorResource extends Resource {
             &&isset($this->request->data->tipo) ))
             return new Response(Response::BADREQUEST);
         try {
-            $this->multiplicadorService->post( 
+            $this->multiplicadorService->post(
                     $nome,
                     $this->request->data->valor,
                     $this->request->data->limite,
@@ -61,7 +59,7 @@ class MultiplicadorResource extends Resource {
                 'uri' => 'multiplicador/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Dao\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -81,16 +79,16 @@ class MultiplicadorResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->multiplicadorService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -111,7 +109,7 @@ class MultiplicadorResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

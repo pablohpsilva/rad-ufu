@@ -5,8 +5,6 @@ use RADUFU\Service\ProfessorService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /professor
  * @uri /professor/:id
@@ -30,7 +28,7 @@ class ProfessorResource extends Resource {
         try {
             return new Response( Response::OK, $this->professorService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -67,7 +65,7 @@ class ProfessorResource extends Resource {
                 'uri' => 'professor/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -87,16 +85,16 @@ class ProfessorResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->professorService->update(
-                    $idOuUsuario, 
-                    $this->request->data->campo, 
+                    $idOuUsuario,
+                    $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -117,7 +115,7 @@ class ProfessorResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
