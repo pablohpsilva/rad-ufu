@@ -5,8 +5,6 @@ use RADUFU\Service\MultiplicadorService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /multiplicador
  * @uri /multiplicador/:id

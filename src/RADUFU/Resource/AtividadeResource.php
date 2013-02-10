@@ -5,8 +5,6 @@ use RADUFU\Service\AtividadeService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /atividade
  * @uri /atividade/:id

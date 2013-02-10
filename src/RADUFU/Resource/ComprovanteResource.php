@@ -5,8 +5,6 @@ use RADUFU\Service\ComprovanteService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /comprovante
  * @uri /comprovante/:id

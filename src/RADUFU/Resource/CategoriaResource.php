@@ -5,8 +5,6 @@ use RADUFU\Service\CategoriaService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /categoria
  * @uri /categoria/:id

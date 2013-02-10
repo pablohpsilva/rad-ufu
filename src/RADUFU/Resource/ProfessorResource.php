@@ -5,8 +5,6 @@ use RADUFU\Service\ProfessorService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /professor
  * @uri /professor/:id
@@ -87,8 +85,8 @@ class ProfessorResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->professorService->update(
-                    $idOuUsuario, 
-                    $this->request->data->campo, 
+                    $idOuUsuario,
+                    $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
