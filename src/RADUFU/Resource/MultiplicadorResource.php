@@ -8,7 +8,7 @@ use RADUFU\Service\MultiplicadorService,
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /Service
+ * @uri /multiplicador
  * @uri /multiplicador/:id
  */
 class MultiplicadorResource extends Resource {
@@ -49,7 +49,7 @@ class MultiplicadorResource extends Resource {
             &&isset($this->request->data->tipo) ))
             return new Response(Response::BADREQUEST);
         try {
-            $this->multiplicadorService->post( 
+            $this->multiplicadorService->post(
                     $nome,
                     $this->request->data->valor,
                     $this->request->data->limite,
@@ -81,7 +81,7 @@ class MultiplicadorResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->multiplicadorService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );

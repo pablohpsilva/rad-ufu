@@ -8,10 +8,10 @@ use RADUFU\Service\ComprovanteService,
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /Service
+ * @uri /comprovante
  * @uri /comprovante/:id
  */
-class Resource extends Resource {
+class ComprovanteResource extends Resource {
 
     private $Service = null;
 
@@ -47,7 +47,7 @@ class Resource extends Resource {
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
         try {
-            $this->comprovanteService->post( 
+            $this->comprovanteService->post(
                     $arquivo,
                     $this->request->data->atividade
                     );
@@ -77,7 +77,7 @@ class Resource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->comprovanteService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );

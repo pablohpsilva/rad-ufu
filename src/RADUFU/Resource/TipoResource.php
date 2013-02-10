@@ -8,7 +8,7 @@ use RADUFU\Service\TipoService,
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /Service
+ * @uri /tipo
  * @uri /tipo/:id
  */
 class TipoResource extends Resource {
@@ -50,7 +50,7 @@ class TipoResource extends Resource {
             &&isset($this->request->data->pontuacaolimite)))
             return new Response(Response::BADREQUEST);
         try {
-            $this->tipoService->post( 
+            $this->tipoService->post(
                     $this->request->data->categoria,
                     $descricao,
                     $this->request->data->pontuacao,
@@ -83,7 +83,7 @@ class TipoResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->tipoService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );

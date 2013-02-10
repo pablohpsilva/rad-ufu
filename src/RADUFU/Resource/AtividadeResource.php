@@ -8,7 +8,7 @@ use RADUFU\Service\AtividadeService,
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /Service
+ * @uri /atividade
  * @uri /atividade/:id
  */
 class AtividadeResource extends Resource {
@@ -50,7 +50,7 @@ class AtividadeResource extends Resource {
                 throw new Tonic\MethodNotAllowedException();
             if(!(isset($this->request->data->escolha)))
                 return new Response(Response::BADREQUEST);
-            return new Response( 
+            return new Response(
                 Response::OK, $this->atividadeService->getDependency(
                     $id,
                     $this->request->data->escolha
@@ -108,7 +108,7 @@ class AtividadeResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->atividadeService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );

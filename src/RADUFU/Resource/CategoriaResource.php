@@ -8,7 +8,7 @@ use RADUFU\Service\CategoriaService,
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /CategoriaService
+ * @uri /categoria
  * @uri /categoria/:id
  */
 class CategoriaResource extends Resource {
@@ -73,7 +73,7 @@ class CategoriaResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->CategoriaService->update(
-                    $id, 
+                    $id,
                     $this->request->data->modificacao
                     );
 
