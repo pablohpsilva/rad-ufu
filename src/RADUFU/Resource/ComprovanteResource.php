@@ -28,7 +28,7 @@ class ComprovanteResource extends Resource {
         try {
             return new Response( Response::OK, $this->comprovanteService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -55,7 +55,7 @@ class ComprovanteResource extends Resource {
                 'uri' => 'comprovante/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -82,9 +82,9 @@ class ComprovanteResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -105,7 +105,7 @@ class ComprovanteResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

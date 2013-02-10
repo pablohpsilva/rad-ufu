@@ -28,7 +28,7 @@ class MultiplicadorResource extends Resource {
         try {
             return new Response( Response::OK, $this->multiplicadorService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -59,7 +59,7 @@ class MultiplicadorResource extends Resource {
                 'uri' => 'multiplicador/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Dao\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -86,9 +86,9 @@ class MultiplicadorResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -109,7 +109,7 @@ class MultiplicadorResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

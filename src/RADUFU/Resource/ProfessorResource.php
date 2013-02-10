@@ -28,7 +28,7 @@ class ProfessorResource extends Resource {
         try {
             return new Response( Response::OK, $this->professorService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -65,7 +65,7 @@ class ProfessorResource extends Resource {
                 'uri' => 'professor/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -92,9 +92,9 @@ class ProfessorResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -115,7 +115,7 @@ class ProfessorResource extends Resource {
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
