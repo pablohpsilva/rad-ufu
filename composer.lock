@@ -1,31 +1,32 @@
 {
-    "hash": "beefc0cf52b223831a23a898998ff30f",
+    "hash": "4ad33176af9b0fc732582b02a74a0817",
     "packages": [
         {
             "name": "peej/tonic",
-            "version": "v3.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/peej/tonic",
-                "reference": "v3.0"
+                "reference": "015f8ebd70c802be71d1d79d70bbff29f8af7b50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/peej/tonic/zipball/v3.0",
-                "reference": "v3.0",
+                "url": "https://api.github.com/repos/peej/tonic/zipball/015f8ebd70c802be71d1d79d70bbff29f8af7b50",
+                "reference": "015f8ebd70c802be71d1d79d70bbff29f8af7b50",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "behat/behat": "2.*"
+                "behat/behat": "2.*",
+                "phpspec/phpspec": "dev-master"
             },
             "suggest": {
                 "pimple/pimple": "A simple dependancy injection container to handle your services",
                 "smarty/smarty": "PHP templating engine for building response representations"
             },
-            "time": "2012-08-09 14:31:36",
+            "time": "2013-01-26 21:44:03",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -50,14 +51,12 @@
             ]
         }
     ],
-    "packages-dev": [
-
-    ],
+    "packages-dev": null,
     "aliases": [
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ]
+    "stability-flags": {
+        "peej/tonic": 20
+    }
 }

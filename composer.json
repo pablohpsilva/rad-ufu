@@ -1,5 +1,5 @@
 {
     "require": {
-        "peej/tonic": "3.0"
+        "peej/tonic": "dev-master"
     }
 }
