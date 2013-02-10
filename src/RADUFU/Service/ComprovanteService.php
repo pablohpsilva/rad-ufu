@@ -2,7 +2,8 @@
 namespace RADUFU\Service;
 
 use RADUFU\DAO\postgres\ComprovanteDAO,
-    RADUFU\Model\Comprovante;
+    RADUFU\Model\Comprovante,
+    RADUFU\Service\FileService;
 
 /*
 require_once(__DIR__.'/../DAO/postgres/ComprovanteDAO.php');
@@ -30,9 +31,13 @@ class ComprovanteService{
 			return $this->dao->read($input);
 	}
 
-	public function post($arquivo, $atividade){
-		$this->dao->post(self::createObject($arquivo, $atividade));
-		unset($this->obj);
+	public function post($professor,$arquivo, $atividade){
+		$file = FileService::createFile($professor,$atividade,$arquivo);
+		if($file != -1){
+			$this->dao->post(self::createObject($file, $atividade));
+			unset($this->obj);
+			return $file;
+		}
 	}
 
 	public function search($input){
@@ -51,7 +56,9 @@ class ComprovanteService{
 		$this->obj = self::get($id);
 		switch (strtolower($campo)) {
 			case 'arquivo':
-				$this->obj->setArquivo($modificacao);
+				$mod = FileService::moveFile($this->obj->getArquivo(),$modificacao);
+				if($mod!=FALSE)
+					$this->obj->setArquivo($mod);
 				break;
 			
 			default:
@@ -69,6 +76,9 @@ class ComprovanteService{
 	}
 
 	public function delete($input){
+		$this->obj = self::get($input);
+		FileService::removeFile($this->obj->getArquivo());
+		unset($this->obj);
 		$this->dao->delete($input);
 	}
 

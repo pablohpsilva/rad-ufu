@@ -5,7 +5,7 @@ use RADUFU\Service\ComprovanteService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
+#require_once(__DIR__."/../Autoloader.php");
 
 /**
  * @uri /Service
@@ -47,11 +47,12 @@ class Resource extends Resource {
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
         try {
-            $this->comprovanteService->post( 
+            $aux = $this->comprovanteService->post( 
+                    $this->request->data->professor,
                     $arquivo,
                     $this->request->data->atividade
                     );
-            $criada = $this->comprovanteService->search($this->request->data->arquivo);
+            $criada = $this->comprovanteService->search($aux);
 
             return new Response(Response::CREATED, array(
                 'uri' => 'comprovante/' . $criada->getId()
