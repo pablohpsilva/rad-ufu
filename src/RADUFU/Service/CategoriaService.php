@@ -3,7 +3,6 @@ namespace RADUFU\Service;
 
 use RADUFU\DAO\postgres\CategoriaDAO,
     RADUFU\Model\Categoria;
-
 /*
 require_once(__DIR__.'/../DAO/postgres/CategoriaDAO.php');
 */

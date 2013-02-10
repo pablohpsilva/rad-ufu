@@ -1,22 +1,22 @@
 <?php
 namespace RADUFU\Resource;
 
-use RADUFU\Service\ProfessorService,
+use RADUFU\Service\ComprovanteService,
     Tonic\Resource,
     Tonic\Response;
 
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /professor
- * @uri /professor/:id
+ * @uri /Service
+ * @uri /comprovante/:id
  */
-class ProfessorResource extends Resource {
+class Resource extends Resource {
 
-    private $professorService = null;
+    private $Service = null;
 
     public function __construct(){
-        $this->professorService = new ProfessorService();
+        $this->comprovanteService = new ComprovanteService();
     }
 
     /**
@@ -28,7 +28,7 @@ class ProfessorResource extends Resource {
      */
     public function buscar($id = null) {
         try {
-            return new Response( Response::OK, $this->professorService->search($id) );
+            return new Response( Response::OK, $this->comprovanteService->search($id) );
 
         } catch (src\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
@@ -41,30 +41,20 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function criar($id = null) {
+    public function criar($arquivo = null) {
 
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->usuario)
-            &&isset($this->request->data->nome)
-            &&isset($this->request->data->sobrenome)
-            &&isset($this->request->data->senha)))
+        if(!(isset($this->request->data->arquivo)
+            &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
         try {
-            $this->professorService->post(
-                    $id,
-                    $this->request->data->nome,
-                    $this->request->data->sobrenome,
-                    $this->request->data->usuario,
-                    $this->request->data->senha,
-                    $this->request->data->ativo
+            $this->comprovanteService->post( 
+                    $arquivo,
+                    $this->request->data->atividade
                     );
-            $criada = $this->professorService->search($this->request->data->usuario);
+            $criada = $this->comprovanteService->search($this->request->data->arquivo);
 
             return new Response(Response::CREATED, array(
-                'uri' => 'professor/' . $criada->getId()
+                'uri' => 'comprovante/' . $criada->getId()
                 ));
 
         } catch (Radiopet\Dao\Exception $e) {
@@ -78,17 +68,17 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function atualizar($idOuUsuario = null) {
+    public function atualizar($id = null) {
 
-        if(is_null($idOuUsuario))
+        if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->campo)
-            && isset($this->request->data->modificacao)))
+            &&isset($this->request->data->modificacao)))
             return new Response(Response::BADREQUEST);
         try {
-            $this->professorService->update(
-                    $idOuUsuario, 
-                    $this->request->data->campo, 
+            $this->comprovanteService->update(
+                    $id, 
+                    $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
@@ -113,7 +103,7 @@ class ProfessorResource extends Resource {
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         try {
-            $this->professorService->delete($id);
+            $this->comprovanteService->delete($id);
 
             return new Response(Response::OK);
 

@@ -27,11 +27,10 @@ class AtividadeService{
 	}
 
 	public function get($input){
+		if(is_numeric($input))
 			return $this->dao->get($input);
-	}
-
-	public function read($input){
-		return $this->dao->read($input);
+		else
+			return $this->dao->read($input);
 	}
 	
 	public function post($tipo, $descricao, $datainicio, $datafim, $professor){
@@ -39,11 +38,8 @@ class AtividadeService{
 		unset($this->obj);
 	}
 
-	public function search($input,$choose=1){
-		if($choose==1)
-			return self::read($input);
-		else
-			return self::get($input);
+	public function search($input){
+		return self::get($input);
 	}
 /*
 	public function searchAll(){

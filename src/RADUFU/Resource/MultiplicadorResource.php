@@ -1,22 +1,22 @@
 <?php
 namespace RADUFU\Resource;
 
-use RADUFU\Service\ProfessorService,
+use RADUFU\Service\MultiplicadorService,
     Tonic\Resource,
     Tonic\Response;
 
 require_once(__DIR__."/../Autoloader.php");
 
 /**
- * @uri /professor
- * @uri /professor/:id
+ * @uri /Service
+ * @uri /multiplicador/:id
  */
-class ProfessorResource extends Resource {
+class MultiplicadorResource extends Resource {
 
-    private $professorService = null;
+    private $multiplicadorService = null;
 
     public function __construct(){
-        $this->professorService = new ProfessorService();
+        $this->multiplicadorService = new MultiplicadorService();
     }
 
     /**
@@ -28,7 +28,7 @@ class ProfessorResource extends Resource {
      */
     public function buscar($id = null) {
         try {
-            return new Response( Response::OK, $this->professorService->search($id) );
+            return new Response( Response::OK, $this->multiplicadorService->search($id) );
 
         } catch (src\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
@@ -41,30 +41,24 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function criar($id = null) {
+    public function criar($nome = null) {
 
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->usuario)
-            &&isset($this->request->data->nome)
-            &&isset($this->request->data->sobrenome)
-            &&isset($this->request->data->senha)))
+        if(!( isset($this->request->data->nome)
+            &&isset($this->request->data->valor)
+            &&isset($this->request->data->limite)
+            &&isset($this->request->data->tipo) ))
             return new Response(Response::BADREQUEST);
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
         try {
-            $this->professorService->post(
-                    $id,
-                    $this->request->data->nome,
-                    $this->request->data->sobrenome,
-                    $this->request->data->usuario,
-                    $this->request->data->senha,
-                    $this->request->data->ativo
+            $this->multiplicadorService->post( 
+                    $nome,
+                    $this->request->data->valor,
+                    $this->request->data->limite,
+                    $this->request->data->tipo
                     );
-            $criada = $this->professorService->search($this->request->data->usuario);
+            $criada = $this->multiplicadorService->search($this->request->data->nome);
 
             return new Response(Response::CREATED, array(
-                'uri' => 'professor/' . $criada->getId()
+                'uri' => 'multiplicador/' . $criada->getId()
                 ));
 
         } catch (Radiopet\Dao\Exception $e) {
@@ -78,17 +72,17 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function atualizar($idOuUsuario = null) {
+    public function atualizar($id = null) {
 
-        if(is_null($idOuUsuario))
+        if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->campo)
-            && isset($this->request->data->modificacao)))
+        if(!( isset($this->request->data->campo)
+            &&isset($this->request->data->modificacao) ))
             return new Response(Response::BADREQUEST);
         try {
-            $this->professorService->update(
-                    $idOuUsuario, 
-                    $this->request->data->campo, 
+            $this->multiplicadorService->update(
+                    $id, 
+                    $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
@@ -113,7 +107,7 @@ class ProfessorResource extends Resource {
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         try {
-            $this->professorService->delete($id);
+            $this->multiplicadorService->delete($id);
 
             return new Response(Response::OK);
 
