@@ -5,7 +5,7 @@ use RADUFU\Service\TipoService,
     Tonic\Resource,
     Tonic\Response;
 
-require_once(__DIR__."/../Autoloader.php");
+#require_once(__DIR__."/../Autoloader.php");
 
 /**
  * @uri /Service
