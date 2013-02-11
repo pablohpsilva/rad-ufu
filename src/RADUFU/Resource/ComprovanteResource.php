@@ -4,20 +4,13 @@ namespace RADUFU\Resource;
 use RADUFU\Service\ComprovanteService,
     Tonic\Resource,
     Tonic\Response;
-
-#require_once(__DIR__."/../Autoloader.php");
-
 /**
- * @uri /Service
+ * @uri /comprovante
  * @uri /comprovante/:id
  */
-class Resource extends Resource {
+class ComprovanteResource extends Resource {
 
-    private $Service = null;
-
-    public function __construct(){
-        $this->comprovanteService = new ComprovanteService();
-    }
+    private $comprovanteService = null;
 
     /**
      * @method GET
@@ -28,9 +21,10 @@ class Resource extends Resource {
      */
     public function buscar($id = null) {
         try {
+            $this->comprovanteService = new ComprovanteService();
             return new Response( Response::OK, $this->comprovanteService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -47,6 +41,7 @@ class Resource extends Resource {
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
         try {
+            $this->comprovanteService = new ComprovanteService();
             $aux = $this->comprovanteService->post( 
                     $this->request->data->professor,
                     $arquivo,
@@ -58,7 +53,7 @@ class Resource extends Resource {
                 'uri' => 'comprovante/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -77,17 +72,18 @@ class Resource extends Resource {
             &&isset($this->request->data->modificacao)))
             return new Response(Response::BADREQUEST);
         try {
+            $this->comprovanteService = new ComprovanteService();
             $this->comprovanteService->update(
-                    $id, 
+                    $id,
                     $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -104,11 +100,12 @@ class Resource extends Resource {
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         try {
+            $this->comprovanteService = new ComprovanteService();
             $this->comprovanteService->delete($id);
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

@@ -5,19 +5,13 @@ use RADUFU\Service\CategoriaService,
     Tonic\Resource,
     Tonic\Response;
 
-#require_once(__DIR__."/../Autoloader.php");
-
 /**
- * @uri /CategoriaService
+ * @uri /categoria
  * @uri /categoria/:id
  */
 class CategoriaResource extends Resource {
 
     private $categoriaService = null;
-
-    public function __construct(){
-        $this->categoriaService = new CategoriaService();
-    }
 
     /**
      * @method GET
@@ -27,11 +21,14 @@ class CategoriaResource extends Resource {
      * @return Tonic\Response
      */
     public function buscar($id = null) {
+        if(is_null($id))
+                throw new Tonic\MethodNotAllowedException();
+
         try {
-            //$this->CategoriaService = new CategoriaService();
+            $this->categoriaService = new CategoriaService();
             return new Response( Response::OK, $this->categoriaService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -45,16 +42,17 @@ class CategoriaResource extends Resource {
     public function criar($nome = null) {
         if(!(isset($this->request->data->nome)))
             return new Response(Response::BADREQUEST);
+
         try {
-            //$this->CategoriaService = new CategoriaService();
-            $this->CategoriaService->post( $nome );
-            $criada = $this->CategoriaService->search($this->request->data->nome);
+            $this->categoriaService = new CategoriaService();
+            $this->categoriaService->post( $nome );
+            $criada = $this->categoriaService->search($this->request->data->nome);
 
             return new Response(Response::CREATED, array(
                 'uri' => 'categoria/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -66,22 +64,23 @@ class CategoriaResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
-
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->modificacao)))
             return new Response(Response::BADREQUEST);
+
         try {
-            $this->CategoriaService->update(
-                    $id, 
+            $this->categoriaService = new CategoriaService();
+            $this->categoriaService->update(
+                    $id,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -94,15 +93,16 @@ class CategoriaResource extends Resource {
      * @return Tonic\Response
      */
     public function remover($id = null) {
-
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
+
         try {
-            $this->CategoriaService->delete($id);
+            $this->categoriaService = new CategoriaService();
+            $this->categoriaService->delete($id);
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }

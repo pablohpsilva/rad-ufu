@@ -4,9 +4,6 @@ namespace RADUFU\Resource;
 use RADUFU\Service\ProfessorService,
     Tonic\Resource,
     Tonic\Response;
-
-#require_once(__DIR__."/../Autoloader.php");
-
 /**
  * @uri /professor
  * @uri /professor/:id
@@ -14,10 +11,6 @@ use RADUFU\Service\ProfessorService,
 class ProfessorResource extends Resource {
 
     private $professorService = null;
-
-    public function __construct(){
-        $this->professorService = new ProfessorService();
-    }
 
     /**
      * @method GET
@@ -27,10 +20,14 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function buscar($id = null) {
+        if(is_null($id))
+            throw new Tonic\MethodNotAllowedException();
+
         try {
+            $this->professorService = new ProfessorService();
             return new Response( Response::OK, $this->professorService->search($id) );
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
     }
@@ -42,7 +39,6 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function criar($id = null) {
-
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->usuario)
@@ -50,9 +46,9 @@ class ProfessorResource extends Resource {
             &&isset($this->request->data->sobrenome)
             &&isset($this->request->data->senha)))
             return new Response(Response::BADREQUEST);
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
+
         try {
+            $this->professorService = new ProfessorService();
             $this->professorService->post(
                     $id,
                     $this->request->data->nome,
@@ -67,7 +63,7 @@ class ProfessorResource extends Resource {
                 'uri' => 'professor/' . $criada->getId()
                 ));
 
-        } catch (Radiopet\Dao\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
@@ -79,24 +75,25 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($idOuUsuario = null) {
-
         if(is_null($idOuUsuario))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->campo)
             && isset($this->request->data->modificacao)))
             return new Response(Response::BADREQUEST);
+
         try {
+            $this->professorService = new ProfessorService();
             $this->professorService->update(
-                    $idOuUsuario, 
-                    $this->request->data->campo, 
+                    $idOuUsuario,
+                    $this->request->data->campo,
                     $this->request->data->modificacao
                     );
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (src\DAO\Exception $e) {
+        } catch (RADUFU\DAO\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -109,15 +106,16 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function remover($id = null) {
-
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
+
         try {
+            $this->professorService = new ProfessorService();
             $this->professorService->delete($id);
 
             return new Response(Response::OK);
 
-        } catch (src\DAO\NotFoundException $e) {
+        } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\Exception($e->getMessage());
         }
     }
