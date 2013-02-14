@@ -25,6 +25,14 @@ interface IAtividadeDAO {
     public function get($id);
 
     /**
+     * Recupera o proximo id da Atividade
+     * @param type $id
+     * @return id da Proxima Atividade
+     * @throws DAOException
+     */
+    public function getNextId();
+
+    /**
      * Recupera o Atividade a partir do id
      * @param type $id
      * @return Atividade O Atividade encontrado

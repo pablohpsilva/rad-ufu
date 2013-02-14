@@ -49,7 +49,8 @@ class CategoriaResource extends Resource {
             $criada = $this->categoriaService->search($this->request->data->nome);
 
             return new Response(Response::CREATED, array(
-                'uri' => 'categoria/' . $criada->getId()
+                //'uri' => 'categoria/' . $criada->getId()
+                'uri' => $criada->getId()
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {

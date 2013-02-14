@@ -26,6 +26,10 @@ class AtividadeService{
 		return $this->obj;
 	}
 
+	public function getNextId(){ 
+		return $this->dao->getNextId(); 
+	}
+
 	public function get($input){
 		if(is_numeric($input))
 			return $this->dao->get($input);
@@ -41,15 +45,22 @@ class AtividadeService{
 	public function search($input){
 		return self::get($input);
 	}
-/*
+
 	public function searchAll(){
-		$jsonArray = array();
-		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val->JsonSerialize();
-		}
-		return $jsonArray;
+		return $this->dao->getAll();
 	}
-*/
+
+	public function searchAll($idProfessor){
+		$response = self::searchAll();
+		$vector = array();
+		foreach ($response as $val) {
+			if($val->getProfessor() == $idProfessor)
+				$vector[] = $val;
+		}
+		unset($val,$response)
+		return $vector;
+	}
+
 	public function update($id, $campo, $modificacao){
 		$this->obj = self::get($id);
 		switch (strtolower($campo)) {

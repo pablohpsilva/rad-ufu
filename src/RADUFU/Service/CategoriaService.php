@@ -37,11 +37,7 @@ class CategoriaService{
 	}
 
 	public function searchAll(){
-		$jsonArray = array();
-		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val;
-		}
-		return $jsonArray;
+		return $this->dao->getAll();
 	}
 
 	public function update($id, $input){

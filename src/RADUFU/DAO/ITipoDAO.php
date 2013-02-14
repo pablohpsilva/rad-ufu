@@ -24,6 +24,14 @@ interface ITipoDAO {
     public function get($id);
 
     /**
+     * Recupera o proximo id do Tipo
+     * @param type $id
+     * @return id do Proximo Tipo
+     * @throws DAOException
+     */
+    public function getNextId();
+
+    /**
      * Recupera todas os Tipos
      * @return array tipoes encontradas
      * @throws DAOException

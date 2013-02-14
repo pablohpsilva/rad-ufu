@@ -30,6 +30,25 @@ class ComprovanteResource extends Resource {
     }
 
     /**
+     * @method GET
+     * @provides application/json
+     * @json
+     * @param int $idAtividade
+     * @return Tonic\Response
+     */
+    public function buscarPorAtividade($idAtividade = null) {
+        if(is_null($idAtividade))
+                throw new Tonic\MethodNotAllowedException();
+        try {
+            $this->comprovanteService = new ComprovanteService();
+            return new Response( Response::OK, $this->comprovanteService->searchAll($idAtividade) );
+
+        } catch (RADUFU\DAO\NotFoundException $e) {
+            throw new Tonic\NotFoundException();
+        }
+    }
+
+    /**
      * @method POST
      * @provides application/json
      * @json
@@ -42,7 +61,8 @@ class ComprovanteResource extends Resource {
             return new Response(Response::BADREQUEST);
         try {
             $this->comprovanteService = new ComprovanteService();
-            $aux = $this->comprovanteService->post( 
+            $criado = $this->comprovanteService->getNextId();
+            $this->comprovanteService->post( 
                     $this->request->data->professor,
                     $arquivo,
                     $this->request->data->atividade
@@ -50,7 +70,7 @@ class ComprovanteResource extends Resource {
             $criada = $this->comprovanteService->search($aux);
 
             return new Response(Response::CREATED, array(
-                'uri' => 'comprovante/' . $criada->getId()
+                'uri' => $criado
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {

@@ -21,6 +21,8 @@ class ComprovanteDAO implements IComprovanteDAO{
         comprovante_atividade = :comprovante_atividade
 		WHERE comprovante_id = :comprovante_id;';
 	const SQL_GET = 'SELECT * FROM Comprovante WHERE comprovante_id = :comprovante_id;';
+    const SQL_GET_NEXT_ID = "SELECT NEXTVAL('comprovante_comprovante_id_seq');";
+    const SQL_RESET_NEXT_ID = "SELECT SETVAL('comprovante_comprovante_id_seq', :next_id);";
     const SQL_READ = 'SELECT * FROM Comprovante WHERE comprovante_arquivo = :comprovante_arquivo;';
 	const SQL_READ_ALL = 'SELECT * FROM Comprovante;';
 	const SQL_DELETE = 'DELETE FROM Comprovante WHERE comprovante_id = :comprovante_id;';
@@ -63,6 +65,25 @@ class ComprovanteDAO implements IComprovanteDAO{
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Comprovante por arquivo:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
+
+    public function getNextId(){
+        try{
+            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
+            $stm->execute();
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
+            $next = $result['nextval'];
+
+            $stm = Connection::Instance()->get()->prepare(self::SQL_RESET_NEXT_ID);
+            $aux = $next-1;
+            $stm->bindParam(':next_id', $aux);
+            $stm->execute();
+            unset($aux,$result,$stm);
+            return $next;
+        } catch (PDOException $ex) {
+            throw new Exception("Ao procurar a Atividade por id:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }

@@ -26,6 +26,10 @@ class TipoService{
 		return $this->obj;
 	}
 
+	public function getNextId(){ 
+		return $this->dao->getNextId(); 
+	}
+
 	public function get($input){
 		return $this->dao->get($input);
 	}
@@ -40,11 +44,7 @@ class TipoService{
 	}
 
 	public function searchAll(){
-		$jsonArray = array();
-		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val;
-		}
-		return $jsonArray;
+		return $this->dao->getAll();
 	}
 
 	public function update($id, $campo, $modificacao){

@@ -31,6 +31,8 @@ class AtividadeDAO implements IAtividadeDAO{
 		atividade_professor = :atividade_professor
 		WHERE atividade_id = :atividade_id;';
 	const SQL_GET = 'SELECT * FROM Atividade WHERE atividade_id = :atividade_id;';
+    const SQL_GET_NEXT_ID = "SELECT NEXTVAL('atividade_atividade_id_seq');";
+    const SQL_RESET_NEXT_ID = "SELECT SETVAL('atividade_atividade_id_seq', :next_id);";
     const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor;';
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
@@ -77,6 +79,25 @@ class AtividadeDAO implements IAtividadeDAO{
 
             throw new NotFoundException();
 
+        } catch (PDOException $ex) {
+            throw new Exception("Ao procurar a Atividade por id:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
+
+    public function getNextId(){
+        try{
+            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
+            $stm->execute();
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
+            $next = $result['nextval'];
+
+            $stm = Connection::Instance()->get()->prepare(self::SQL_RESET_NEXT_ID);
+            $aux = $next-1;
+            $stm->bindParam(':next_id', $aux);
+            $stm->execute();
+            unset($aux,$result,$stm);
+            return $next;
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar a Atividade por id:\t"
                 . $ex->getMessage(), 0, $ex);

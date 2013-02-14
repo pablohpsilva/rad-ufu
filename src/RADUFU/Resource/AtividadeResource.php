@@ -36,6 +36,25 @@ class AtividadeResource extends Resource {
      * @method GET
      * @provides application/json
      * @json
+     * @param int $idProfessor
+     * @return Tonic\Response
+     */
+    public function buscarPorProfessor($idProfessor = null) {
+        if(is_null($idProfessor))
+                throw new Tonic\MethodNotAllowedException();
+        try {
+            $this->comprovanteService = new ComprovanteService();
+            return new Response( Response::OK, $this->comprovanteService->searchAll($idProfessor) );
+
+        } catch (RADUFU\DAO\NotFoundException $e) {
+            throw new Tonic\NotFoundException();
+        }
+    }
+
+    /**
+     * @method GET
+     * @provides application/json
+     * @json
      * @param int $id
      * @return Tonic\Response
      */
@@ -74,6 +93,8 @@ class AtividadeResource extends Resource {
 
         try {
             $this->atividadeService = new AtividadeService();
+            $criado = $this->atividadeService->getNextId();
+
             $this->atividadeService->post(
                     $this->request->data->tipo,
                     $$this->request->data->descricao,
@@ -83,7 +104,7 @@ class AtividadeResource extends Resource {
                     );
 
             return new Response(Response::CREATED, array(
-                'uri' => 'atividade/' . "CREATED"//$criada->getId()
+                'uri' => $criado
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {

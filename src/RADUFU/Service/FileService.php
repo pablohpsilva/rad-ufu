@@ -1,6 +1,8 @@
 <?php
 namespace RADUFU\Service;
 
+use RADUFU\DAO\Exception;
+
 class FileService{
 	private function __construct(){ }
 
@@ -24,15 +26,20 @@ class FileService{
 		if (!is_dir($destino)){ mkdir($destino); }
 		$destino = $destino."/".$arquivo['name'];
 
-		if (move_uploaded_file($arquivo['tmp_name'],$destino)) { return $destino; }
-		else { return -1; }
+		$res = move_uploaded_file($arquivo['tmp_name'],$destino);
+
+		if(!$res)
+			throw new Exception("Arquivo nao foi salvo:\t");
+        else
+        	return $res;
 	}
 
 	public static function removeFile($fileName){
-		if(unlink($fileName))
-			return TRUE;
+		$res = unlink($fileName);
+		if(!$res)
+			throw new Exception("Arquivo nao foi apagado:\t");
 		else
-			return FALSE;
+			return $res;
 	}
 
 	public static function moveFile($fileName,$newPath){

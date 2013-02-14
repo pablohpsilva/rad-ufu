@@ -24,6 +24,10 @@ class ComprovanteService{
 		return $this->obj;
 	}
 
+	public function getNextId(){ 
+		return $this->dao->getNextId(); 
+	}
+
 	public function get($input){
 		if(is_numeric($input))
 			return $this->dao->get($input);
@@ -35,8 +39,7 @@ class ComprovanteService{
 		$file = FileService::createFile($professor,$atividade,$arquivo);
 		if($file != -1){
 			$this->dao->post(self::createObject($file, $atividade));
-			unset($this->obj);
-			return $file;
+			unset($this->obj,$file);
 		}
 	}
 
@@ -45,11 +48,18 @@ class ComprovanteService{
 	}
 
 	public function searchAll(){
-		$jsonArray = array();
-		foreach ($this->dao->getAll() as $val) {
-			$jsonArray[] = $val;
+		return $this->dao->getAll();
+	}
+
+	public function searchAll($idAtividade){
+		$response = self::searchAll();
+		$vector = array();
+		foreach ($response as $val) {
+			if($val->getAtividade() == $idAtividade)
+				$vector[] = $val;
 		}
-		return $jsonArray;
+		unset($val,$response)
+		return $vector;
 	}
 
 	public function update($id, $campo, $modificacao){

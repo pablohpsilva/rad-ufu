@@ -48,6 +48,7 @@ class TipoResource extends Resource {
 
         try {
             $this->tipoService = new TipoService();
+            $criado = $this->tipoService->getNextId();
             $this->tipoService->post(
                     $this->request->data->categoria,
                     $descricao,
@@ -55,10 +56,9 @@ class TipoResource extends Resource {
                     $this->request->data->pontuacaoreferencia,
                     $this->request->data->pontuacaolimite
                     );
-            //$criada = $this->tipoService->search($this->request->data->nome);
 
             return new Response(Response::CREATED, array(
-                'uri' => 'tipo/' . "CREATED"//$criada->getId()
+                'uri' => $criado
                 ));
 
         } catch (\Exception $e) {
