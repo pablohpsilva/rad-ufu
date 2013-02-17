@@ -1,20 +1,17 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\postgres\ComprovanteDAO,
+use RADUFU\DAO\Factory,
+	RADUFU\DAO\postgres\ComprovanteDAO,
     RADUFU\Model\Comprovante,
     RADUFU\Service\FileService;
 
-/*
-require_once(__DIR__.'/../DAO/postgres/ComprovanteDAO.php');
-#require_once(__DIR__.'/AtividadeService.php');
-*/
 class ComprovanteService{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new ComprovanteDAO();
+		$this->dao = Factory::getFactory(Factory::PGSQL)->getComprovanteDAO();
 	}
 
 	public function createObject($arquivo, $atividade){
@@ -35,7 +32,7 @@ class ComprovanteService{
 			return $this->dao->read($input);
 	}
 
-	public function post($professor,$arquivo, $atividade){
+	public function post($professor,$atividade,$arquivo){
 		$file = FileService::createFile($professor,$atividade,$arquivo);
 		if($file != -1){
 			$this->dao->post(self::createObject($file, $atividade));
@@ -47,34 +44,30 @@ class ComprovanteService{
 		return self::get($input);
 	}
 
-	public function searchAll(){
-		return $this->dao->getAll();
-	}
-
-	public function searchAll($idAtividade){
-		$response = self::searchAll();
-		$vector = array();
-		foreach ($response as $val) {
-			if($val->getAtividade() == $idAtividade)
-				$vector[] = $val;
+	public function searchAll($idAtividade = null){
+		if(is_null($idAtividade))
+			return $this->dao->getAll();
+		else{
+			$response = self::searchAll();
+			$vector = array();
+			foreach ($response as $val) {
+				if($val->getAtividade() == $idAtividade)
+					$vector[] = $val;
+			}
+			unset($val,$response);
+			return $vector;
 		}
-		unset($val,$response)
-		return $vector;
 	}
 
-	public function update($id, $campo, $modificacao){
+	public function update($id, $arquivo, $atividade){
 		$this->obj = self::get($id);
-		switch (strtolower($campo)) {
-			case 'arquivo':
-				$mod = FileService::moveFile($this->obj->getArquivo(),$modificacao);
-				if($mod!=FALSE)
-					$this->obj->setArquivo($mod);
-				break;
-			
-			default:
-				$this->obj->setAtividade($modificacao);
-				break;
-		}
+		
+		$move = FileService::moveFile($this->obj->getArquivo(),$arquivo);
+		if($move!=FALSE)
+			$this->obj->setArquivo($move);
+
+		$this->obj->setAtividade($atividade);
+
 		$this->dao->update($this->obj);
 		unset($this->obj);
 	}

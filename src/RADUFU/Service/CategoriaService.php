@@ -1,17 +1,16 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\postgres\CategoriaDAO,
+use RADUFU\DAO\Factory,
+	RADUFU\DAO\postgres\CategoriaDAO,
     RADUFU\Model\Categoria;
-/*
-require_once(__DIR__.'/../DAO/postgres/CategoriaDAO.php');
-*/
+
 class CategoriaService{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new CategoriaDAO();
+		$this->dao = Factory::getFactory(Factory::PGSQL)->getCategoriaDAO();
 	}
 
 	public function createObject($input){
@@ -39,10 +38,10 @@ class CategoriaService{
 	public function searchAll(){
 		return $this->dao->getAll();
 	}
-
-	public function update($id, $input){
-		$this->obj = self::get($id);
-		$this->obj->setNome($input);
+	
+	public function update($id, $nome){
+		self::createObject($nome);
+		$this->obj->setId($id);
 		$this->dao->update($this->obj);
 		unset($this->obj);
 	}

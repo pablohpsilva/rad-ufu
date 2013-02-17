@@ -1,25 +1,22 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\postgres\MultiplicadorDAO,
+use RADUFU\DAO\Factory,
+	RADUFU\DAO\postgres\MultiplicadorDAO,
     RADUFU\Model\Multiplicador;
 
-/*
-require_once(__DIR__.'/../DAO/postgres/MultiplicadorDAO.php');
-#require_once(__DIR__.'/TipoService.php');
-*/
 class MultiplicadorService{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new MultiplicadorDAO();
+		$this->dao = Factory::getFactory(Factory::PGSQL)->getMultiplicadorDAO();
 	}
 
 	public function createObject($nome, $valor, $limite, $tipo){
 		$this->obj = new Multiplicador();
 		$this->obj->setNome($nome);
-		$this->obj->setValor($valor);
+		/*$this->obj->setValor($valor);*/
 		$this->obj->setLimite($limite);
 		$this->obj->setTipoAtividade($tipo);
 		return $this->obj;
@@ -33,7 +30,8 @@ class MultiplicadorService{
 	}
 	
 	public function post($nome, $valor, $limite, $tipo){
-		$this->dao->post(self::createObject($nome, $valor, $limite, $tipo));
+		//$this->dao->post(self::createObject($nome, $valor, $limite, $tipo));
+		$this->dao->post(self::createObject($nome, $limite, $tipo));
 		unset($this->obj);
 	}
 
@@ -45,23 +43,9 @@ class MultiplicadorService{
 		return $this->dao->getAll();
 	}
 
-	public function update($id, $campo, $modificacao){
-		$this->obj = self::get($id);
-		switch (strtolower($campo)) {
-			case 'nome':
-				$this->obj->setNome($modificacao);
-				break;
-			case 'valor':
-				$this->obj->setValor($modificacao);
-				break;
-			case 'limite':
-				$this->obj->setLimite($modificacao);
-				break;
-			
-			default:
-				$this->obj->setTipoAtividade($modificacao);
-				break;
-		}
+	public function update($id, $nome, $limite, $tipo){
+		self::createObject($nome, $limite, $tipo);
+		$this->obj->setId($id);
 		$this->dao->update($this->obj);
 		unset($this->obj);
 	}

@@ -1,19 +1,16 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\postgres\TipoDAO,
+use RADUFU\DAO\Factory,
+	RADUFU\DAO\postgres\TipoDAO,
     RADUFU\Model\Tipo;
 
-/*
-require_once(__DIR__.'/../DAO/postgres/TipoDAO.php');
-#require_once(__DIR__.'/CategoriaService.php');
-*/
 class TipoService{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new TipoDAO();
+		$this->dao = Factory::getFactory(Factory::PGSQL)->getTipoDAO();
 	}
 
 	public function createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite){
@@ -43,30 +40,24 @@ class TipoService{
 		return self::get($input);
 	}
 
-	public function searchAll(){
-		return $this->dao->getAll();
+	public function searchAll($idCategoria = null){
+		if(is_null($idCategoria))
+			return $this->dao->getAll();
+		else{
+			$response = self::searchAll();
+			$vector = array();
+			foreach ($response as $val) {
+				if($val->getProfessor() == $idCategoria)
+					$vector[] = $val;
+			}
+			unset($val,$response);
+			return $vector;
+		}
 	}
 
-	public function update($id, $campo, $modificacao){
-		$this->obj = self::get($id);
-		switch (strtolower($campo)) {
-			case 'descricao':
-				$this->obj->setDescricao($modificacao);
-				break;
-			case 'pontuacao':
-				$this->obj->setPontuacao($modificacao);
-				break;
-			case 'pontuacaoreferencia':
-				$this->obj->setPontuacaoReferencia($modificacao);
-				break;
-			case 'pontuacaolimite':
-				$this->obj->setPontuacaoLimite($modificacao);
-				break;
-			
-			default:
-				$this->obj->setCategoria($modificacao);
-				break;
-		}
+	public function update($id, $categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite){
+		self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite);
+		$this->obj->getId($id);
 		$this->dao->update($this->obj);
 		unset($this->obj);
 	}

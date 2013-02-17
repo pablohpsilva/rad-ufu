@@ -1,19 +1,16 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\postgres\ProfessorDAO,
+use RADUFU\DAO\Factory,
+	RADUFU\DAO\postgres\ProfessorDAO,
     RADUFU\Model\Professor;
-
-/*
-require_once(__DIR__.'/../DAO/postgres/ProfessorDAO.php');
-*/
 
 class ProfessorService{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new ProfessorDAO();
+		$this->dao = Factory::getFactory(Factory::PGSQL)->getProfessorDAO();
 	}
 
 	public function createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo = TRUE){
@@ -47,23 +44,8 @@ class ProfessorService{
 		return $this->dao->getAll();
 	}
 
-	public function update($idUsuario, $campo, $modificacao){
-		$this->obj = self::search($idUsuario);
-		switch (strtolower($campo)) {
-			case 'nome':
-				$this->obj->setNome($modificacao);
-				break;
-			case 'sobrenome':
-				$this->obj->setSobrenome($modificacao);
-				break;
-			case 'senha':
-				$this->obj->setSenha($modificacao);
-				break;
-			
-			default:
-				$this->obj->setAtivo($modificacao);
-				break;
-		}
+	public function update($siape, $nome, $sobrenome, $usuario, $senha, $ativo){
+		self::createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo);
 		$this->dao->update($this->obj);
 		unset($this->object);
 	}

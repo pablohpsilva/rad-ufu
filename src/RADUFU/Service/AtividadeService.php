@@ -1,27 +1,25 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\postgres\AtividadeDAO,
+use RADUFU\DAO\Factory,
+	RADUFU\DAO\postgres\AtividadeDAO,
     RADUFU\Model\Atividade;
-/*    
-require_once(__DIR__.'/../DAO/postgres/AtividadeDAO.php');
-#require_once(__DIR__.'/TipoService.php');
-#require_once(__DIR__.'/ProfessorService.php');
-*/
+
 class AtividadeService{
 	private $dao;
 	private $obj;
 
 	public function __construct(){
-		$this->dao = new AtividadeDAO();
+		$this->dao = Factory::getFactory(Factory::PGSQL)->getAtividadeDAO();
 	}
 
-	public function createObject($tipo, $descricao, $datainicio, $datafim, $professor){
+	public function createObject($tipo, $descricao, $datainicio, $datafim, $valor, $professor){
 		$this->obj = new Atividade();
 		$this->obj->setTipo($tipo);
 		$this->obj->setDescricao($descricao);
 		$this->obj->setDataInicio($datainicio);
 		$this->obj->setDataFim($datafim);
+		$this->obj->setValor($valor);
 		$this->obj->setProfessor($professor);
 		return $this->obj;
 	}
@@ -37,8 +35,8 @@ class AtividadeService{
 			return $this->dao->read($input);
 	}
 	
-	public function post($tipo, $descricao, $datainicio, $datafim, $professor){
-		$this->dao->post(self::createObject($tipo, $descricao, $datainicio, $datafim, $professor));
+	public function post($tipo, $descricao, $datainicio, $datafim, $valor, $professor){
+		$this->dao->post(self::createObject($tipo, $descricao, $datainicio, $datafim, $valor, $professor));
 		unset($this->obj);
 	}
 
@@ -46,41 +44,24 @@ class AtividadeService{
 		return self::get($input);
 	}
 
-	public function searchAll(){
-		return $this->dao->getAll();
+	public function searchAll($idProfessor = null){
+		if(is_null($idProfessor))
+			return $this->dao->getAll();
+		else{
+			$response = self::searchAll();
+			$vector = array();
+			foreach ($response as $val) {
+				if($val->getProfessor() == $idProfessor)
+					$vector[] = $val;
+			}
+			unset($val,$response);
+			return $vector;
+		}
 	}
 
-	public function searchAll($idProfessor){
-		$response = self::searchAll();
-		$vector = array();
-		foreach ($response as $val) {
-			if($val->getProfessor() == $idProfessor)
-				$vector[] = $val;
-		}
-		unset($val,$response)
-		return $vector;
-	}
-
-	public function update($id, $campo, $modificacao){
-		$this->obj = self::get($id);
-		switch (strtolower($campo)) {
-			case 'tipo':
-				$this->obj->setTipo($modificacao);
-				break;
-			case 'descricao':
-				$this->obj->setDescricao($modificacao);
-				break;
-			case 'datainicio':
-				$this->obj->setDataInicio($modificacao);
-				break;
-			case 'datafim':
-				$this->obj->setDataFim($modificacao);
-				break;
-			
-			default:
-				$this->obj->setProfessor($modificacao);
-				break;
-		}
+	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valor, $professor){
+		self::createObject($tipo, $descricao, $datainicio, $datafim, $valor, $professor);
+		$this->obj->setId($id);
 		$this->dao->update($this->obj);
 		unset($this->obj);
 	}
