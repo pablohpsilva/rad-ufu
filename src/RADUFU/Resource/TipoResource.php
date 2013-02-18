@@ -73,18 +73,25 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
+        //$id, $categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->campo)
-            &&isset($this->request->data->modificacao)))
+        if(!(isset($this->request->data->categoria)
+            &&isset($this->request->data->descricao)
+            &&isset($this->request->data->pontuacao)
+            &&isset($this->request->data->pontuacaoreferencia)
+            &&isset($this->request->data->pontuacaolimite)))
             return new Response(Response::BADREQUEST);
 
         try {
             $this->tipoService = new TipoService();
             $this->tipoService->update(
                     $id,
-                    $this->request->data->campo,
-                    $this->request->data->modificacao
+                    $this->request->data->categoria,
+                    $this->request->data->descricao,
+                    $this->request->data->pontuacao,
+                    $this->request->data->pontuacaoreferencia,
+                    $this->request->data->pontuacaolimite
                     );
 
             return new Response(Response::OK);

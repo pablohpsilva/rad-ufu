@@ -22,8 +22,7 @@ class Comprovante implements JsonSerializable{
 	public function JsonSerialize() {
         return [
             'uri' => 'comprovante/' . $this->getId(),
-            'arquivo' => $this->getArquivo(),
-            'atividade' => $this->getAtividade(),
+            'arquivo' => $this->getArquivo()
         ];
     }
 }

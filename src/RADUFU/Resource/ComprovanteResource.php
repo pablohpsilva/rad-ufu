@@ -36,7 +36,6 @@ class ComprovanteResource extends Resource {
      * @return Tonic\Response
      */
     public function criar($arquivo = null) {
-
         if(!(isset($this->request->data->arquivo)
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
@@ -66,18 +65,19 @@ class ComprovanteResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
-
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->campo)
-            &&isset($this->request->data->modificacao)))
+        if(!(isset($this->request->data->professor)
+            &&isset($this->request->data->atividade)
+            &&isset($this->request->data->arquivo)))
             return new Response(Response::BADREQUEST);
         try {
             $this->comprovanteService = new ComprovanteService();
             $this->comprovanteService->update(
                     $id,
-                    $this->request->data->campo,
-                    $this->request->data->modificacao
+                    $this->request->data->professor,
+                    $this->request->data->arquivo,
+                    $this->request->data->atividade
                     );
 
             return new Response(Response::OK);

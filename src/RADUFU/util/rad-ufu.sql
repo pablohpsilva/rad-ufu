@@ -33,7 +33,7 @@ CREATE TABLE tipo(
 CREATE TABLE multiplicador(
 	multiplicador_id 		SERIAL NOT NULL,
 	multiplicador_nome 		VARCHAR (30),
-	multiplicador_valor 		SMALLINT,
+	--multiplicador_valor 		SMALLINT,
 	multiplicador_limite		SMALLINT,
 	multiplicador_tipo_atividade    INTEGER NOT NULL,
 	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id),
@@ -47,6 +47,8 @@ CREATE TABLE atividade(
 	atividade_descricao 	VARCHAR(255) NOT NULL,
 	atividade_datainicio 	DATE,
 	atividade_datafim 	DATE,
+	--adicionado o valor abaixo;
+	atividade_multiplicador_valor 		SMALLINT,
 	atividade_professor	BIGINT NOT NULL,
 	CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id),
 	CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_id),

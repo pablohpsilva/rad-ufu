@@ -8,12 +8,6 @@ use \PDO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
     
-/*
-require_once(__DIR__ . '/../IAtividadeDAO.php');
-require_once(__DIR__.'/../Connection.php');
-require_once(__DIR__.'/../Exception.php');
-require_once(__DIR__.'/../NotFoundException.php');
-*/
 class AtividadeDAO implements IAtividadeDAO{
 	const SQL_POST = 'INSERT INTO Atividade VALUES(
 		DEFAULT,
@@ -21,6 +15,8 @@ class AtividadeDAO implements IAtividadeDAO{
 		:atividade_descricao, 
 		:atividade_datainicio,
 		:atividade_datafim,
+        /*modificado o campo abaixo*/
+        :atividade_multiplicador_valor,
 		:atividade_professor
 		);';
 	const SQL_UPDATE = 'UPDATE Atividade SET 
@@ -28,6 +24,8 @@ class AtividadeDAO implements IAtividadeDAO{
 		atividade_descricao = :atividade_descricao, 
 		atividade_datainicio = :atividade_datainicio,
 		atividade_datafim = :atividade_datafim,
+        /*modificado o campo abaixo*/
+        atividade_multiplicador_valor = :atividade_multiplicador_valor,
 		atividade_professor = :atividade_professor
 		WHERE atividade_id = :atividade_id;';
 	const SQL_GET = 'SELECT * FROM Atividade WHERE atividade_id = :atividade_id;';
@@ -46,6 +44,8 @@ class AtividadeDAO implements IAtividadeDAO{
                 ':atividade_descricao' =>$ativ->getDescricao(),
                 ':atividade_datainicio' =>$ativ->getDataInicio(),
                 ':atividade_datafim' =>$ativ->getDataFim(),
+                /*modificado o campo abaixo*/
+                ':atividade_multiplicador_valor' =>$ativ->getValor(),
                 ':atividade_professor' =>$ativ->getProfessor()
             ));
 
@@ -72,6 +72,8 @@ class AtividadeDAO implements IAtividadeDAO{
                 $ativ->setDescricao($result['atividade_descricao']);
                 $ativ->setDataInicio($result['atividade_datainicio']);
                 $ativ->setDataFim($result['atividade_datafim']);
+                /*modificado o campo abaixo*/
+                $ativ->setValor($result['atividade_multiplicador_valor']);
                 $ativ->setProfessor($result['atividade_professor']);
 
                 return $ativ;
@@ -117,6 +119,8 @@ class AtividadeDAO implements IAtividadeDAO{
                 $a->setDescricao($row['atividade_descricao']);
                 $a->setDataInicio($row['atividade_datainicio']);
                 $a->setDataFim($row['atividade_datafim']);
+                /*modificado o campo abaixo*/
+                $a->setValor($result['atividade_multiplicador_valor']);
                 $a->setProfessor($row['atividade_professor']);
 
                 $ativ[] = $a;
@@ -147,6 +151,8 @@ class AtividadeDAO implements IAtividadeDAO{
                 $a->setDescricao($row['atividade_descricao']);
                 $a->setDataInicio($row['atividade_datainicio']);
                 $a->setDataFim($row['atividade_datafim']);
+                /*modificado o campo abaixo*/
+                $a->setValor($result['atividade_multiplicador_valor']);
                 $a->setProfessor($row['atividade_professor']);
 
                 $ativ[] = $a;
@@ -174,6 +180,8 @@ class AtividadeDAO implements IAtividadeDAO{
                 ':atividade_descricao' =>$ativ->getDescricao(),
                 ':atividade_datainicio' =>$ativ->getDataInicio(),
                 ':atividade_datafim' =>$ativ->getDataFim(),
+                /*modificado o campo abaixo*/
+                ':atividade_multiplicador_valor' =>$ativ->getValor(),
                 ':atividade_professor' =>$ativ->getProfessor()
                 ));
 

@@ -8,12 +8,6 @@ use \PDO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
 
-/*
-    require_once(__DIR__.'/../ITipoDAO.php');
-    require_once(__DIR__.'/../Connection.php');
-    require_once(__DIR__.'/../Exception.php');
-    require_once(__DIR__.'/../NotFoundException.php');
-*/
 class TipoDAO implements ITipoDAO{
 
     const SQL_POST = 'INSERT INTO Tipo VALUES(

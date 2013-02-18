@@ -43,7 +43,8 @@ class AtividadeResource extends Resource {
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->descricao)
             &&isset($this->request->data->datainicio)
-            &&isset($this->request->data->datafim)))
+            &&isset($this->request->data->datafim)
+            &&isset($this->request->data->valor)))
             return new Response(Response::BADREQUEST);
 
         try {
@@ -55,6 +56,7 @@ class AtividadeResource extends Resource {
                     $$this->request->data->descricao,
                     $this->request->data->datainicio,
                     $this->request->data->datafim,
+                    $this->request->data->valor,
                     $professor
                     );
 
@@ -74,18 +76,27 @@ class AtividadeResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
+        //$tipo, $descricao, $datainicio, $datafim, $valor, $professor
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->campo)
-            &&isset($this->request->data->modificacao)))
+        if(!(isset($this->request->data->tipo)
+            &&isset($this->request->data->descricao)
+            &&isset($this->request->data->datainicio)
+            &&isset($this->request->data->datafim)
+            &&isset($this->request->data->valor)
+            &&isset($this->request->data->professor)))
             return new Response(Response::BADREQUEST);
 
         try {
             $this->atividadeService = new AtividadeService();
             $this->atividadeService->update(
                     $id,
-                    $this->request->data->campo,
-                    $this->request->data->modificacao
+                    $this->request->data->tipo,
+                    $this->request->data->descricao,
+                    $this->request->data->datainicio,
+                    $this->request->data->datafim,
+                    $this->request->data->valor,
+                    $this->request->data->professor
                     );
 
             return new Response(Response::OK);

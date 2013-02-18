@@ -8,12 +8,6 @@ use \PDO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
 
-/*
-    require_once(__DIR__ . '/../IComprovanteDAO.php');
-    require_once(__DIR__.'/../Connection.php');
-    require_once(__DIR__.'/../Exception.php');
-    require_once(__DIR__.'/../NotFoundException.php');
-*/
 class ComprovanteDAO implements IComprovanteDAO{
 	const SQL_POST = 'INSERT INTO Comprovante VALUES(DEFAULT,:comprovante_arquivo,:comprovante_atividade);';
 	const SQL_UPDATE = 'UPDATE Comprovante SET
@@ -33,7 +27,7 @@ class ComprovanteDAO implements IComprovanteDAO{
 
             $res = $stm->execute(array(
                 ':comprovante_arquivo' => $comp->getArquivo(),
-                ':comprovante_atividade' => $comp->getAtividade()
+                ':comprovante_arquivo' => $comp->getAtividade()
             ));
 
             if(!$res)
@@ -120,7 +114,7 @@ class ComprovanteDAO implements IComprovanteDAO{
             $comp = array();
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
                 $c = new Comprovante();
-                $c->setId($result['comprovante_id']);
+                $c->setId($row['comprovante_id']);
                 $c->setArquivo($row['comprovante_arquivo']);
                 $c->setAtividade($row['comprovante_atividade']);
 
@@ -146,7 +140,7 @@ class ComprovanteDAO implements IComprovanteDAO{
             $stm->execute(array(
                 ':comprovante_id' => $comp->getId(),
                 ':comprovante_arquivo' => $comp->getArquivo(),
-                ':comprovante_atividade' => $comp->getAtividade()
+                ':comprovante_arquivo' => $comp->getAtividade()
                 ));
 
             if (!$stm->rowCount() > 0)

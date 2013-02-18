@@ -40,7 +40,7 @@ class MultiplicadorResource extends Resource {
      */
     public function criar($nome = null) {
         if(!( isset($this->request->data->nome)
-            &&isset($this->request->data->valor)
+            /*&&isset($this->request->data->valor)*/
             &&isset($this->request->data->limite)
             &&isset($this->request->data->tipo) ))
             return new Response(Response::BADREQUEST);
@@ -49,7 +49,7 @@ class MultiplicadorResource extends Resource {
             $this->multiplicadorService = new MultiplicadorService();
             $this->multiplicadorService->post(
                     $nome,
-                    $this->request->data->valor,
+                    /*$this->request->data->valor,*/
                     $this->request->data->limite,
                     $this->request->data->tipo
                     );
@@ -73,16 +73,18 @@ class MultiplicadorResource extends Resource {
     public function atualizar($id = null) {
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!( isset($this->request->data->campo)
-            &&isset($this->request->data->modificacao) ))
+        if(!( isset($this->request->data->nome)
+            &&isset($this->request->data->limite)
+            &&isset($this->request->data->tipo)))
             return new Response(Response::BADREQUEST);
 
         try {
             $this->multiplicadorService = new MultiplicadorService();
             $this->multiplicadorService->update(
                     $id,
-                    $this->request->data->campo,
-                    $this->request->data->modificacao
+                    $this->request->data->nome,
+                    $this->request->data->limite,
+                    $this->request->data->tipo
                     );
 
             return new Response(Response::OK);

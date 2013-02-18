@@ -8,25 +8,19 @@ use \PDO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
 
-/*
-require_once(__DIR__.'/../IMultiplicadorDAO.php');
-require_once(__DIR__.'/../Connection.php');
-require_once(__DIR__.'/../Exception.php');
-require_once(__DIR__.'/../NotFoundException.php');
-*/
 class MultiplicadorDAO implements IMultiplicadorDAO{
 
     const SQL_POST = 'INSERT INTO Multiplicador VALUES(
              DEFAULT,
             :multiplicador_nome,
-            :multiplicador_valor,
+            /*:multiplicador_valor,*/
             :multiplicador_limite,
             :multiplicador_tipo_atividade
             );';
 
     const SQL_UPDATE = 'UPDATE Multiplicador SET 
             multiplicador_nome =:multiplicador_nome, 
-            multiplicador_valor = :multiplicador_valor, 
+            /*multiplicador_valor = :multiplicador_valor, */
             multiplicador_limite = :multiplicador_limite, 
             multiplicador_tipo_atividade = :multiplicador_tipo_atividade 
             WHERE multiplicador_id = :multiplicador_id;';
@@ -42,7 +36,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
 
             $res = $stm->execute(array(
                 ':multiplicador_nome' => $mult->getNome(),
-                ':multiplicador_valor' => $mult->getValor(),
+                /*':multiplicador_valor' => $mult->getValor(),*/
                 ':multiplicador_limite' => $mult->getLimite(),
                 ':multiplicador_tipo_atividade' => $mult->getTipoAtividade()
             ));
@@ -67,7 +61,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
                 $mult = new Multiplicador();
                 $mult->setId($result['multiplicador_id']);
                 $mult->setNome($result['multiplicador_nome']);
-                $mult->setValor($result['multiplicador_valor']);
+                /*$mult->setValor($result['multiplicador_valor']);*/
                 $mult->setlimite($result['multiplicador_limite']);
                 $mult->setTipoAtividade($result['multiplicador_tipo_atividade']);
 
@@ -93,7 +87,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
                 $mult = new Multiplicador();
                 $mult->setId($result['multiplicador_id']);
                 $mult->setNome($result['multiplicador_nome']);
-                $mult->setValor($result['multiplicador_valor']);
+                /*$mult->setValor($result['multiplicador_valor']);*/
                 $mult->setlimite($result['multiplicador_limite']);
                 $mult->setTipoAtividade($result['multiplicador_tipo_atividade']);
 
@@ -118,7 +112,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
                 $m = new Multiplicador();
                 $m->setId($row['multiplicador_id']);
                 $m->setNome($row['multiplicador_nome']);
-                $m->setValor($row['multiplicador_valor']);
+                /*$m->setValor($row['multiplicador_valor']);*/
                 $m->setlimite($row['multiplicador_limite']);
                 $m->setTipoAtividade($row['multiplicador_tipo_atividade']);
 
@@ -144,7 +138,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
             $stm->execute(array(
                 ':multiplicador_id' => $mult->getId(),
                 ':multiplicador_nome' => $mult->getNome(),
-                ':multiplicador_valor' => $mult->getValor(),
+                /*':multiplicador_valor' => $mult->getValor(),*/
                 ':multiplicador_limite' => $mult->getLimite(),
                 ':multiplicador_tipo_atividade' => $mult->getTipoAtividade()
                 ));

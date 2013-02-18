@@ -8,12 +8,6 @@ use \PDO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
     
-/*
-    require_once(__DIR__ . '/../ICategoriaDAO.php');
-    require_once(__DIR__.'/../Connection.php');
-    require_once(__DIR__.'/../Exception.php');
-    require_once(__DIR__.'/../NotFoundException.php');
-*/
 class CategoriaDAO implements ICategoriaDAO{
 
     const SQL_POST = 'INSERT INTO Categoria VALUES(DEFAULT, :categoria_nome);';

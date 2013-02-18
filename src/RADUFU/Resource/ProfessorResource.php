@@ -74,19 +74,25 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function atualizar($idOuUsuario = null) {
-        if(is_null($idOuUsuario))
+    public function atualizar($id = null) {
+        if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->campo)
-            && isset($this->request->data->modificacao)))
+        if(!(isset($this->request->data->nome)
+            && isset($this->request->data->sobrenome)
+            && isset($this->request->data->usuario)
+            && isset($this->request->data->senha)
+            && isset($this->request->data->ativo)))
             return new Response(Response::BADREQUEST);
 
         try {
             $this->professorService = new ProfessorService();
             $this->professorService->update(
-                    $idOuUsuario,
-                    $this->request->data->campo,
-                    $this->request->data->modificacao
+                    $id,
+                    $this->request->data->nome,
+                    $this->request->data->sobrenome,
+                    $this->request->data->usuario,
+                    $this->request->data->senha,
+                    $this->request->data->ativo
                     );
 
             return new Response(Response::OK);

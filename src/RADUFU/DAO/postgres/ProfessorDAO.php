@@ -8,14 +8,6 @@ use \PDO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
 
-
-/*
-    require_once(__DIR__.'/../../model/Professor.php');
-    require_once(__DIR__.'/../IProfessorDAO.php');
-    require_once(__DIR__.'/../Connection.php');
-    require_once(__DIR__.'/../Exception.php');
-    require_once(__DIR__.'/../NotFoundException.php');
-*/
 class ProfessorDAO implements IProfessorDAO{
 
     const SQL_POST = 'INSERT INTO Professor VALUES(
