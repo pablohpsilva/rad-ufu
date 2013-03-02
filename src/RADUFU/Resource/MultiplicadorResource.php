@@ -20,15 +20,16 @@ class MultiplicadorResource extends Resource {
      * @return Tonic\Response
      */
     public function buscar($id = null) {
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-
         try {
             $this->multiplicadorService = new MultiplicadorService();
-            return new Response( Response::OK, $this->multiplicadorService->search($id) );
 
-        } catch (RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
+            if(is_null($id))
+                return new Response( Response::OK, $this->multiplicadorService->searchAll());
+            else
+                return new Response( Response::OK, $this->multiplicadorService->search($id) );
+
+        } catch (\RADUFU\DAO\NotFoundException $e) {
+            throw new \Tonic\NotFoundException();
         }
     }
 
@@ -38,29 +39,24 @@ class MultiplicadorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function criar($nome = null) {
-        if(!( isset($this->request->data->nome)
-            /*&&isset($this->request->data->valor)*/
-            &&isset($this->request->data->limite)
-            &&isset($this->request->data->tipo) ))
+    public function criar($id = null) {
+        if(!(isset($this->request->data->nome)))
             return new Response(Response::BADREQUEST);
+
+        if(!is_null($id))
+            throw new \Tonic\MethodNotAllowedException();
 
         try {
             $this->multiplicadorService = new MultiplicadorService();
-            $this->multiplicadorService->post(
-                    $nome,
-                    /*$this->request->data->valor,*/
-                    $this->request->data->limite,
-                    $this->request->data->tipo
-                    );
+            $this->multiplicadorService->post($this->request->data->nome);
             $criada = $this->multiplicadorService->search($this->request->data->nome);
 
             return new Response(Response::CREATED, array(
-                'uri' => 'multiplicador/' . $criada->getId()
+                'id' => $criada->getId()
                 ));
 
-        } catch (RADUFU\DAO\Dao\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
+        } catch (\RADUFU\DAO\Exception $e) {
+            throw new \Tonic\Exception();
         }
     }
 
@@ -72,27 +68,22 @@ class MultiplicadorResource extends Resource {
      */
     public function atualizar($id = null) {
         if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        if(!( isset($this->request->data->nome)
-            &&isset($this->request->data->limite)
-            &&isset($this->request->data->tipo)))
+            throw new \Tonic\MethodNotAllowedException();
+
+        if(!(isset($this->request->data->nome)))
             return new Response(Response::BADREQUEST);
 
         try {
             $this->multiplicadorService = new MultiplicadorService();
             $this->multiplicadorService->update(
                     $id,
-                    $this->request->data->nome,
-                    $this->request->data->limite,
-                    $this->request->data->tipo
+                    $this->request->data->nome
                     );
 
             return new Response(Response::OK);
 
-        } catch (RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
-        } catch (RADUFU\DAO\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
+        } catch (\RADUFU\DAO\Exception $e) {
+            throw new \Tonic\Exception();
         }
 
     }
@@ -105,16 +96,16 @@ class MultiplicadorResource extends Resource {
      */
     public function remover($id = null) {
         if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        
+            throw new \Tonic\MethodNotAllowedException();
+
         try {
             $this->multiplicadorService = new MultiplicadorService();
             $this->multiplicadorService->delete($id);
 
             return new Response(Response::OK);
 
-        } catch (RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\Exception($e->getMessage());
+        } catch (\RADUFU\DAO\Exception $e) {
+            throw new \Tonic\Exception();
         }
     }
 
