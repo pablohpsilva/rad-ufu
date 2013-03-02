@@ -22,7 +22,7 @@ class Atividade implements JsonSerializable{
     public function getDataFim(){return $this->datafim;}
     public function getValorMult(){ return $this->valorMult;}
     //public function getProfessor(){return $this->professor;}
-    public function getComprovante(){ return $this->comprovante }
+    public function getComprovante(){ return $this->comprovante; }
 
     /*SETTERS*/
     public function setId($input){$this->id = $input;}
