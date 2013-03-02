@@ -21,6 +21,7 @@ class LimparBanco{
 	CREATE TABLE categoria(
 	categoria_id	SERIAL NOT NULL,
 	categoria_nome 	VARCHAR(30),
+	UNIQUE(categoria_nome),
 	CONSTRAINT const_categoria_primary PRIMARY KEY(categoria_id)
 	);
 	";
