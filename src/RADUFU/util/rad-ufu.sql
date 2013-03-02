@@ -1,14 +1,15 @@
 CREATE DATABASE RADUFU;
 
+ALTER DATABASE RADUFU SET datestyle TO "ISO, DMY";
+
 DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;
 
 CREATE TABLE professor(
-	professor_id		INTEGER NOT NULL,
+	professor_id		SERIAL NOT NULL,
 	professor_nome 		VARCHAR(60) NOT NULL,
 	professor_siape		VARCHAR(30) NOT NULL,
-	professor_login		VARCHAR(15) NOT NULL,
 	professor_senha		VARCHAR(40) NOT NULL,
-	UNIQUE(professor_login),
+	UNIQUE(professor_siape),
 	CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
 );
 
@@ -21,28 +22,26 @@ CREATE TABLE categoria(
 CREATE TABLE tipo(
 	tipo_id 			SERIAL NOT NULL,
 	tipo_categoria 			INTEGER NOT NULL,
-	tipo_descricao 			VARCHAR(255) NOT NULL,
+	tipo_descricao 			VARCHAR(750) NOT NULL,
 	tipo_pontuacao 			SMALLINT,
 	tipo_pontuacaoreferencia	SMALLINT,
 	tipo_pontuacaolimite 		SMALLINT,
+	tipo_multiplicador			INTEGER NOT NULL,
 	CONSTRAINT const_tipo_primary PRIMARY KEY(tipo_id),
-	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id)
+	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id),
+	CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador(multiplicador_id)
 );
 
 CREATE TABLE multiplicador(
 	multiplicador_id 		SERIAL NOT NULL,
 	multiplicador_nome 		VARCHAR (30),
-	multiplicador_valor 	FLOAT(8),
-	multiplicador_tipo_atividade    INTEGER NOT NULL,
-	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id),
-	CONSTRAINT const_multiplicador_foreign FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_id)
-	ON UPDATE CASCADE ON DELETE CASCADE
+	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
 );
 
 CREATE TABLE atividade(
 	atividade_id		SERIAL NOT NULL,
 	atividade_tipo		INTEGER NOT NULL,
-	atividade_descricao 	VARCHAR(255) NOT NULL,
+	atividade_descricao 	VARCHAR(500) NOT NULL,
 	atividade_datainicio 	DATE,
 	atividade_datafim 	DATE,
 	atividade_multiplicador_valor 		FLOAT(8),

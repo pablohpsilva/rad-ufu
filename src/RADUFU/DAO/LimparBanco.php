@@ -3,17 +3,17 @@ namespace RADUFU\DAO;
 
 use \PDO;
 
-require_once(__DIR__ . '/Connection.php');
+require_once (__DIR__ . '/../Autoloader.php');
 
 class LimparBanco{
+
 	const prof = "
 	CREATE TABLE professor(
-	professor_id		INTEGER NOT NULL,
+	professor_id		SERIAL NOT NULL,
 	professor_nome 		VARCHAR(60) NOT NULL,
 	professor_siape		VARCHAR(30) NOT NULL,
-	professor_login		VARCHAR(15) NOT NULL,
 	professor_senha		VARCHAR(40) NOT NULL,
-	UNIQUE(professor_login),
+	UNIQUE(professor_siape),
 	CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
 	);
 	";
@@ -24,32 +24,33 @@ class LimparBanco{
 	CONSTRAINT const_categoria_primary PRIMARY KEY(categoria_id)
 	);
 	";
+	const mult = "
+	CREATE TABLE multiplicador(
+	multiplicador_id 		SERIAL NOT NULL,
+	multiplicador_nome 		VARCHAR (30),
+	multiplicador_valor 	FLOAT(8),
+	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
+	);
+	";
 	const tipo = "
+	CREATE TABLE tipo(
 	tipo_id 			SERIAL NOT NULL,
 	tipo_categoria 			INTEGER NOT NULL,
-	tipo_descricao 			VARCHAR(255) NOT NULL,
+	tipo_descricao 			VARCHAR(750) NOT NULL,
 	tipo_pontuacao 			SMALLINT,
 	tipo_pontuacaoreferencia	SMALLINT,
 	tipo_pontuacaolimite 		SMALLINT,
+	tipo_multiplicador			INTEGER NOT NULL,
 	CONSTRAINT const_tipo_primary PRIMARY KEY(tipo_id),
-	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id)
-	);
-	";
-	const mult = "
-	multiplicador_id 		SERIAL NOT NULL,
-	multiplicador_nome 		VARCHAR (30),
-	multiplicador_limite		FLOAT(8),
-	multiplicador_valor 	FLOAT(8),
-	multiplicador_tipo_atividade    INTEGER NOT NULL,
-	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id),
-	CONSTRAINT const_multiplicador_foreign FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_id)
-	ON UPDATE CASCADE ON DELETE CASCADE
+	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id),
+	CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador(multiplicador_id)
 	);
 	";
 	const ativ = "
+	CREATE TABLE atividade(
 	atividade_id		SERIAL NOT NULL,
 	atividade_tipo		INTEGER NOT NULL,
-	atividade_descricao 	VARCHAR(255) NOT NULL,
+	atividade_descricao 	VARCHAR(500) NOT NULL,
 	atividade_datainicio 	DATE,
 	atividade_datafim 	DATE,
 	atividade_multiplicador_valor 		FLOAT(8),
@@ -60,6 +61,7 @@ class LimparBanco{
 	);
 	";
 	const comp = "
+	CREATE TABLE comprovante(
 	comprovante_id 			SERIAL NOT NULL,
 	comprovante_arquivo 	VARCHAR(500),
 	comprovante_atividade 	INTEGER NOT NULL,
@@ -79,20 +81,31 @@ class LimparBanco{
 
 		$stm = Connection::Instance()->get()->prepare(self::del);
 		$stm->execute();
-		
+		echo $stm->errorInfo()[2];
+
+		$stm = Connection::Instance()->get()->prepare(self::mult);
+		$stm->execute();
+		echo $stm->errorInfo()[2];
 
 		$stm = Connection::Instance()->get()->prepare(self::prof);
 		$stm->execute();
+		echo $stm->errorInfo()[2];
+
 		$stm = Connection::Instance()->get()->prepare(self::cate);
 		$stm->execute();
+		echo $stm->errorInfo()[2];
+
 		$stm = Connection::Instance()->get()->prepare(self::tipo);
 		$stm->execute();
-		$stm = Connection::Instance()->get()->prepare(self::mult);
-		$stm->execute();
+		echo $stm->errorInfo()[2];
+
 		$stm = Connection::Instance()->get()->prepare(self::ativ);
 		$stm->execute();
+		echo  $stm->errorInfo()[2];
+
 		$stm = Connection::Instance()->get()->prepare(self::comp);
 		$stm->execute();
+		echo $stm->errorInfo()[2];
 
 		echo "LimparBanco says: Feito! Banco novinho em folha. Aproveite! <br/><br/><br/>";
 	}
