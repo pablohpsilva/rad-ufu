@@ -15,19 +15,19 @@ class ComprovanteDAO implements IComprovanteDAO{
         comprovante_atividade = :comprovante_atividade
 		WHERE comprovante_id = :comprovante_id;';
 	const SQL_GET = 'SELECT * FROM Comprovante WHERE comprovante_id = :comprovante_id;';
+    const SQL_GET_ALL = 'SELECT * FROM Comprovante;';
     const SQL_GET_NEXT_ID = "SELECT NEXTVAL('comprovante_comprovante_id_seq');";
     const SQL_RESET_NEXT_ID = "SELECT SETVAL('comprovante_comprovante_id_seq', :next_id);";
-    const SQL_READ = 'SELECT * FROM Comprovante WHERE comprovante_arquivo = :comprovante_arquivo;';
-	const SQL_READ_ALL = 'SELECT * FROM Comprovante;';
+    const SQL_READ = 'SELECT * FROM Comprovante WHERE comprovante_atividade = :comprovante_atividade;';
 	const SQL_DELETE = 'DELETE FROM Comprovante WHERE comprovante_id = :comprovante_id;';
 
-	public function post(Comprovante $comp){
+	public function post(Comprovante $comp, $idAtividade){
 		try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
                 ':comprovante_arquivo' => $comp->getArquivo(),
-                ':comprovante_arquivo' => $comp->getAtividade()
+                ':comprovante_atividade' => $idAtividade
             ));
 
             if(!$res)
@@ -50,7 +50,6 @@ class ComprovanteDAO implements IComprovanteDAO{
                 $comp = new Comprovante();
                 $comp->setId($result['comprovante_id']);
                 $comp->setArquivo($result['comprovante_arquivo']);
-                $comp->setAtividade($result['comprovante_atividade']);
 
                 return $comp;
             }
@@ -60,6 +59,50 @@ class ComprovanteDAO implements IComprovanteDAO{
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Comprovante por arquivo:\t"
                 . $ex->getMessage(), 0, $ex);
+        }
+    }
+
+    public function getAllTemplate($stm){
+        $stm->execute();
+
+        $comp = array();
+        while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+            $c = new Comprovante();
+            $c->setId($row['comprovante_id']);
+            $c->setArquivo($row['comprovante_arquivo']);
+
+            $comp[] = $c;
+        }
+        unset($c);
+
+        if (empty($comp))
+            throw new NotFoundException();
+        else
+            return $comp;
+    }
+
+    public function read($idAtividade){
+    	try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
+            $stm->bindParam(':comprovante_atividade', $idAtividade);
+
+            return getAllTemplate($stm);
+
+        } catch (PDOException $ex) {
+            throw new Exception("Ao procurar o Comprovante por arquivo:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
+
+    public function getAll(){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_ALL);
+            
+            return getAllTemplate($stm);
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos os Comprovantes:\t'
+                . $ex->getMessage());
         }
     }
 
@@ -74,73 +117,25 @@ class ComprovanteDAO implements IComprovanteDAO{
             $aux = $next-1;
             $stm->bindParam(':next_id', $aux);
             $stm->execute();
+
             unset($aux,$result,$stm);
+            
             return $next;
+
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar a Atividade por id:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }
 
-    public function read($arquivo){
-    	try {
-            $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
-            $stm->bindParam(':comprovante_arquivo', $arquivo);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $comp = new Comprovante();
-                $comp->setId($result['comprovante_id']);
-                $comp->setArquivo($result['comprovante_arquivo']);
-                $comp->setAtividade($result['comprovante_atividade']);
-
-                return $comp;
-            }
-
-            throw new NotFoundException();
-
-        } catch (PDOException $ex) {
-            throw new Exception("Ao procurar o Comprovante por arquivo:\t"
-                . $ex->getMessage(), 0, $ex);
-        }
-    }
-
-    public function getAll(){
-        try {
-            $stm = Connection::Instance()->get()->prepare(self::SQL_READ_ALL);
-            $stm->execute();
-
-            $comp = array();
-            while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-                $c = new Comprovante();
-                $c->setId($row['comprovante_id']);
-                $c->setArquivo($row['comprovante_arquivo']);
-                $c->setAtividade($row['comprovante_atividade']);
-
-                $comp[] = $c;
-            }
-            unset($c);
-
-            if (empty($comp))
-                throw new NotFoundException();
-            else
-                return $comp;
-
-        } catch (PDOException $ex) {
-            throw new Exception('Erro ao listar todos os Comprovantes:\t'
-                . $ex->getMessage());
-        }
-    }
-
-    public function update(Comprovante $comp){
+    public function update(Comprovante $comp, $idAtividade){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
                 ':comprovante_id' => $comp->getId(),
                 ':comprovante_arquivo' => $comp->getArquivo(),
-                ':comprovante_arquivo' => $comp->getAtividade()
+                ':comprovante_atividade' => $idAtividade
                 ));
 
             if (!$stm->rowCount() > 0)

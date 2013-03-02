@@ -7,23 +7,30 @@ use \JsonSerializable;
 class Comprovante implements JsonSerializable{
 	private $id;
 	private $arquivo;
-	private $nome;
 
 	/* GETTERS */
 	public function getId(){ return $this->id; }
 	public function getArquivo(){ return $this->arquivo; }
-	public function getNome(){ return $this->nome; }
 
 	/* SETTERS */
 	public function setId($input){ $this->id = $input; }
 	public function setArquivo($input){ $this->arquivo = $input; }
-	public function setNome($input){ $this->nome = $input; }
+
+	public function separaNome(){
+		$aux = explode("/",$this->getArquivo());
+		return array_pop($aux);
+	}
+
+	public function separaArquivo(){
+		$aux = self::separaNome();
+		return explode($aux,$this->getArquivo())[0];
+	}
 
 	public function JsonSerialize() {
         return [
             'id' => $this->getId(),
-            'nome' => $this->getNome(),
-            'arquivo' => $this->getArquivo()
+            'nome' => $this->separaNome(),
+            'arquivo' => $this->separaArquivo()
         ];
     }
 }
