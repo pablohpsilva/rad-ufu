@@ -36,6 +36,7 @@ CREATE TABLE tipo(
 CREATE TABLE multiplicador(
 	multiplicador_id 		SERIAL NOT NULL,
 	multiplicador_nome 		VARCHAR (30),
+	UNIQUE(multiplicador_nome),
 	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
 );
 
