@@ -12,17 +12,11 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
 
     const SQL_POST = 'INSERT INTO Multiplicador VALUES(
              DEFAULT,
-            :multiplicador_nome,
-            /*:multiplicador_valor,*/
-            :multiplicador_limite,
-            :multiplicador_tipo_atividade
+            :multiplicador_nome
             );';
 
     const SQL_UPDATE = 'UPDATE Multiplicador SET 
-            multiplicador_nome =:multiplicador_nome, 
-            /*multiplicador_valor = :multiplicador_valor, */
-            multiplicador_limite = :multiplicador_limite, 
-            multiplicador_tipo_atividade = :multiplicador_tipo_atividade 
+            multiplicador_nome =:multiplicador_nome
             WHERE multiplicador_id = :multiplicador_id;';
 
     const SQL_GET = 'SELECT * FROM Multiplicador WHERE multiplicador_id = :multiplicador_id;';
@@ -36,8 +30,6 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
 
             $res = $stm->execute(array(
                 ':multiplicador_nome' => $mult->getNome(),
-                /*':multiplicador_valor' => $mult->getValor(),*/
-                ':multiplicador_limite' => $mult->getLimite(),
                 ':multiplicador_tipo_atividade' => $mult->getTipoAtividade()
             ));
 
@@ -50,25 +42,27 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
         }
     }
 
+    private function getAllTemplate($stm){
+        $stm->execute();
+        $result = $stm->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $mult = new Multiplicador();
+            $mult->setId($result['multiplicador_id']);
+            $mult->setNome($result['multiplicador_nome']);
+
+            return $mult;
+        }
+
+        throw new NotFoundException();
+    }
+
     public function get($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':multiplicador_id', $id);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $mult = new Multiplicador();
-                $mult->setId($result['multiplicador_id']);
-                $mult->setNome($result['multiplicador_nome']);
-                /*$mult->setValor($result['multiplicador_valor']);*/
-                $mult->setlimite($result['multiplicador_limite']);
-                $mult->setTipoAtividade($result['multiplicador_tipo_atividade']);
-
-                return $mult;
-            }
-
-            throw new NotFoundException();
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Multiplicador por id:\t"
@@ -80,21 +74,8 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
             $stm->bindParam(':multiplicador_nome', $nome);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $mult = new Multiplicador();
-                $mult->setId($result['multiplicador_id']);
-                $mult->setNome($result['multiplicador_nome']);
-                /*$mult->setValor($result['multiplicador_valor']);*/
-                $mult->setlimite($result['multiplicador_limite']);
-                $mult->setTipoAtividade($result['multiplicador_tipo_atividade']);
-
-                return $mult;
-            }
-
-            throw new NotFoundException();
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Multiplicador por nome:\t"
@@ -112,9 +93,6 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
                 $m = new Multiplicador();
                 $m->setId($row['multiplicador_id']);
                 $m->setNome($row['multiplicador_nome']);
-                /*$m->setValor($row['multiplicador_valor']);*/
-                $m->setlimite($row['multiplicador_limite']);
-                $m->setTipoAtividade($row['multiplicador_tipo_atividade']);
 
                 $mult[] = $m;
             }
@@ -137,10 +115,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
 
             $stm->execute(array(
                 ':multiplicador_id' => $mult->getId(),
-                ':multiplicador_nome' => $mult->getNome(),
-                /*':multiplicador_valor' => $mult->getValor(),*/
-                ':multiplicador_limite' => $mult->getLimite(),
-                ':multiplicador_tipo_atividade' => $mult->getTipoAtividade()
+                ':multiplicador_nome' => $mult->getNome()
                 ));
 
             if (!$stm->rowCount() > 0)

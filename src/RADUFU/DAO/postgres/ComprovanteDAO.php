@@ -127,7 +127,7 @@ class ComprovanteDAO implements IComprovanteDAO{
                 . $ex->getMessage(), 0, $ex);
         }
     }
-
+    
     public function update(Comprovante $comp, $idAtividade){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);

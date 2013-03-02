@@ -11,25 +11,24 @@ use \PDO,
 class ProfessorDAO implements IProfessorDAO{
 
     const SQL_POST = 'INSERT INTO Professor VALUES(
-            :professor_id,
-             DEFAULT,
+            DEFAULT,
             :professor_nome,
-            :professor_sobrenome,
-            :professor_usuario,
+            :professor_siape,
             :professor_senha
             );';
 
     const SQL_UPDATE = 'UPDATE Professor SET 
-            professor_ativo =:professor_ativo, 
+            professor_siape =:professor_siape, 
             professor_nome = :professor_nome, 
-            professor_sobrenome = :professor_sobrenome, 
             professor_senha = :professor_senha 
             WHERE professor_id = :professor_id;';
 
     const SQL_GET = 'SELECT * FROM Professor WHERE professor_id = :professor_id;';
-    const SQL_READ = 'SELECT * FROM Professor WHERE professor_usuario = :professor_usuario;';
+    const SQL_READ = 'SELECT * FROM Professor WHERE professor_siape = :professor_siape;';
     const SQL_READ_ALL = 'SELECT * FROM Professor;';
     const SQL_DELETE = 'DELETE FROM Professor WHERE professor_id = :professor_id;';
+
+    private $atividadeDAO;
 
     public function post(Professor $prof){
         try {
@@ -38,8 +37,7 @@ class ProfessorDAO implements IProfessorDAO{
             $res = $stm->execute(array(
                 ':professor_id' =>$prof->getId(),
                 ':professor_nome' =>$prof->getNome(),
-                ':professor_sobrenome' =>$prof->getSobrenome(),
-                ':professor_usuario' =>$prof->getUsuario(),
+                ':professor_siape' =>$prof->getUsuario(),
                 ':professor_senha' =>$prof->getSenha()
             ));
 
@@ -52,26 +50,36 @@ class ProfessorDAO implements IProfessorDAO{
         }
     }
 
+    private function getAllTemplate($stm){
+        $stm->execute();
+        $result = $stm->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $prof = new Professor();
+            $prof->setId($result['professor_id']);
+            $prof->setNome($result['professor_nome']);
+            $prof->setUsuario($result['professor_siape']);
+            $prof->setSenha($result['professor_senha']);
+
+            $atividadeDAO = new AtividadeDAO();
+            foreach ($atividadeDAO->read($id) as $val) {
+                $prof->addAtividade($val);
+            }
+
+            unset($atividadeDAO,$val);
+
+            return $prof;
+        }
+
+        throw new NotFoundException();
+    }
+
     public function get($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':professor_id', $id);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $prof = new Professor();
-                $prof->setId($result['professor_id']);
-                $prof->setAtivo($result['professor_ativo']);
-                $prof->setNome($result['professor_nome']);
-                $prof->setSobrenome($result['professor_sobrenome']);
-                $prof->setUsuario($result['professor_usuario']);
-                $prof->setSenha($result['professor_senha']);
-
-                return $prof;
-            }
-
-            throw new NotFoundException();
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Professor por id:\t"
@@ -82,23 +90,9 @@ class ProfessorDAO implements IProfessorDAO{
     public function read($usuario){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
-            $stm->bindParam(':professor_usuario', $usuario);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $prof = new Professor();
-                $prof->setId($result['professor_id']);
-                $prof->setAtivo($result['professor_ativo']);
-                $prof->setNome($result['professor_nome']);
-                $prof->setSobrenome($result['professor_sobrenome']);
-                $prof->setUsuario($result['professor_usuario']);
-                $prof->setSenha($result['professor_senha']);
-
-                return $prof;
-            }
-
-            throw new NotFoundException();
+            $stm->bindParam(':professor_siape', $usuario);
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Professor por usuario:\t"
@@ -115,14 +109,19 @@ class ProfessorDAO implements IProfessorDAO{
             while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
                 $p = new Professor();
                 $p->setId($row['professor_id']);
-                $p->setAtivo($row['professor_ativo']);
                 $p->setNome($row['professor_nome']);
-                $p->setSobrenome($row['professor_sobrenome']);
-                $p->setUsuario($row['professor_usuario']);
+                $p->setUsuario($row['professor_siape']);
                 $p->setSenha($row['professor_senha']);
+
+                $atividadeDAO = new AtividadeDAO();
+                foreach ($atividadeDAO->read($id) as $val) {
+                    $prof->addAtividade($val);
+                }
 
                 $prof[] = $p;
             }
+
+            unset($atividadeDAO,$val,$p);
 
             if (empty($prof))
                 throw new NotFoundException();
@@ -140,10 +139,7 @@ class ProfessorDAO implements IProfessorDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
-                ':professor_id' =>$prof->getId(),
-                ':professor_ativo' =>$prof->getAtivo(),
                 ':professor_nome' =>$prof->getNome(),
-                ':professor_sobrenome' =>$prof->getSobrenome(),
                 ':professor_senha' =>$prof->getSenha()
                 ));
 

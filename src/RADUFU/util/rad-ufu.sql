@@ -3,7 +3,7 @@ CREATE DATABASE RADUFU;
 DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;
 
 CREATE TABLE professor(
-	professor_id		INTEGER NOT NULL,
+	professor_id		SERIAL NOT NULL,
 	professor_nome 		VARCHAR(60) NOT NULL,
 	professor_siape		VARCHAR(30) NOT NULL,
 	professor_login		VARCHAR(15) NOT NULL,

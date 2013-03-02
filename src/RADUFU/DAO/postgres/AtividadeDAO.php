@@ -15,7 +15,6 @@ class AtividadeDAO implements IAtividadeDAO{
 		:atividade_descricao, 
 		:atividade_datainicio,
 		:atividade_datafim,
-        /*modificado o campo abaixo*/
         :atividade_multiplicador_valor,
 		:atividade_professor
 		);';
@@ -24,7 +23,6 @@ class AtividadeDAO implements IAtividadeDAO{
 		atividade_descricao = :atividade_descricao, 
 		atividade_datainicio = :atividade_datainicio,
 		atividade_datafim = :atividade_datafim,
-        /*modificado o campo abaixo*/
         atividade_multiplicador_valor = :atividade_multiplicador_valor,
 		atividade_professor = :atividade_professor
 		WHERE atividade_id = :atividade_id;';
@@ -35,18 +33,19 @@ class AtividadeDAO implements IAtividadeDAO{
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
 
-	public function post(Atividade $ativ){
+    private $comprovanteDAO;
+
+	public function post(Atividade $ativ, $idProfessor){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
-                ':atividade_tipo' =>$ativ->getTipo(),
-                ':atividade_descricao' =>$ativ->getDescricao(),
-                ':atividade_datainicio' =>$ativ->getDataInicio(),
-                ':atividade_datafim' =>$ativ->getDataFim(),
-                /*modificado o campo abaixo*/
-                ':atividade_multiplicador_valor' =>$ativ->getValor(),
-                ':atividade_professor' =>$ativ->getProfessor()
+                ':atividade_tipo' => $ativ->getTipo(),
+                ':atividade_descricao' => $ativ->getDescricao(),
+                ':atividade_datainicio' => $ativ->getDataInicio(),
+                ':atividade_datafim' => $ativ->getDataFim(),
+                ':atividade_multiplicador_valor' => $ativ->getMultValor(),
+                ':atividade_professor' => $idProfessor
             ));
 
             if(!$res)
@@ -72,9 +71,12 @@ class AtividadeDAO implements IAtividadeDAO{
                 $ativ->setDescricao($result['atividade_descricao']);
                 $ativ->setDataInicio($result['atividade_datainicio']);
                 $ativ->setDataFim($result['atividade_datafim']);
-                /*modificado o campo abaixo*/
-                $ativ->setValor($result['atividade_multiplicador_valor']);
-                $ativ->setProfessor($result['atividade_professor']);
+                $ativ->setMultValor($result['atividade_multiplicador_valor']);
+                $comprovanteDAO = new ComprovanteDAO();
+                foreach ($comprovanteDAO->read($id) as $val) {
+                        $ativ->addComprovante($val);
+                }
+                unset($comprovanteDAO,$val);
 
                 return $ativ;
             }
@@ -106,31 +108,40 @@ class AtividadeDAO implements IAtividadeDAO{
         }
     }
 
+    private function getAllTemplate($stm){
+        $stm->execute();
+
+        $ativ = array();
+        while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+            $a = new Atividade();
+            $a->setId($row['atividade_id']);
+            $a->setTipo($row['atividade_tipo']);
+            $a->setDescricao($row['atividade_descricao']);
+            $a->setDataInicio($row['atividade_datainicio']);
+            $a->setDataFim($row['atividade_datafim']);
+            $a->setMultValor($result['atividade_multiplicador_valor']);
+
+            $comprovanteDAO = new ComprovanteDAO();
+            foreach ($comprovanteDAO->read($a->getId()) as $val) {
+                    $ativ->addComprovante($val);
+            }
+
+            $ativ[] = $a;
+        }
+        unset($a,$comprovanteDAO,$val);
+
+        if (empty($ativ))
+            throw new NotFoundException();
+        else
+            return $ativ;
+    }
+
     public function read($idProfessor){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
-            $stm->execute(array(':atividade_professor'=>$idProfessor));
+            $stm->bindParam(':atividade_professor' => $idProfessor);
 
-            $ativ = array();
-            while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-                $a = new Atividade();
-                $a->setId($row['atividade_id']);
-                $a->setTipo($row['atividade_tipo']);
-                $a->setDescricao($row['atividade_descricao']);
-                $a->setDataInicio($row['atividade_datainicio']);
-                $a->setDataFim($row['atividade_datafim']);
-                /*modificado o campo abaixo*/
-                $a->setValor($result['atividade_multiplicador_valor']);
-                $a->setProfessor($row['atividade_professor']);
-
-                $ativ[] = $a;
-            }
-            unset($a);
-
-            if (empty($ativ))
-                throw new NotFoundException();
-            else
-                return $ativ;
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos as Atividade:\t'
@@ -141,28 +152,8 @@ class AtividadeDAO implements IAtividadeDAO{
     public function getAll(){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET_ALL);
-            $stm->execute();
-
-            $ativ = array();
-            while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-                $a = new Atividade();
-                $a->setId($row['atividade_id']);
-                $a->setTipo($row['atividade_tipo']);
-                $a->setDescricao($row['atividade_descricao']);
-                $a->setDataInicio($row['atividade_datainicio']);
-                $a->setDataFim($row['atividade_datafim']);
-                /*modificado o campo abaixo*/
-                $a->setValor($result['atividade_multiplicador_valor']);
-                $a->setProfessor($row['atividade_professor']);
-
-                $ativ[] = $a;
-            }
-            unset($a);
-
-            if (empty($ativ))
-                throw new NotFoundException();
-            else
-                return $ativ;
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos as Atividade:\t'
@@ -170,7 +161,7 @@ class AtividadeDAO implements IAtividadeDAO{
         }
     }
 
-    public function update(Atividade $ativ){
+    public function update(Atividade $ativ, $idProfessor){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
@@ -180,9 +171,8 @@ class AtividadeDAO implements IAtividadeDAO{
                 ':atividade_descricao' =>$ativ->getDescricao(),
                 ':atividade_datainicio' =>$ativ->getDataInicio(),
                 ':atividade_datafim' =>$ativ->getDataFim(),
-                /*modificado o campo abaixo*/
-                ':atividade_multiplicador_valor' =>$ativ->getValor(),
-                ':atividade_professor' =>$ativ->getProfessor()
+                ':atividade_multiplicador_valor' =>$ativ->getMultValor(),
+                ':atividade_professor' => $idProfessor
                 ));
 
             if (!$stm->rowCount() > 0)

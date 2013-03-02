@@ -45,7 +45,7 @@ class Tipo implements JsonSerializable{
             'pontuacao' => $this->getPontuacao(),
             'limitePontos' => $this->getPontuacaoLimite(),
             'pontuacaoRef' => $this->getPontuacaoReferencia(),
-            'multiplicador' => $this->getMultiplicador()
+            'multiplicador' => $this->getMultiplicador()['atuais']
         ];
     }
 

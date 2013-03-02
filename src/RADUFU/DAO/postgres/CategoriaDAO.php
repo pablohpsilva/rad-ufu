@@ -21,7 +21,6 @@ class CategoriaDAO implements ICategoriaDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
             $res = $stm->execute(array(
-                    #':categoria_id' => $cat->getId(),
                     ':categoria_nome' => $cat->getNome()
                 ));
 
@@ -34,21 +33,26 @@ class CategoriaDAO implements ICategoriaDAO{
         }
     }
 
+    private function getAllTemplate($stm){
+        $stm->execute();
+        $result = $stm->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $cat = new Categoria();
+            $cat->setId($result['categoria_id']);
+            $cat->setNome($result['categoria_nome']);
+            return $cat;
+        }
+
+        throw new NotFoundException();
+    }
+
     public function get($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':categoria_id', $id);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $cat = new Categoria();
-                $cat->setId($result['categoria_id']);
-                $cat->setNome($result['categoria_nome']);
-                return $cat;
-            }
-
-            throw new NotFoundException();
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Categoria por id:\t"
@@ -60,17 +64,8 @@ class CategoriaDAO implements ICategoriaDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
             $stm->bindParam(':categoria_nome', $nome);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                $cat = new Categoria();
-                $cat->setId($result['categoria_id']);
-                $cat->setNome($result['categoria_nome']);
-                return $cat;
-            }
-
-            throw new NotFoundException();
+            
+            return getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Categoria por nome:\t"

@@ -12,7 +12,7 @@ class Atividade implements JsonSerializable{
     private $datainicio;
     private $datafim;
     private $valorMult;
-    private $comprovante = array();
+    private $comprovante;
 
     public function __construct(){
         $this->comprovante = new LazyDelCollection();
@@ -43,7 +43,7 @@ class Atividade implements JsonSerializable{
             'descricao' => $this->getDescricao(),
             'datainicio' => $this->getDataInicio(),
             'datafim' => $this->getDataFim(),
-            'comprovantes' => $this->getComprovante(),
+            'comprovantes' => $this->getComprovante()['atuais'],
             'tipo' => $this->getTipo(),
             'valorMult' => $this->getValorMult()
         ];

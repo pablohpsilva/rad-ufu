@@ -41,7 +41,7 @@ class Professor implements JsonSerializable{
             'login' => $this->getUsuario(),
             'senha' => $this->getSenha(),
             'siape' => $this->getSiape(),
-            'atividades' => $this->getAtividade()
+            'atividades' => $this->getAtividade()['atuais']
         ];
     }
 
