@@ -3,13 +3,12 @@ CREATE DATABASE RADUFU;
 DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;
 
 CREATE TABLE professor(
-	professor_id		BIGINT NOT NULL,
-	professor_ativo		BOOLEAN DEFAULT TRUE, -- false para inativo. true para ativo.
-	professor_nome 		VARCHAR(30) NOT NULL,
-	professor_sobrenome	VARCHAR(30) NOT NULL,
-	professor_usuario	VARCHAR(15) NOT NULL,
+	professor_id		INTEGER NOT NULL,
+	professor_nome 		VARCHAR(60) NOT NULL,
+	professor_siape		VARCHAR(30) NOT NULL,
+	professor_login		VARCHAR(15) NOT NULL,
 	professor_senha		VARCHAR(40) NOT NULL,
-	UNIQUE(professor_usuario),
+	UNIQUE(professor_login),
 	CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
 );
 
@@ -33,8 +32,7 @@ CREATE TABLE tipo(
 CREATE TABLE multiplicador(
 	multiplicador_id 		SERIAL NOT NULL,
 	multiplicador_nome 		VARCHAR (30),
-	--multiplicador_valor 		SMALLINT,
-	multiplicador_limite		SMALLINT,
+	multiplicador_valor 	FLOAT(8),
 	multiplicador_tipo_atividade    INTEGER NOT NULL,
 	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id),
 	CONSTRAINT const_multiplicador_foreign FOREIGN KEY (multiplicador_tipo_atividade) REFERENCES tipo(tipo_id)
@@ -47,9 +45,8 @@ CREATE TABLE atividade(
 	atividade_descricao 	VARCHAR(255) NOT NULL,
 	atividade_datainicio 	DATE,
 	atividade_datafim 	DATE,
-	--adicionado o valor abaixo;
-	atividade_multiplicador_valor 		SMALLINT,
-	atividade_professor	BIGINT NOT NULL,
+	atividade_multiplicador_valor 		FLOAT(8),
+	atividade_professor	INTEGER NOT NULL,
 	CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id),
 	CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_id),
 	CONSTRAINT const_atividade_foreign2 FOREIGN KEY (atividade_professor) REFERENCES professor(professor_id)
@@ -57,7 +54,7 @@ CREATE TABLE atividade(
 
 CREATE TABLE comprovante(
 	comprovante_id 			SERIAL NOT NULL,
-	comprovante_arquivo 	VARCHAR(300),
+	comprovante_arquivo 	VARCHAR(500),
 	comprovante_atividade 	INTEGER NOT NULL,
 	CONSTRAINT const_comprovante_primary PRIMARY KEY(comprovante_id),
 	CONSTRAINT const_comprovante_foreign FOREIGN KEY(comprovante_atividade) REFERENCES atividade(atividade_id)
