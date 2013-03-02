@@ -24,7 +24,7 @@ CREATE TABLE tipo(
 	tipo_id 			SERIAL NOT NULL,
 	tipo_categoria 			INTEGER NOT NULL,
 	tipo_descricao 			VARCHAR(750) NOT NULL,
-	tipo_pontuacao 			SMALLINT,
+	tipo_pontuacao 			SMALLINT NOT NULL,
 	tipo_pontuacaoreferencia	SMALLINT,
 	tipo_pontuacaolimite 		SMALLINT,
 	tipo_multiplicador			INTEGER NOT NULL,
