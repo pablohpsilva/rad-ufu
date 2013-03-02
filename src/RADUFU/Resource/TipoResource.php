@@ -20,12 +20,14 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function buscar($id = null) {
-        if(is_null($id))
-                throw new Tonic\MethodNotAllowedException();
-
         try {
+
             $this->tipoService = new TipoService();
-            return new Response( Response::OK, $this->tipoService->search($id) );
+
+            if(is_null($id))
+                return new Response( Response::OK, $this->tipoService->searchAll() );
+            else
+                return new Response( Response::OK, $this->tipoService->search($id) );
 
         } catch (\RADUFU\DAO\NotFoundException $e) {
             throw new \Tonic\NotFoundException();
@@ -38,30 +40,42 @@ class TipoResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function criar($descricao = null) {
+    public function criar($id = null) {
+        $pontuacaoRef = null;
+        $pontuacaoLim = null;
+
         if(!(isset($this->request->data->descricao)
             &&isset($this->request->data->categoria)
             &&isset($this->request->data->pontuacao)
-            &&isset($this->request->data->pontuacaoreferencia)
-            &&isset($this->request->data->pontuacaolimite)))
+            &&isset($this->request->data->multiplicador)))
             return new Response(Response::BADREQUEST);
+
+        if(!is_null($id))
+            throw new \Tonic\MethodNotAllowedException();
 
         try {
             $this->tipoService = new TipoService();
             $criado = $this->tipoService->getNextId();
+
+            if (isset($this->request->data->pontuacaoReferencia))
+                $pontuacaoRef = $this->request->data->pontuacaoReferencia;
+            if (isset($this->request->data->pontuacaolimite))
+                $pontuacaoLim = $this->request->data->pontuacaolimite;
+
             $this->tipoService->post(
                     $this->request->data->categoria,
-                    $descricao,
+                    $this->request->data->descricao,
                     $this->request->data->pontuacao,
-                    $this->request->data->pontuacaoreferencia,
-                    $this->request->data->pontuacaolimite
+                    $pontuacaoRef,
+                    $pontuacaoLim,
+                    $this->request->data->multiplicador
                     );
 
             return new Response(Response::CREATED, array(
-                'uri' => $criado
+                'id' => $criado
                 ));
 
-        } catch (\Exception $e) {
+        } catch (\RADUFU\DAO\Exception $e) {
             throw new \Tonic\Exception($e->getMessage());
         }
     }
@@ -97,7 +111,7 @@ class TipoResource extends Resource {
             return new Response(Response::OK);
 
         } catch (\RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
+            throw new \Tonic\NotFoundException();
         } catch (\Exception $e) {
             throw new \Tonic\Exception($e->getMessage());
         }
@@ -112,8 +126,8 @@ class TipoResource extends Resource {
      */
     public function remover($id = null) {
         if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        
+            throw new \Tonic\MethodNotAllowedException();
+
         try {
             $this->tipoService = new TipoService();
             $this->tipoService->delete($id);
