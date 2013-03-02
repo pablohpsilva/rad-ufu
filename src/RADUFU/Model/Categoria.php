@@ -17,7 +17,7 @@ class Categoria implements JsonSerializable{
 
 	public function JsonSerialize() {
         return [
-            'uri' => 'categoria/' . $this->getId(),
+            'id' => $this->getId(),
             'nome' => $this->getNome()
         ];
     }

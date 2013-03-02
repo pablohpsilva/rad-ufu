@@ -7,21 +7,22 @@ use \JsonSerializable;
 class Comprovante implements JsonSerializable{
 	private $id;
 	private $arquivo;
-	private $atividade;
+	private $nome;
 
 	/* GETTERS */
-	public function getId(){ return $this->id;}
-	public function getArquivo(){ return $this->arquivo;}
-	public function getAtividade(){ return $this->atividade;}
+	public function getId(){ return $this->id; }
+	public function getArquivo(){ return $this->arquivo; }
+	public function getNome(){ return $this->nome; }
 
 	/* SETTERS */
-	public function setId($input){$this->id = $input;}
-	public function setArquivo($input){$this->arquivo = $input;}
-	public function setAtividade($input){$this->atividade = $input;}
+	public function setId($input){ $this->id = $input; }
+	public function setArquivo($input){ $this->arquivo = $input; }
+	public function setNome($input){ $this->nome = $input; }
 
 	public function JsonSerialize() {
         return [
-            'uri' => 'comprovante/' . $this->getId(),
+            'id' => $this->getId(),
+            'nome' => $this->getNome(),
             'arquivo' => $this->getArquivo()
         ];
     }

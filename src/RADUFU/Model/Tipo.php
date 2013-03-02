@@ -2,7 +2,8 @@
 
 namespace RADUFU\Model;
 
-use \JsonSerializable;
+use \JsonSerializable,
+	RADUFU\util\LazyDelCollection;
 
 class Tipo implements JsonSerializable{
 	private $id;
@@ -11,6 +12,11 @@ class Tipo implements JsonSerializable{
 	private $pontuacao;
 	private $pontuacaoreferencia;
 	private $pontuacaolimite;
+	private $multiplicador;
+
+	public function __construct(){
+		$multiplicador = new LazyDelCollection();
+	}
 
 	/* GETTERS */
 	public function getId(){ return $this->id; }
@@ -19,6 +25,7 @@ class Tipo implements JsonSerializable{
 	public function getPontuacao(){ return $this->pontuacao; }
 	public function getPontuacaoReferencia(){ return $this->pontuacaoreferencia; }
 	public function getPontuacaoLimite(){ return $this->pontuacaolimite; }
+	public function getMultiplicador(){ return $this->multiplicador; }
 
 	/* SETTERS */
 	public function setId($input){$this->id = $input;}
@@ -27,15 +34,18 @@ class Tipo implements JsonSerializable{
 	public function setPontuacao($input){$this->pontuacao = $input;}
 	public function setPontuacaoReferencia($input){$this->pontuacaoreferencia = $input;}
 	public function setPontuacaoLimite($input){$this->pontuacaolimite = $input;}
+	public function addMultiplicador(Multiplicador $input){ $this->multiplicador->add($input); }
+	public function removeMultiplicador($input){ $this->multiplicador->remove($input); }
 
 	public function JsonSerialize() {
         return [
-            'uri' => 'tipo/' . $this->getId(),
+            'id' => $this->getId(),
             'categoria' => $this->getCategoria(),
             'descricao' => $this->getDescricao(),
             'pontuacao' => $this->getPontuacao(),
-            'pontuacaoreferencia' => $this->getPontuacaoReferencia(),
-            'pontuacaolimite' => $this->getPontuacaoLimite()
+            'limitePontos' => $this->getPontuacaoLimite(),
+            'pontuacaoRef' => $this->getPontuacaoReferencia(),
+            'multiplicador' => $this->getMultiplicador()
         ];
     }
 

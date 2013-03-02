@@ -2,40 +2,46 @@
 
 namespace RADUFU\Model;
 
-use \JsonSerializable;
+use \JsonSerializable,
+	RADUFU\util\LazyDelCollection;
 
 class Professor implements JsonSerializable{
 	private $id;
-	private $ativo = true; //DEFAULT true. -- true-ativo; false-inativo
 	private $nome;
-	private $sobrenome;
 	private $usuario;
 	private $senha;
+	private $siape;
+	private $atividade;
+
+	public function __construct(){
+		$this->atividade = new LazyDelCollection();
+	}
 
 	/* GETTERS */
 	public function getId(){ return $this->id; }
-	public function getAtivo(){ return $this->ativo; }
 	public function getNome(){ return $this->nome; }
-	public function getSobrenome(){ return $this->sobrenome; }
 	public function getUsuario(){ return $this->usuario; }
 	public function getSenha(){ return $this->senha; }
+	public function getSiape(){ return $this->siape; }
+	public function getAtividade(){ return $this->atividade; }
 
 	/* SETTERS */
-	public function setId($si){$this->id = $si;}
-	public function setAtivo($a){$this->ativo = $a;}
-	public function setNome($n){$this->nome = $n;}
-	public function setSobrenome($sn){$this->sobrenome = $sn;}
-	public function setUsuario($u){$this->usuario = $u;}
-	public function setSenha($se){$this->senha = $se;}
+	public function setId($input){$this->id = $input;}
+	public function setNome($input){$this->nome = $input;}
+	public function setUsuario($input){$this->usuario = $input;}
+	public function setSenha($input){$this->senha = $input;}
+	public function setSiape($input){$this->siape = $input;}
+	public function addAtividade($input){$this->atividade->add($input);}
+	public function removeAtividade($input){$this->atividade->remove($input);}
 
 	public function JsonSerialize() {
         return [
-            'uri' => 'professor/' . $this->getId(),
-            'ativo' => $this->getAtivo(),
+            'id' => $this->getId(),
             'nome' => $this->getNome(),
-            'sobrenome' => $this->getSobrenome(),
-            'usuario' => $this->getUsuario(),
-            'senha' => $this->getSenha()
+            'login' => $this->getUsuario(),
+            'senha' => $this->getSenha(),
+            'siape' => $this->getSiape(),
+            'atividades' => $this->getAtividade()
         ];
     }
 

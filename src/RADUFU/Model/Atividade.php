@@ -2,7 +2,8 @@
 
 namespace RADUFU\Model;
 
-use \JsonSerializable;
+use \JsonSerializable,
+    RADUFU\util\LazyDelCollection;
 
 class Atividade implements JsonSerializable{
 	private $id;
@@ -12,7 +13,10 @@ class Atividade implements JsonSerializable{
     private $datafim;
     private $valorMult;
     private $comprovante = array();
-    //private $professor;
+
+    public function __construct(){
+        $this->comprovante = new LazyDelCollection();
+    }
 
     /*GETTERS*/
     public function getId(){return $this->id;}
@@ -21,7 +25,6 @@ class Atividade implements JsonSerializable{
     public function getDataInicio(){return $this->datainicio;}
     public function getDataFim(){return $this->datafim;}
     public function getValorMult(){ return $this->valorMult;}
-    //public function getProfessor(){return $this->professor;}
     public function getComprovante(){ return $this->comprovante; }
 
     /*SETTERS*/
@@ -31,30 +34,18 @@ class Atividade implements JsonSerializable{
     public function setDataInicio($input){$this->datainicio = $input;}
     public function setDataFim($input){$this->datafim = $input;}
     public function setValorMult($input){$this->valorMult = $input;}
-    //public function setProfessor($input){$this->professor = $input;}
-    public function setComprovante(Comprovante $comprovante){ self::add($comprovante); }
-
-    public function add(Comprovante $comprovante){
-        if(!in_array($comprovante, $this->comprovante))
-            self::getComprovante()[] = $this->comprovante;
-    }
-
-    public function remove(Comprovante $comprovante){
-        $key = array_search($comprovante, $this->comprovante);
-        if($key != FALSE)
-            unset($this->comprovante[$key]);
-    }
+    public function addComprovante(Comprovante $comprovante){ $this->comprovante->add($comprovante); }
+    public function removeComprovante($id){ $this->comprovante->remove($id); }
 
     public function JsonSerialize() {
         return [
-            'uri' => 'atividade/' . $this->getId(),
-            'tipo' => $this->getTipo(),
+            'id' => $this->getId(),
             'descricao' => $this->getDescricao(),
             'datainicio' => $this->getDataInicio(),
             'datafim' => $this->getDataFim(),
-            'valorMult' => $this->getValorMult(),
-            /*'professor' => $this->getProfessor(),*/
-            'comprovante' => $this->getComprovante()
+            'comprovantes' => $this->getComprovante(),
+            'tipo' => $this->getTipo(),
+            'valorMult' => $this->getValorMult()
         ];
     }
   }
