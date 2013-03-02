@@ -14,10 +14,6 @@ class Tipo implements JsonSerializable{
 	private $pontuacaolimite;
 	private $multiplicador;
 
-	public function __construct(){
-		$multiplicador = new LazyDelCollection();
-	}
-
 	/* GETTERS */
 	public function getId(){ return $this->id; }
 	public function getCategoria(){ return $this->categoria; }
@@ -34,8 +30,7 @@ class Tipo implements JsonSerializable{
 	public function setPontuacao($input){$this->pontuacao = $input;}
 	public function setPontuacaoReferencia($input){$this->pontuacaoreferencia = $input;}
 	public function setPontuacaoLimite($input){$this->pontuacaolimite = $input;}
-	public function addMultiplicador(Multiplicador $input){ $this->multiplicador->add($input); }
-	public function removeMultiplicador($input){ $this->multiplicador->remove($input); }
+	public function setMultiplicador(Multiplicador $input){$this->multiplicador = $input;}
 
 	public function JsonSerialize() {
         return [
@@ -45,7 +40,7 @@ class Tipo implements JsonSerializable{
             'pontuacao' => $this->getPontuacao(),
             'limitePontos' => $this->getPontuacaoLimite(),
             'pontuacaoRef' => $this->getPontuacaoReferencia(),
-            'multiplicador' => $this->getMultiplicador()['atuais']
+            'multiplicador' => $this->getMultiplicador();
         ];
     }
 

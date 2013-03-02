@@ -17,6 +17,7 @@ class TipoDAO implements ITipoDAO{
             :tipo_pontuacao,
             :tipo_pontuacaoreferencia,
             :tipo_pontuacaolimite
+            :tipo_multiplicador
             );';
 
     const SQL_UPDATE = 'UPDATE Tipo SET 
@@ -33,7 +34,9 @@ class TipoDAO implements ITipoDAO{
     const SQL_READ_ALL = 'SELECT * FROM Tipo;';
     const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_id = :tipo_id;';
 
-    public function post(Tipo $tipo){
+    private $multiplicadorDAO;
+
+    public function post(Tipo $tipo, $idMultiplicador){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
@@ -42,7 +45,8 @@ class TipoDAO implements ITipoDAO{
                 ':tipo_descricao' =>$tipo->getDescricao(),
                 ':tipo_pontuacao' =>$tipo->getPontuacao(),
                 ':tipo_pontuacaoreferencia' =>$tipo->getPontuacaoReferencia(),
-                ':tipo_pontuacaolimite' =>$tipo->getPontuacaoLimite()
+                ':tipo_pontuacaolimite' =>$tipo->getPontuacaoLimite(),
+                ':tipo_multiplicador' => $idMultiplicador
             ));
 
             if(!$res)
@@ -70,6 +74,10 @@ class TipoDAO implements ITipoDAO{
                 $tipo->setPontuacaoReferencia($result['tipo_pontuacaoreferencia']);
                 $tipo->setPontuacaoLimite($result['tipo_pontuacaolimite']);
 
+                $multiplicadorDAO = new MultiplicadorDAO();
+                $tipo->setMultiplicador($multiplicadorDAO->get($result['tipo_multiplicador']));
+
+                unset($multiplicadorDAO);
                 return $tipo;
             }
 
@@ -78,6 +86,39 @@ class TipoDAO implements ITipoDAO{
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Tipo por codigo:\t"
                 . $ex->getMessage(), 0, $ex);
+        }
+    }
+
+    public function getAll(){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_READ_ALL);
+            $stm->execute();
+
+            $tipo = array();
+            while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $t = new Tipo();
+                $t->setId($row['tipo_id']);
+                $t->setCategoria($row['tipo_categoria']);
+                $t->setDescricao($row['tipo_descricao']);
+                $t->setPontuacao($row['tipo_pontuacao']);
+                $t->setPontuacaoReferencia($row['tipo_pontuacaoreferencia']);
+                $t->setPontuacaoLimite($row['tipo_pontuacaolimite']);
+                
+                $multiplicadorDAO = new MultiplicadorDAO();
+                $tipo->setMultiplicador($multiplicadorDAO->get($result['tipo_multiplicador']));
+
+                $tipo[] = $t;
+            }
+            unset($t,$multiplicadorDAO);
+
+            if (empty($tipo))
+                throw new NotFoundException();
+            else
+                return $tipo;
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos os Tipos:\t'
+                . $ex->getMessage());
         }
     }
 
@@ -100,47 +141,17 @@ class TipoDAO implements ITipoDAO{
         }
     }
 
-    public function getAll(){
-        try {
-            $stm = Connection::Instance()->get()->prepare(self::SQL_READ_ALL);
-            $stm->execute();
-
-            $tipo = array();
-            while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-                $t = new Tipo();
-                $t->setId($row['tipo_id']);
-                $t->setCategoria($row['tipo_categoria']);
-                $t->setDescricao($row['tipo_descricao']);
-                $t->setPontuacao($row['tipo_pontuacao']);
-                $t->setPontuacaoReferencia($row['tipo_pontuacaoreferencia']);
-                $t->setPontuacaoLimite($row['tipo_pontuacaolimite']);
-
-                $tipo[] = $t;
-            }
-            unset($t);
-
-            if (empty($tipo))
-                throw new NotFoundException();
-            else
-                return $tipo;
-
-        } catch (PDOException $ex) {
-            throw new Exception('Erro ao listar todos os Tipos:\t'
-                . $ex->getMessage());
-        }
-    }
-
     public function update(Tipo $tipo){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
-                ':tipo_id' =>$tipo->getId(),
                 ':tipo_categoria' =>$tipo->getCategoria(),
                 ':tipo_descricao' =>$tipo->getDescricao(),
                 ':tipo_pontuacao' =>$tipo->getPontuacao(),
                 ':tipo_pontuacaoreferencia' =>$tipo->getPontuacaoReferencia(),
-                ':tipo_pontuacaolimite' =>$tipo->getPontuacaoLimite()
+                ':tipo_pontuacaolimite' =>$tipo->getPontuacaoLimite(),
+                ':tipo_multiplicador' => $tipo->getMultiplicador()->getId()
                 ));
 
             if (!$stm->rowCount() > 0)

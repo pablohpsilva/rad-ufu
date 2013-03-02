@@ -35,7 +35,6 @@ class ProfessorDAO implements IProfessorDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
-                ':professor_id' =>$prof->getId(),
                 ':professor_nome' =>$prof->getNome(),
                 ':professor_siape' =>$prof->getUsuario(),
                 ':professor_senha' =>$prof->getSenha()
@@ -62,7 +61,7 @@ class ProfessorDAO implements IProfessorDAO{
             $prof->setSenha($result['professor_senha']);
 
             $atividadeDAO = new AtividadeDAO();
-            foreach ($atividadeDAO->read($id) as $val) {
+            foreach ($atividadeDAO->read($prof->getId()) as $val) {
                 $prof->addAtividade($val);
             }
 
@@ -79,7 +78,7 @@ class ProfessorDAO implements IProfessorDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':professor_id', $id);
             
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Professor por id:\t"
@@ -87,15 +86,15 @@ class ProfessorDAO implements IProfessorDAO{
         }
     }
 
-    public function read($usuario){
+    public function read($siape){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
-            $stm->bindParam(':professor_siape', $usuario);
+            $stm->bindParam(':professor_siape', $siape);
             
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
-            throw new Exception("Ao procurar Professor por usuario:\t"
+            throw new Exception("Ao procurar Professor por siape:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }

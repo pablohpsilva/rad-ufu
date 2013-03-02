@@ -86,7 +86,7 @@ class ComprovanteDAO implements IComprovanteDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
             $stm->bindParam(':comprovante_atividade', $idAtividade);
 
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Comprovante por arquivo:\t"
@@ -98,7 +98,7 @@ class ComprovanteDAO implements IComprovanteDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET_ALL);
             
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos os Comprovantes:\t'
