@@ -15,7 +15,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
             :multiplicador_nome
             );';
 
-    const SQL_UPDATE = 'UPDATE Multiplicador SET 
+    const SQL_UPDATE = 'UPDATE Multiplicador SET
             multiplicador_nome =:multiplicador_nome
             WHERE multiplicador_id = :multiplicador_id;';
 
@@ -29,8 +29,7 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
-                ':multiplicador_nome' => $mult->getNome(),
-                ':multiplicador_tipo_atividade' => $mult->getTipoAtividade()
+                ':multiplicador_nome' => $mult->getNome()
             ));
 
             if(!$res)
@@ -61,8 +60,8 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':multiplicador_id', $id);
-            
-            return getAllTemplate($stm);
+
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar o Multiplicador por id:\t"
@@ -74,8 +73,8 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
             $stm->bindParam(':multiplicador_nome', $nome);
-            
-            return getAllTemplate($stm);
+
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Multiplicador por nome:\t"
