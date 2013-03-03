@@ -13,14 +13,20 @@ class AtividadeService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getAtividadeDAO();
 	}
 
-	public function createObject($tipo, $descricao, $datainicio, $datafim, $valor, $professor){
+	private function createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante = null){
 		$this->obj = new Atividade();
+		$this->obj->setId($id);
 		$this->obj->setTipo($tipo);
 		$this->obj->setDescricao($descricao);
 		$this->obj->setDataInicio($datainicio);
 		$this->obj->setDataFim($datafim);
-		$this->obj->setValor($valor);
-		$this->obj->setProfessor($professor);
+		$this->obj->setValorMult($valorMult);
+
+		if(!is_null($comprovante))
+			foreach ($comprovante as $val) {
+				$this->obj->add($val);
+			}
+		
 		return $this->obj;
 	}
 
@@ -29,14 +35,11 @@ class AtividadeService{
 	}
 
 	public function get($input){
-		if(is_numeric($input))
-			return $this->dao->get($input);
-		else
-			return $this->dao->read($input);
+		return $this->dao->get($input);
 	}
 	
-	public function post($tipo, $descricao, $datainicio, $datafim, $valor, $professor){
-		$this->dao->post(self::createObject($tipo, $descricao, $datainicio, $datafim, $valor, $professor));
+	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
+		$this->dao->post(self::createObject($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 		unset($this->obj);
 	}
 
@@ -45,45 +48,40 @@ class AtividadeService{
 	}
 
 	public function searchAll($idProfessor = null){
-		if(is_null($idProfessor))
+		if(!is_null($idProfessor))
+			return $this->dao->read($idProfessor);
+		else
 			return $this->dao->getAll();
-		else{
-			$response = self::searchAll();
-			$vector = array();
-			foreach ($response as $val) {
-				if($val->getProfessor() == $idProfessor)
-					$vector[] = $val;
-			}
-			unset($val,$response);
-			return $vector;
-		}
 	}
 
-	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valor, $professor){
-		self::createObject($tipo, $descricao, $datainicio, $datafim, $valor, $professor);
-		$this->obj->setId($id);
-		$this->dao->update($this->obj);
-		unset($this->obj);
-	}
+	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
+		// Deleto todos os comprovantes Antigos
+		$comprovante = new ComprovanteService();
+		$comprovante->deleteCollection(self::get($id)->getComprovantes());
 
-	public function getDependency($id, $choose){
-		$idDep = null;
-		$dependency = null;
-		switch (strtolower($choose)) {
-			case 'tipo':
-				$idDep = self::get($id)->getTipo();
-				$dependency = new TipoService();
-				break;
-			default:
-				$idDep = self::get($id)->getProfessor();
-				$dependency = new ProfessorService();
-				break;
-		}
-		return $dependency->get($idDep);
+		// Insiro todos os comprovantes Novos
+		$comprovante->addCollection($comprovante);
+
+		// Funcao principal de modificacao no DAO
+		// Nao preciso passar o $comprovante como parametro, visto que nao sera necessario
+		// fazer nada com ele, pois ele ja foi inserido no banco na linha de codigo acima.
+		self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult);
+		$this->dao->update($this->obj,$professor);
+		unset($this->obj,$comprovante);
 	}
 
 	public function delete($input){
+		// Pego todos os comprovantes de Atividade
+		$comprovante = new ComprovanteService();
+		$array = $comprovante->getAll($input);
+
+		// Deleto a atividade
 		$this->dao->delete($input);
+
+		// Deleto os comprovantes
+		$comprovante->deleteCollection($array);
+
+		unset($comprovante);
 	}
 
 }

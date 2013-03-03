@@ -14,11 +14,23 @@ class ComprovanteService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getComprovanteDAO();
 	}
 
-	public function createObject($arquivo, $atividade){
+	private function createObject($id = null, $arquivo){
 		$this->obj = new Comprovante();
+		$this->obj->setId($id);
 		$this->obj->setArquivo($arquivo);
-		$this->obj->setAtividade($atividade);
 		return $this->obj;
+	}
+
+	public function deleteCollection($collection){
+		foreach ($collection as $val) {
+			self::delete($val->getId());
+		}
+	}
+
+	public function addCollection($collection,$idAtividade){
+		foreach ($collection as $val) {
+			self::post($val->getArquivo(),$idAtividade,$val->getId());
+		}
 	}
 
 	public function getNextId(){ 
@@ -32,12 +44,9 @@ class ComprovanteService{
 			return $this->dao->read($input);
 	}
 
-	public function post($professor,$atividade,$arquivo){
-		$file = FileService::createFile($professor,$atividade,$arquivo);
-		if($file != -1){
-			$this->dao->post(self::createObject($file, $atividade));
-			unset($this->obj,$file);
-		}
+	public function post($arquivo,$atividade,$id = null){
+		$this->dao->post(self::createObject($id,$file),$atividade);
+		unset($this->obj);
 	}
 
 	public function search($input){
@@ -45,20 +54,15 @@ class ComprovanteService{
 	}
 
 	public function searchAll($idAtividade = null){
-		if(is_null($idAtividade))
+		if(!is_null($idAtividade))
+			return $this->dao->read($idAtividade);
+		else
 			return $this->dao->getAll();
-		else{
-			$response = self::searchAll();
-			$vector = array();
-			foreach ($response as $val) {
-				if($val->getAtividade() == $idAtividade)
-					$vector[] = $val;
-			}
-			unset($val,$response);
-			return $vector;
-		}
 	}
 
+	/*
+	 * Conferir como esse metodo funcionara com o front-end.
+	*/
 	public function update($id, $arquivo, $atividade){
 		$this->obj = self::get($id);
 		
@@ -70,12 +74,6 @@ class ComprovanteService{
 
 		$this->dao->update($this->obj);
 		unset($this->obj);
-	}
-
-	public function getDependency($id){
-		$idDep = self::get($id)->getAtividade();
-		$dependency = new AtividadeService();
-		return $dependency->get($idDep);
 	}
 
 	public function delete($input){

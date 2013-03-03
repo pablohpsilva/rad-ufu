@@ -5,7 +5,7 @@ namespace RADUFU\Model;
 use \JsonSerializable;
 
 class Comprovante implements JsonSerializable{
-	private $id;
+	private $id = null;
 	private $arquivo;
 
 	/* GETTERS */

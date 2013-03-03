@@ -13,14 +13,12 @@ class ProfessorService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getProfessorDAO();
 	}
 
-	public function createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo = TRUE){
+	public function createObject($id = null, $siape, $nome, $senha){
 		$this->obj = new Professor();
-		$this->obj->setId($siape);
+		$this->obj->setId($id);
 		$this->obj->setNome($nome);
-		$this->obj->setSobrenome($sobrenome);
-		$this->obj->setUsuario($usuario);
+		$this->obj->setSiape($siape);
 		$this->obj->setSenha($senha);
-		$this->obj->setAtivo($ativo);
 		return $this->obj;
 	}
 
@@ -31,8 +29,8 @@ class ProfessorService{
 			return $this->dao->read($input);
 	}
 
-	public function post($siape, $nome, $sobrenome, $usuario, $senha){
-		$this->dao->post(self::createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo = TRUE));
+	public function post($siape, $nome, $senha){
+		$this->dao->post(self::createObject(null, $siape, $nome, $senha));
 		unset($this->obj);
 	}
 
@@ -44,10 +42,12 @@ class ProfessorService{
 		return $this->dao->getAll();
 	}
 
-	public function update($siape, $nome, $sobrenome, $usuario, $senha, $ativo){
-		self::createObject($siape, $nome, $sobrenome, $usuario, $senha, $ativo);
+	public function update($id, $siape, $nome, $senha){
+		//Tenho tudo que preciso para atualizar um objeto. Crio um objeto novo
+		self::createObject($id, $siape, $nome, $senha);
+		//Atualizo ele aqui, afinal, tenho o seu ID, e isso e o que interessa.
 		$this->dao->update($this->obj);
-		unset($this->object);
+		unset($this->obj);
 	}
 
 	public function delete($input){

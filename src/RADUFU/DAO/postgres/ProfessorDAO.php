@@ -138,6 +138,7 @@ class ProfessorDAO implements IProfessorDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
+                ':professor_id' =>$prof->getId(),
                 ':professor_nome' =>$prof->getNome(),
                 ':professor_senha' =>$prof->getSenha()
                 ));

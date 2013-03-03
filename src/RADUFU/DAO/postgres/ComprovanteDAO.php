@@ -39,6 +39,25 @@ class ComprovanteDAO implements IComprovanteDAO{
         }
     }
 
+    public function getAllTemplate($stm){
+        $stm->execute();
+
+        $comp = array();
+        while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+            $c = new Comprovante();
+            $c->setId($row['comprovante_id']);
+            $c->setArquivo($row['comprovante_arquivo']);
+
+            $comp[] = $c;
+        }
+        unset($c);
+
+        if (empty($comp))
+            throw new NotFoundException();
+        else
+            return $comp;
+    }
+
     public function get($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
@@ -60,25 +79,6 @@ class ComprovanteDAO implements IComprovanteDAO{
             throw new Exception("Ao procurar o Comprovante por arquivo:\t"
                 . $ex->getMessage(), 0, $ex);
         }
-    }
-
-    public function getAllTemplate($stm){
-        $stm->execute();
-
-        $comp = array();
-        while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-            $c = new Comprovante();
-            $c->setId($row['comprovante_id']);
-            $c->setArquivo($row['comprovante_arquivo']);
-
-            $comp[] = $c;
-        }
-        unset($c);
-
-        if (empty($comp))
-            throw new NotFoundException();
-        else
-            return $comp;
     }
 
     public function read($idAtividade){

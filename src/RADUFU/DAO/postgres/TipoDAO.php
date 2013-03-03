@@ -146,6 +146,7 @@ class TipoDAO implements ITipoDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
 
             $stm->execute(array(
+                ':tipo_id' =>$tipo->getId(),
                 ':tipo_categoria' =>$tipo->getCategoria(),
                 ':tipo_descricao' =>$tipo->getDescricao(),
                 ':tipo_pontuacao' =>$tipo->getPontuacao(),

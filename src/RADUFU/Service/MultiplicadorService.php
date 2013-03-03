@@ -13,8 +13,9 @@ class MultiplicadorService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getMultiplicadorDAO();
 	}
 
-	public function createObject($nome){
+	public function createObject($id = null,$nome){
 		$this->obj = new Multiplicador();
+		$this->obj->setId($id);
 		$this->obj->setNome($nome);
 		return $this->obj;
 	}
@@ -27,7 +28,7 @@ class MultiplicadorService{
 	}
 
 	public function post($nome){
-		$this->dao->post(self::createObject($nome));
+		$this->dao->post(self::createObject(null,$nome));
 		unset($this->obj);
 	}
 
@@ -40,16 +41,9 @@ class MultiplicadorService{
 	}
 
 	public function update($id, $nome){
-		self::createObject($nome);
-		$this->obj->setId($id);
+		self::createObject($id, $nome);
 		$this->dao->update($this->obj);
 		unset($this->obj);
-	}
-
-	public function getDependency($id){
-		$idDep = self::get($id)->getTipoAtividade();
-		$dependency = new TipoService();
-		return $dependency->get($idDep);
 	}
 
 	public function delete($input){
