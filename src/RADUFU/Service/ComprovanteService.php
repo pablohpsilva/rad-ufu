@@ -29,7 +29,7 @@ class ComprovanteService{
 
 	public function addCollection($collection,$idAtividade){
 		foreach ($collection as $val) {
-			self::post($val->getArquivo(),$idAtividade,$val->getId());
+			$this->dao->post($val,$idAtividade);
 		}
 	}
 

@@ -12,7 +12,7 @@ interface IComprovanteDAO {
      * @param Comprovante $Comprovante O comprovante a ser inserido
      * @throws DAOException
      */
-    public function post(Comprovante $comp);
+    public function post(Comprovante $comp,$idAtividade);
 
     /**
      * Recupera o comprovante a partir do id
@@ -50,7 +50,7 @@ interface IComprovanteDAO {
      * @param Comprovante $prof
      * @throws DAOException
      */
-    public function update(Comprovante $comp);
+    public function update(Comprovante $comp,$idAtividade);
 
     /**
      * Remove o comprovante do BD

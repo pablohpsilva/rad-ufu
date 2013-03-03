@@ -25,7 +25,7 @@ class Tipo implements JsonSerializable{
 
 	/* SETTERS */
 	public function setId($input){$this->id = $input;}
-	public function setCategoria($input){$this->categoria = $input;}
+	public function setCategoria(Categoria $input){$this->categoria = $input;}
 	public function setDescricao($input){$this->descricao = $input;}
 	public function setPontuacao($input){$this->pontuacao = $input;}
 	public function setPontuacaoReferencia($input){$this->pontuacaoreferencia = $input;}
@@ -40,7 +40,7 @@ class Tipo implements JsonSerializable{
             'pontuacao' => $this->getPontuacao(),
             'limitePontos' => $this->getPontuacaoLimite(),
             'pontuacaoRef' => $this->getPontuacaoReferencia(),
-            'multiplicador' => $this->getMultiplicador();
+            'multiplicador' => $this->getMultiplicador()
         ];
     }
 

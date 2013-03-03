@@ -13,7 +13,7 @@ class CategoriaService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getCategoriaDAO();
 	}
 
-	public function createObject($input){
+	private function createObject($input){
 		$this->obj = new Categoria();
 		$this->obj->setNome($input);
 		return $this->obj;

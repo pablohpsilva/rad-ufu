@@ -18,7 +18,6 @@ class ProfessorDAO implements IProfessorDAO{
             );';
 
     const SQL_UPDATE = 'UPDATE Professor SET 
-            professor_siape =:professor_siape, 
             professor_nome = :professor_nome, 
             professor_senha = :professor_senha 
             WHERE professor_id = :professor_id;';
@@ -36,7 +35,7 @@ class ProfessorDAO implements IProfessorDAO{
 
             $res = $stm->execute(array(
                 ':professor_nome' =>$prof->getNome(),
-                ':professor_siape' =>$prof->getUsuario(),
+                ':professor_siape' =>$prof->getSiape(),
                 ':professor_senha' =>$prof->getSenha()
             ));
 
@@ -57,7 +56,7 @@ class ProfessorDAO implements IProfessorDAO{
             $prof = new Professor();
             $prof->setId($result['professor_id']);
             $prof->setNome($result['professor_nome']);
-            $prof->setUsuario($result['professor_siape']);
+            $prof->setSiape($result['professor_siape']);
             $prof->setSenha($result['professor_senha']);
 
             $atividadeDAO = new AtividadeDAO();
@@ -109,11 +108,11 @@ class ProfessorDAO implements IProfessorDAO{
                 $p = new Professor();
                 $p->setId($row['professor_id']);
                 $p->setNome($row['professor_nome']);
-                $p->setUsuario($row['professor_siape']);
+                $p->setSiape($row['professor_siape']);
                 $p->setSenha($row['professor_senha']);
 
                 $atividadeDAO = new AtividadeDAO();
-                foreach ($atividadeDAO->read($id) as $val) {
+                foreach ($atividadeDAO->read($p->getId()) as $val) {
                     $prof->addAtividade($val);
                 }
 

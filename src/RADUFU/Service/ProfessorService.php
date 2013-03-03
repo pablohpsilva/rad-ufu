@@ -13,12 +13,20 @@ class ProfessorService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getProfessorDAO();
 	}
 
-	public function createObject($id = null, $siape, $nome, $senha){
+	public function createObject($id = null, $siape = null, $nome, $senha, $atividades = null){
 		$this->obj = new Professor();
 		$this->obj->setId($id);
 		$this->obj->setNome($nome);
-		$this->obj->setSiape($siape);
 		$this->obj->setSenha($senha);
+		
+		if(!is_null($siape))
+			$this->obj->setSiape($siape);
+
+		if(!is_null($atividades))
+			foreach ($atividades as $val) {
+				$this->obj->addAtividade($val);
+			}
+		
 		return $this->obj;
 	}
 
@@ -30,7 +38,7 @@ class ProfessorService{
 	}
 
 	public function post($siape, $nome, $senha){
-		$this->dao->post(self::createObject(null, $siape, $nome, $senha));
+		$this->dao->post(self::createObject(null, $siape, $nome, $senha, null));
 		unset($this->obj);
 	}
 
@@ -42,16 +50,26 @@ class ProfessorService{
 		return $this->dao->getAll();
 	}
 
-	public function update($id, $siape, $nome, $senha){
-		//Tenho tudo que preciso para atualizar um objeto. Crio um objeto novo
-		self::createObject($id, $siape, $nome, $senha);
-		//Atualizo ele aqui, afinal, tenho o seu ID, e isso e o que interessa.
+	public function update($id, $nome, $senha, $atividades = null){
+		if(!is_null($atividades)){
+			$atividadeservice = new AtividadeService();
+			LazyUpdater::lazyUpdaterJob(self::get($id)->getAtividades(), $atividades, $atividadeservice);
+		}
+
+		self::createObject($id, null, $nome, $senha, $atividades);
 		$this->dao->update($this->obj);
-		unset($this->obj);
+
+		unset($this->obj,$atividadeservice);
 	}
 
 	public function delete($input){
+		$atividade = new AtividadeService();
+		$array = $atividade->searchAll($input);
+
+		$atividade->deleteCollection($array);
+
 		$this->dao->delete($input);
+		$atividade->deleteCollection($array);
 	}
 
 }

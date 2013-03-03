@@ -21,7 +21,7 @@ class Professor implements JsonSerializable{
 	public function getNome(){ return $this->nome; }
 	public function getSenha(){ return $this->senha; }
 	public function getSiape(){ return $this->siape; }
-	public function getAtividade(){ return $this->atividade; }
+	public function getAtividade(){ return $this->atividade['atuais']; }
 
 	/* SETTERS */
 	public function setId($input){$this->id = $input;}
@@ -37,7 +37,7 @@ class Professor implements JsonSerializable{
             'nome' => $this->getNome(),
             'login' => $this->getSiape(),
             'senha' => $this->getSenha(),
-            'atividades' => $this->getAtividade()['atuais']
+            'atividades' => $this->getAtividade()
         ];
     }
 

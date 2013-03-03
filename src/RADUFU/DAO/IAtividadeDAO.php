@@ -14,7 +14,7 @@ interface IAtividadeDAO {
      * @param Atividade $Atividade O Atividade a ser inserido
      * @throws DAOException
      */
-    public function post(Atividade $ativ);
+    public function post(Atividade $ativ,$idProfessor);
 
     /**
      * Recupera o Atividade a partir do id
@@ -52,7 +52,7 @@ interface IAtividadeDAO {
      * @param Atividade $ativ
      * @throws DAOException
      */
-    public function update(Atividade $ativ);
+    public function update(Atividade $ativ,$idProfessor);
 
     /**
      * Removeo Atividade do BD

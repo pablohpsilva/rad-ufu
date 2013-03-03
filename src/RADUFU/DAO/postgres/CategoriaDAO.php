@@ -52,7 +52,7 @@ class CategoriaDAO implements ICategoriaDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':categoria_id', $id);
             
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Categoria por id:\t"
@@ -65,7 +65,7 @@ class CategoriaDAO implements ICategoriaDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
             $stm->bindParam(':categoria_nome', $nome);
             
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar Categoria por nome:\t"

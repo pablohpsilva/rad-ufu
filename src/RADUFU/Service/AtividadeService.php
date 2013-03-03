@@ -30,6 +30,18 @@ class AtividadeService{
 		return $this->obj;
 	}
 
+	public function deleteCollection($collection){
+		foreach ($collection as $val) {
+			self::delete($val->getId());
+		}
+	}
+
+	public function addCollection($collection,$idProfessor){
+		foreach ($collection as $val) {
+			$this->dao->post($val,$idProfessor);
+		}
+	}
+
 	public function getNextId(){ 
 		return $this->dao->getNextId(); 
 	}
@@ -38,8 +50,8 @@ class AtividadeService{
 		return $this->dao->get($input);
 	}
 	
-	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
-		$this->dao->post(self::createObject($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
+	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
+		$this->dao->post(self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 		unset($this->obj);
 	}
 
@@ -54,20 +66,14 @@ class AtividadeService{
 			return $this->dao->getAll();
 	}
 
-	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
-		// Deleto todos os comprovantes Antigos
-		$comprovante = new ComprovanteService();
-		$comprovante->deleteCollection(self::get($id)->getComprovantes());
+	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovantes, $professor){
+		$comprovanteservice = new ComprovanteService();
+		LazyUpdater::lazyUpdaterJob(self::get($id)->getComprovantes(), $comprovantes, $comprovanteservice);
 
-		// Insiro todos os comprovantes Novos
-		$comprovante->addCollection($comprovante);
-
-		// Funcao principal de modificacao no DAO
-		// Nao preciso passar o $comprovante como parametro, visto que nao sera necessario
-		// fazer nada com ele, pois ele ja foi inserido no banco na linha de codigo acima.
 		self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult);
 		$this->dao->update($this->obj,$professor);
-		unset($this->obj,$comprovante);
+		
+		unset($this->obj,$comprovanteservice);
 	}
 
 	public function delete($input){
@@ -75,11 +81,11 @@ class AtividadeService{
 		$comprovante = new ComprovanteService();
 		$array = $comprovante->getAll($input);
 
-		// Deleto a atividade
-		$this->dao->delete($input);
-
 		// Deleto os comprovantes
 		$comprovante->deleteCollection($array);
+
+		// Deleto a atividade
+		$this->dao->delete($input);
 
 		unset($comprovante);
 	}

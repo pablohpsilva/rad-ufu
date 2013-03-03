@@ -13,13 +13,15 @@ class TipoService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getTipoDAO();
 	}
 
-	public function createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite){
+	public function createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador, $id = null){
 		$this->obj = new Tipo();
+		$this->obj->setId($id);
 		$this->obj->setCategoria($categoria);
 		$this->obj->setDescricao($descricao);
 		$this->obj->setPontuacao($pontuacao);
 		$this->obj->setPontuacaoReferencia($pontuacaoreferencia);
 		$this->obj->setPontuacaoLimite($pontuacaolimite);
+		$this->obj->setMultiplicador($multiplicador);
 		return $this->obj;
 	}
 
@@ -31,8 +33,8 @@ class TipoService{
 		return $this->dao->get($input);
 	}
 
-	public function post($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite){
-		$this->dao->post(self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite));
+	public function post($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador){
+		$this->dao->post(self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador));
 		unset($this->obj);
 	}
 
@@ -41,31 +43,16 @@ class TipoService{
 	}
 
 	public function searchAll($idCategoria = null){
-		if(is_null($idCategoria))
+		if(!is_null($idCategoria))
+			return $this->read($idCategoria);
+		else
 			return $this->dao->getAll();
-		else{
-			$response = self::searchAll();
-			$vector = array();
-			foreach ($response as $val) {
-				if($val->getProfessor() == $idCategoria)
-					$vector[] = $val;
-			}
-			unset($val,$response);
-			return $vector;
-		}
 	}
 
-	public function update($id, $categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite){
-		self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite);
-		$this->obj->getId($id);
+	public function update($id, $categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador){
+		self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador, $id);
 		$this->dao->update($this->obj);
 		unset($this->obj);
-	}
-
-	public function getDependency($id){
-		$idDep = self::get($id)->getCategoria();
-		$dependency = new CategoriaService();
-		return $dependency->get($idDep);
 	}
 
 	public function delete($input){

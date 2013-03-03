@@ -129,19 +129,20 @@ class AtividadeDAO implements IAtividadeDAO{
             $ativ[] = $a;
         }
         unset($a,$comprovanteDAO,$val);
-
+        /*
         if (empty($ativ))
             throw new NotFoundException();
         else
+        */
             return $ativ;
     }
 
     public function read($idProfessor){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
-            $stm->bindParam(':atividade_professor' => $idProfessor);
+            $stm->bindParam(':atividade_professor',$idProfessor);
 
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos as Atividade:\t'
@@ -153,7 +154,7 @@ class AtividadeDAO implements IAtividadeDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET_ALL);
             
-            return getAllTemplate($stm);
+            return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos as Atividade:\t'
