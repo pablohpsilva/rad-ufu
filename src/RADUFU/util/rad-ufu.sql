@@ -27,7 +27,7 @@ CREATE TABLE tipo(
 	tipo_pontuacao 			SMALLINT NOT NULL,
 	tipo_pontuacaoreferencia	SMALLINT,
 	tipo_pontuacaolimite 		SMALLINT,
-	tipo_multiplicador			INTEGER NOT NULL,
+	tipo_multiplicador		INTEGER NOT NULL,
 	CONSTRAINT const_tipo_primary PRIMARY KEY(tipo_id),
 	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id),
 	CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador(multiplicador_id)
@@ -41,12 +41,12 @@ CREATE TABLE multiplicador(
 );
 
 CREATE TABLE atividade(
-	atividade_id		SERIAL NOT NULL,
-	atividade_tipo		INTEGER NOT NULL,
-	atividade_descricao 	VARCHAR(500) NOT NULL,
-	atividade_datainicio 	DATE,
-	atividade_datafim 	DATE,
-	atividade_multiplicador_valor 		FLOAT(8),
+	atividade_id			SERIAL NOT NULL,
+	atividade_tipo			INTEGER NOT NULL,
+	atividade_descricao 		VARCHAR(500) NOT NULL,
+	atividade_datainicio 		DATE,
+	atividade_datafim 		DATE,
+	atividade_multiplicador_valor 	FLOAT(8),
 	atividade_professor	INTEGER NOT NULL,
 	CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id),
 	CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_id),
@@ -54,7 +54,7 @@ CREATE TABLE atividade(
 );
 
 CREATE TABLE comprovante(
-	comprovante_id 			SERIAL NOT NULL,
+	comprovante_id 		SERIAL NOT NULL,
 	comprovante_arquivo 	VARCHAR(500),
 	comprovante_atividade 	INTEGER NOT NULL,
 	CONSTRAINT const_comprovante_primary PRIMARY KEY(comprovante_id),
