@@ -14,7 +14,7 @@ class ComprovanteService{
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getComprovanteDAO();
 	}
 
-	private function createObject($id = null, $arquivo){
+	private function createObject($arquivo, $id = null){
 		$this->obj = new Comprovante();
 		$this->obj->setId($id);
 		$this->obj->setArquivo($arquivo);
@@ -44,9 +44,12 @@ class ComprovanteService{
 			return $this->dao->read($input);
 	}
 
-	public function post($arquivo,$atividade,$id = null){
-		$this->dao->post(self::createObject($id,$file),$atividade);
-		unset($this->obj);
+	public function post($professor,$arquivo,$atividade,$id = null){
+		$comp = self::createObject($arquivo,$id);
+		$this->dao->post($comp,$atividade);
+		FileService::save($professor,$atividade,$comp);
+
+		unset($this->obj,$comp);
 	}
 
 	public function search($input){
@@ -63,7 +66,7 @@ class ComprovanteService{
 	/*
 	 * Conferir como esse metodo funcionara com o front-end.
 	*/
-	public function update($id, $arquivo, $atividade){
+	public function update($id, $atividade, $arquivo){
 		$this->obj = self::get($id);
 		
 		$move = FileService::moveFile($this->obj->getArquivo(),$arquivo);

@@ -34,13 +34,14 @@ class AtividadeDAO implements IAtividadeDAO{
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
 
     private $comprovanteDAO;
+    private $tipoDAO;
 
 	public function post(Atividade $ativ, $idProfessor){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
-                ':atividade_tipo' => $ativ->getTipo(),
+                ':atividade_tipo' => $ativ->getTipo()->getId(),
                 ':atividade_descricao' => $ativ->getDescricao(),
                 ':atividade_datainicio' => $ativ->getDataInicio(),
                 ':atividade_datafim' => $ativ->getDataFim(),
@@ -67,16 +68,19 @@ class AtividadeDAO implements IAtividadeDAO{
             if ($result) {
                 $ativ = new Atividade();
                 $ativ->setId($result['atividade_id']);
-                $ativ->setTipo($result['atividade_tipo']);
                 $ativ->setDescricao($result['atividade_descricao']);
                 $ativ->setDataInicio($result['atividade_datainicio']);
                 $ativ->setDataFim($result['atividade_datafim']);
                 $ativ->setMultValor($result['atividade_multiplicador_valor']);
-                $comprovanteDAO = new ComprovanteDAO();
-                foreach ($comprovanteDAO->read($id) as $val) {
+
+                $this->tipoDAO = new TipoDAO();
+                $ativ->setTipo($this->tipoDAO->get($result['atividade_tipo']));
+
+                $this->comprovanteDAO = new ComprovanteDAO();
+                foreach ($this->comprovanteDAO->read($id) as $val) {
                         $ativ->addComprovante($val);
                 }
-                unset($comprovanteDAO,$val);
+                unset($this->comprovanteDAO,$this->tipoDAO,$val);
 
                 return $ativ;
             }
@@ -115,20 +119,22 @@ class AtividadeDAO implements IAtividadeDAO{
         while($row = $stm->fetch(PDO::FETCH_ASSOC)) {
             $a = new Atividade();
             $a->setId($row['atividade_id']);
-            $a->setTipo($row['atividade_tipo']);
             $a->setDescricao($row['atividade_descricao']);
             $a->setDataInicio($row['atividade_datainicio']);
             $a->setDataFim($row['atividade_datafim']);
-            $a->setMultValor($result['atividade_multiplicador_valor']);
+            $a->setMultValor($row['atividade_multiplicador_valor']);
 
-            $comprovanteDAO = new ComprovanteDAO();
-            foreach ($comprovanteDAO->read($a->getId()) as $val) {
-                    $ativ->addComprovante($val);
+            $this->tipoDAO = new TipoDAO();
+            $a->setTipo($this->tipoDAO->get($row['atividade_tipo']));
+
+            $this->comprovanteDAO = new ComprovanteDAO();
+            foreach ($this->comprovanteDAO->read($a->getId()) as $val) {
+                    $a->addComprovante($val);
             }
 
             $ativ[] = $a;
         }
-        unset($a,$comprovanteDAO,$val);
+        unset($a,$this->comprovanteDAO,$val,$this->tipoDAO);
         /*
         if (empty($ativ))
             throw new NotFoundException();
@@ -168,7 +174,7 @@ class AtividadeDAO implements IAtividadeDAO{
 
             $stm->execute(array(
                 ':atividade_id' =>$ativ->getId(),
-                ':atividade_tipo' =>$ativ->getTipo(),
+                ':atividade_tipo' =>$ativ->getTipo()->getId(),
                 ':atividade_descricao' =>$ativ->getDescricao(),
                 ':atividade_datainicio' =>$ativ->getDataInicio(),
                 ':atividade_datafim' =>$ativ->getDataFim(),

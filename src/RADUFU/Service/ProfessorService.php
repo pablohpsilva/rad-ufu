@@ -31,10 +31,7 @@ class ProfessorService{
 	}
 
 	public function get($input){
-		if(is_numeric($input))
-			return $this->dao->get($input);
-		else
-			return $this->dao->read($input);
+		return $this->dao->get($input);
 	}
 
 	public function post($siape, $nome, $senha){
@@ -46,8 +43,11 @@ class ProfessorService{
 		return self::get($input);
 	}
 
-	public function searchAll(){
-		return $this->dao->getAll();
+	public function searchAll($siape = null){
+		if(!is_null($siape))
+			return $this->dao->read($siape);
+		else
+			return $this->dao->getAll();
 	}
 
 	public function update($id, $nome, $senha, $atividades = null){

@@ -11,12 +11,12 @@ use \PDO,
 class TipoDAO implements ITipoDAO{
 
     const SQL_POST = 'INSERT INTO Tipo VALUES(
-             DEFAULT,
+            DEFAULT,
             :tipo_categoria,
             :tipo_descricao,
             :tipo_pontuacao,
             :tipo_pontuacaoreferencia,
-            :tipo_pontuacaolimite
+            :tipo_pontuacaolimite,
             :tipo_multiplicador
             );';
 
@@ -25,7 +25,7 @@ class TipoDAO implements ITipoDAO{
             tipo_descricao = :tipo_descricao,
             tipo_pontuacao = :tipo_pontuacao,
             tipo_pontuacaoreferencia = :tipo_pontuacaoreferencia,
-            tipo_pontuacaolimite = :tipo_pontuacaolimite
+            tipo_pontuacaolimite = :tipo_pontuacaolimite,
             tipo_multiplicador = :tipo_multiplicador
             WHERE tipo_id = :tipo_id;';
 
@@ -43,8 +43,6 @@ class TipoDAO implements ITipoDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
-            echo $tipo->getCategoria()->getId() . $tipo->getDescricao() . $tipo->getPontuacao() . $tipo->getPontuacaoReferencia() . $tipo->getPontuacaoLimite() . $tipo->getMultiplicador()->getId();
-
             $res = $stm->execute(array(
                 ':tipo_categoria' => $tipo->getCategoria()->getId(),
                 ':tipo_descricao' => $tipo->getDescricao(),
@@ -52,7 +50,7 @@ class TipoDAO implements ITipoDAO{
                 ':tipo_pontuacaoreferencia' => $tipo->getPontuacaoReferencia(),
                 ':tipo_pontuacaolimite' => $tipo->getPontuacaoLimite(),
                 ':tipo_multiplicador' => $tipo->getMultiplicador()->getId()
-            ));
+                ));
 
             if(!$res)
                 throw new Exception("Tipo não foi criado:\t"
@@ -75,13 +73,13 @@ class TipoDAO implements ITipoDAO{
             $tipo->setPontuacaoReferencia($result['tipo_pontuacaoreferencia']);
             $tipo->setPontuacaoLimite($result['tipo_pontuacaolimite']);
 
-            $categoriaDAO = new CategoriaDAO();
-            $tipo->setCategoria($categoriaDAO->get($result['tipo_categoria']));
+            $this->categoriaDAO = new CategoriaDAO();
+            $tipo->setCategoria($this->categoriaDAO->get($result['tipo_categoria']));
 
-            $multiplicadorDAO = new MultiplicadorDAO();
-            $tipo->setMultiplicador($multiplicadorDAO->get($result['tipo_multiplicador']));
+            $this->multiplicadorDAO = new MultiplicadorDAO();
+            $tipo->setMultiplicador($this->multiplicadorDAO->get($result['tipo_multiplicador']));
 
-            unset($multiplicadorDAO,$categoriaDAO);
+            unset($this->multiplicadorDAO,$this->categoriaDAO);
             return $tipo;
         }
 
@@ -130,15 +128,15 @@ class TipoDAO implements ITipoDAO{
                 $t->setPontuacaoReferencia($row['tipo_pontuacaoreferencia']);
                 $t->setPontuacaoLimite($row['tipo_pontuacaolimite']);
 
-                $categoriaDAO = new CategoriaDAO();
-                $tipo->setCategoria($categoriaDAO->get($result['tipo_categoria']));
+                $this->categoriaDAO = new CategoriaDAO();
+                $t->setCategoria($this->categoriaDAO->get($row['tipo_categoria']));
                 
-                $multiplicadorDAO = new MultiplicadorDAO();
-                $tipo->setMultiplicador($multiplicadorDAO->get($result['tipo_multiplicador']));
+                $this->multiplicadorDAO = new MultiplicadorDAO();
+                $t->setMultiplicador($this->multiplicadorDAO->get($row['tipo_multiplicador']));
 
                 $tipo[] = $t;
             }
-            unset($t,$multiplicadorDAO,$categoriaDAO);
+            unset($t,$this->multiplicadorDAO,$this->categoriaDAO);
 
             if (empty($tipo))
                 throw new NotFoundException();

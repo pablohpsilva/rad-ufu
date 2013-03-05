@@ -11,45 +11,44 @@ class FileService{
 	 *@type: FILE
 	 */
 	public static function getPath(){
-		$caminho = __DIR__."/../../../../FileService/";
-		return $caminho;
+		$defaultPath = __DIR__."/../../../../FileService/";
+		return $defaultPath;
 	}
 
-	public static function saveFile($idProfessor, $idAtividade, $arquivo){
-		$caminho = self::getPath();
+	public static function save($idProfessor, $idAtividade, Comprovante $comprovante){
+		$root = self::getPath();
+		$profDir = $caminho.$idProfessor."/";
+		$finalDir = $profDir.$idAtividade . "/";
+		$lastMile = $destino.$comprovante->separaNome();
 
-		if (!is_dir($caminho)){ mkdir($caminho); } 
-		if (!is_dir($caminho.$idProfessor."/")){ mkdir($caminho.$idProfessor."/"); } 
-		
-		$destino = $caminho.$idProfessor."/".$idAtividade."/";
-		
-		if (!is_dir($destino)){ mkdir($destino); }
-		$destino = $destino."/".$arquivo['name'];
+		if (!is_dir($caminho))
+			mkdir($caminho);
 
-		$res = move_uploaded_file($arquivo['tmp_name'],$destino);
+		if (!is_dir($profDir))
+			mkdir($profDir);
+
+		if (!is_dir($destino))
+			mkdir($destino);
+
+		$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
 
 		if(!$res)
 			throw new Exception("Arquivo nao foi salvo:\t");
-        else
-        	return $res;
 	}
 
-	public static function removeFile($fileName){
-		$res = unlink($fileName);
+	public static function remove(Comprovante $comprovante){
+		$res = unlink($comprovante->getArquivo());
 		if(!$res)
 			throw new Exception("Arquivo nao foi apagado:\t");
-		else
-			return $res;
 	}
 
-	public static function moveFile($fileName,$newPath){
-		$aux = explode("/", $fileName);
-		$last = sizeof($aux);
-		if(copy($fileName, $newPath . $aux[$last-1]))
-			if(self::removeFile($fileName))
-				return $newPath.$aux[$last-1];
-		else
-			return FALSE;
+	public static function move(Comprovante $oldComp, Comprovante $newComp){
+		self::remove($oldComp);
+		$aux = explode("/",$oldComp->getArquivo());
+		$size = sizeof($aux);
+		$idProfessor = $aux[$aux-2];
+		$idAtividade = $aux[$aux-1];
+		self::save($idProfessor,$idAtividade,$newComp);
 	}
 
 }

@@ -24,16 +24,16 @@ class Atividade implements JsonSerializable{
     public function getDescricao(){return $this->descricao;}
     public function getDataInicio(){return $this->datainicio;}
     public function getDataFim(){return $this->datafim;}
-    public function getValorMult(){ return $this->valorMult;}
-    public function getComprovantes(){ return $this->comprovante['atuais']; }
+    public function getMultValor(){ return $this->valorMult;}
+    public function getComprovantes(){ return $this->comprovante; }
 
     /*SETTERS*/
     public function setId($input){$this->id = $input;}
-    public function setTipo($input){$this->tipo = $input;}
+    public function setTipo(Tipo $input){$this->tipo = $input;}
     public function setDescricao($input){$this->descricao = $input;}
     public function setDataInicio($input){$this->datainicio = $input;}
     public function setDataFim($input){$this->datafim = $input;}
-    public function setValorMult($input){$this->valorMult = $input;}
+    public function setMultValor($input){$this->valorMult = $input;}
     public function addComprovante(Comprovante $comprovante){ $this->comprovante->add($comprovante); }
     public function removeComprovante($id){ $this->comprovante->remove($id); }
 
@@ -44,7 +44,7 @@ class Atividade implements JsonSerializable{
             'datainicio' => $this->getDataInicio(),
             'datafim' => $this->getDataFim(),
             'comprovantes' => $this->getComprovantes(),
-            'tipo' => $this->getTipo(),
+            'tipo' => $this->getTipo()->getId(),
             'valorMult' => $this->getValorMult()
         ];
     }

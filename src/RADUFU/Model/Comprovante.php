@@ -21,7 +21,7 @@ class Comprovante implements JsonSerializable{
 		return array_pop($aux);
 	}
 
-	public function separaArquivo(){
+	public function separaCaminho(){
 		$aux = self::separaNome();
 		return explode($aux,$this->getArquivo())[0];
 	}
@@ -30,7 +30,7 @@ class Comprovante implements JsonSerializable{
         return [
             'id' => $this->getId(),
             'nome' => $this->separaNome(),
-            'arquivo' => $this->separaArquivo()
+            'arquivo' => $this->separaCaminho()
         ];
     }
 }

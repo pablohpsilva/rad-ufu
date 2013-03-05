@@ -20,7 +20,7 @@ class AtividadeService{
 		$this->obj->setDescricao($descricao);
 		$this->obj->setDataInicio($datainicio);
 		$this->obj->setDataFim($datafim);
-		$this->obj->setValorMult($valorMult);
+		$this->obj->setMultValor($valorMult);
 
 		if(!is_null($comprovante))
 			foreach ($comprovante as $val) {
@@ -79,7 +79,7 @@ class AtividadeService{
 	public function delete($input){
 		// Pego todos os comprovantes de Atividade
 		$comprovante = new ComprovanteService();
-		$array = $comprovante->getAll($input);
+		$array = $comprovante->searchAll($input);
 
 		// Deleto os comprovantes
 		$comprovante->deleteCollection($array);

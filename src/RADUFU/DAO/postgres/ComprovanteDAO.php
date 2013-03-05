@@ -51,11 +51,12 @@ class ComprovanteDAO implements IComprovanteDAO{
             $comp[] = $c;
         }
         unset($c);
-
+        /*
         if (empty($comp))
             throw new NotFoundException();
         else
-            return $comp;
+        */
+        return $comp;
     }
 
     public function get($id){

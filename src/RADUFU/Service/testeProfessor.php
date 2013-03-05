@@ -13,7 +13,7 @@ $service->post("11021bsi","Nome do Professor1","Senha do Prof. 1");
 $service->post("78662bsi","Nome do Professor2","Senha do Prof. 2");
 
 echo $service->search(1)->getSiape();
-echo $service->search("78662bsi")->getNome();
+echo $service->searchAll("78662bsi")->getNome();
 
 
 print_r($service->searchAll());
