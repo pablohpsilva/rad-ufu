@@ -69,7 +69,6 @@ class ProfessorService{
 		$atividade->deleteCollection($array);
 
 		$this->dao->delete($input);
-		$atividade->deleteCollection($array);
 	}
 
 }

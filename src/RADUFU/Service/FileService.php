@@ -1,7 +1,8 @@
 <?php
 namespace RADUFU\Service;
 
-use RADUFU\DAO\Exception;
+use RADUFU\DAO\Exception,
+	RADUFU\Model\Comprovante;
 
 class FileService{
 	private function __construct(){ }
@@ -17,20 +18,22 @@ class FileService{
 
 	public static function save($idProfessor, $idAtividade, Comprovante $comprovante){
 		$root = self::getPath();
-		$profDir = $caminho.$idProfessor."/";
+		$profDir = $root.$idProfessor."/";
 		$finalDir = $profDir.$idAtividade . "/";
-		$lastMile = $destino.$comprovante->separaNome();
+		$lastMile = $finalDir.$comprovante->separaNome();
 
-		if (!is_dir($caminho))
-			mkdir($caminho);
+		if (!is_dir($root))
+			\mkdir($root,0777);
 
 		if (!is_dir($profDir))
-			mkdir($profDir);
+			\mkdir($profDir,0777);
 
-		if (!is_dir($destino))
-			mkdir($destino);
+		if (!is_dir($finalDir))
+			\mkdir($finalDir,0777);
 
-		$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
+		//$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
+		$res = copy($comprovante->getArquivo(),$lastMile);
+		$comprovante->setArquivo($lastMile);
 
 		if(!$res)
 			throw new Exception("Arquivo nao foi salvo:\t");

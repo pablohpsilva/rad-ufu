@@ -113,7 +113,7 @@ class ProfessorDAO implements IProfessorDAO{
 
                 $atividadeDAO = new AtividadeDAO();
                 foreach ($atividadeDAO->read($p->getId()) as $val) {
-                    $prof->addAtividade($val);
+                    $p->addAtividade($val);
                 }
 
                 $prof[] = $p;

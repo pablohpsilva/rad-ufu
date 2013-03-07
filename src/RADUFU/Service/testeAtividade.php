@@ -29,7 +29,7 @@ print_r($service->searchAll());
 $service->update(1,$t->search(1),'NOVINHA ddescricao','03/03/2013','04/04/2013',100,null,1);
 echo $service->search(1)->getDescricao();
 
-$service->delete(1);
-$service->delete(2);
+//$service->delete(1);
+//$service->delete(2);
 
 ?>

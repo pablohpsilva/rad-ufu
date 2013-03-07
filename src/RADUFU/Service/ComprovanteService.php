@@ -46,8 +46,10 @@ class ComprovanteService{
 
 	public function post($professor,$arquivo,$atividade,$id = null){
 		$comp = self::createObject($arquivo,$id);
-		$this->dao->post($comp,$atividade);
+		echo $comp->getArquivo();
 		FileService::save($professor,$atividade,$comp);
+
+		$this->dao->post($comp,$atividade);
 
 		unset($this->obj,$comp);
 	}
@@ -63,25 +65,9 @@ class ComprovanteService{
 			return $this->dao->getAll();
 	}
 
-	/*
-	 * Conferir como esse metodo funcionara com o front-end.
-	*/
-	public function update($id, $atividade, $arquivo){
-		$this->obj = self::get($id);
-		
-		$move = FileService::moveFile($this->obj->getArquivo(),$arquivo);
-		if($move!=FALSE)
-			$this->obj->setArquivo($move);
-
-		$this->obj->setAtividade($atividade);
-
-		$this->dao->update($this->obj);
-		unset($this->obj);
-	}
-
 	public function delete($input){
 		$this->obj = self::get($input);
-		FileService::removeFile($this->obj->getArquivo());
+		FileService::remove($this->obj);
 		unset($this->obj);
 		$this->dao->delete($input);
 	}
