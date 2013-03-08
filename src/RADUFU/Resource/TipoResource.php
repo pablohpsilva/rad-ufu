@@ -41,34 +41,29 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function criar($id = null) {
-        $pontuacaoRef = null;
-        $pontuacaoLim = null;
-
-        if(!(isset($this->request->data->descricao)
-            &&isset($this->request->data->categoria)
+        if(!(isset($this->request->data->categoria)
+            &&isset($this->request->data->descricao)
             &&isset($this->request->data->pontuacao)
+            &&isset($this->request->data->pontuacaoreferencia)
+            &&isset($this->request->data->pontuacaolimite)
             &&isset($this->request->data->multiplicador)))
             return new Response(Response::BADREQUEST);
-
+        /*
         if(!is_null($id))
             throw new \Tonic\MethodNotAllowedException();
-
+        */
         try {
             $this->tipoService = new TipoService();
             $criado = $this->tipoService->getNextId();
-
-            if (isset($this->request->data->pontuacaoReferencia))
-                $pontuacaoRef = $this->request->data->pontuacaoReferencia;
-            if (isset($this->request->data->pontuacaolimite))
-                $pontuacaoLim = $this->request->data->pontuacaolimite;
 
             $this->tipoService->post(
                     $this->request->data->categoria,
                     $this->request->data->descricao,
                     $this->request->data->pontuacao,
-                    $pontuacaoRef,
-                    $pontuacaoLim,
-                    $this->request->data->multiplicador
+                    $this->request->data->pontuacaoreferencia,
+                    $this->request->data->pontuacaolimite,
+                    $this->request->data->multiplicador,
+                    $id
                     );
 
             return new Response(Response::CREATED, array(

@@ -40,14 +40,15 @@ class ComprovanteResource extends Resource {
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
         try {
+
             $this->comprovanteService = new ComprovanteService();
             $criado = $this->comprovanteService->getNextId();
+            
             $this->comprovanteService->post( 
                     $this->request->data->professor,
                     $arquivo,
                     $this->request->data->atividade
                     );
-            $criada = $this->comprovanteService->search($aux);
 
             return new Response(Response::CREATED, array(
                 'uri' => $criado
@@ -58,12 +59,13 @@ class ComprovanteResource extends Resource {
         }
     }
 
-    /**
+    /*//*
      * @method PUT
      * @provides application/json
      * @json
      * @return Tonic\Response
      */
+/*
     public function atualizar($id = null) {
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
@@ -89,7 +91,7 @@ class ComprovanteResource extends Resource {
         }
 
     }
-
+*/
     /**
      * @method DELETE
      * @provides application/json

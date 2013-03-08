@@ -44,10 +44,11 @@ class AtividadeResource extends Resource {
         if(!(isset($this->request->data->descricao)
             &&isset($this->request->data->datainicio)
             &&isset($this->request->data->datafim)
-            &&isset($this->request->data->valor)))
+            &&isset($this->request->data->valorMult)))
             return new Response(Response::BADREQUEST);
 
         try {
+            //public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
             $this->atividadeService = new AtividadeService();
             $criado = $this->atividadeService->getNextId();
 
@@ -56,7 +57,7 @@ class AtividadeResource extends Resource {
                     $$this->request->data->descricao,
                     $this->request->data->datainicio,
                     $this->request->data->datafim,
-                    $this->request->data->valor,
+                    $this->request->data->valorMult,
                     $professor
                     );
 
@@ -83,7 +84,7 @@ class AtividadeResource extends Resource {
             &&isset($this->request->data->descricao)
             &&isset($this->request->data->datainicio)
             &&isset($this->request->data->datafim)
-            &&isset($this->request->data->valor)
+            &&isset($this->request->data->valorMult)
             &&isset($this->request->data->professor)))
             return new Response(Response::BADREQUEST);
 
@@ -95,7 +96,7 @@ class AtividadeResource extends Resource {
                     $this->request->data->descricao,
                     $this->request->data->datainicio,
                     $this->request->data->datafim,
-                    $this->request->data->valor,
+                    $this->request->data->valorMult,
                     $this->request->data->professor
                     );
 

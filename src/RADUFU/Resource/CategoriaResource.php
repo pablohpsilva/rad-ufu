@@ -43,10 +43,10 @@ class CategoriaResource extends Resource {
     public function criar($id = null) {
         if(!(isset($this->request->data->nome)))
             return new Response(Response::BADREQUEST);
-
+        /*
         if(!is_null($id))
             throw new \Tonic\MethodNotAllowedException();
-
+        */
         try {
             $this->categoriaService = new CategoriaService();
             $this->categoriaService->post($this->request->data->nome);

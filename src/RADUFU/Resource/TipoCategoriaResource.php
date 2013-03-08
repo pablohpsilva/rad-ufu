@@ -5,7 +5,7 @@ use RADUFU\Service\ComprovanteService,
     Tonic\Resource,
     Tonic\Response;
 /**
- * @uri /tipo/:id/categoria
+ * @uri /categoria/:id/tipos
  */
 class TipoCategoriaResource extends Resource {
 
@@ -19,9 +19,9 @@ class TipoCategoriaResource extends Resource {
      * @return Tonic\Response
      */
     public function buscarPorCategoria($idCategoria = null) {
-
         if(is_null($idCategoria))
                 throw new \Tonic\MethodNotAllowedException();
+
         try {
             $this->tipoService = new TipoService();
             return new Response( Response::OK, $this->tipoService->searchAll($idCategoria) );

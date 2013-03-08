@@ -39,28 +39,27 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function criar($id = null) {
+        /*
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->usuario)
+        */
+        if(!(isset($this->request->data->siape)
             &&isset($this->request->data->nome)
-            &&isset($this->request->data->sobrenome)
             &&isset($this->request->data->senha)))
             return new Response(Response::BADREQUEST);
 
         try {
             $this->professorService = new ProfessorService();
             $this->professorService->post(
-                    $id,
+                    $this->request->data->siape,
                     $this->request->data->nome,
-                    $this->request->data->sobrenome,
-                    $this->request->data->usuario,
                     $this->request->data->senha,
-                    $this->request->data->ativo
+                    $id
                     );
-            $criada = $this->professorService->search($this->request->data->usuario);
+            $criada = $this->professorService->search($this->request->data->usuario)->getId();
 
             return new Response(Response::CREATED, array(
-                'uri' => 'professor/' . $criada->getId()
+                'uri' => 'professor/' . $criada
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {
@@ -78,10 +77,8 @@ class ProfessorResource extends Resource {
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->nome)
-            && isset($this->request->data->sobrenome)
-            && isset($this->request->data->usuario)
-            && isset($this->request->data->senha)
-            && isset($this->request->data->ativo)))
+            && isset($this->request->data->siape)
+            && isset($this->request->data->senha)))
             return new Response(Response::BADREQUEST);
 
         try {
@@ -89,10 +86,8 @@ class ProfessorResource extends Resource {
             $this->professorService->update(
                     $id,
                     $this->request->data->nome,
-                    $this->request->data->sobrenome,
-                    $this->request->data->usuario,
-                    $this->request->data->senha,
-                    $this->request->data->ativo
+                    $this->request->data->siape,
+                    $this->request->data->senha
                     );
 
             return new Response(Response::OK);

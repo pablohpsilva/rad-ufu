@@ -34,8 +34,8 @@ class ProfessorService{
 		return $this->dao->get($input);
 	}
 
-	public function post($siape, $nome, $senha){
-		$this->dao->post(self::createObject(null, $siape, $nome, $senha, null));
+	public function post($siape, $nome, $senha, $id = null){
+		$this->dao->post(self::createObject($id, $siape, $nome, $senha, null));
 		unset($this->obj);
 	}
 

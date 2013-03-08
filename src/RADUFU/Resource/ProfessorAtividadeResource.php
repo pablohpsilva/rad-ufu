@@ -22,6 +22,7 @@ class ProfessorAtividadeResource extends Resource {
     public function buscar($idProfessor = null) {
         if(is_null($idProfessor))
                 throw new \Tonic\MethodNotAllowedException();
+            
         try {
             $this->atividadeService = new AtividadeService();
             return new Response( Response::OK, $this->atividadeService->searchAll($idProfessor) );

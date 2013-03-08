@@ -33,8 +33,8 @@ class TipoService{
 		return $this->dao->get($input);
 	}
 
-	public function post($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador){
-		$this->dao->post(self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador));
+	public function post($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador, $id = null){
+		$this->dao->post(self::createObject($categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite, $multiplicador,$id));
 		unset($this->obj);
 	}
 

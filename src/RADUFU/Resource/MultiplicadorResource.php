@@ -42,17 +42,17 @@ class MultiplicadorResource extends Resource {
     public function criar($id = null) {
         if(!(isset($this->request->data->nome)))
             return new Response(Response::BADREQUEST);
-
+        /*
         if(!is_null($id))
             throw new \Tonic\MethodNotAllowedException();
-
+        */
         try {
             $this->multiplicadorService = new MultiplicadorService();
             $this->multiplicadorService->post($this->request->data->nome);
-            $criada = $this->multiplicadorService->search($this->request->data->nome);
+            $criada = $this->multiplicadorService->search($this->request->data->nome)->getId();
 
             return new Response(Response::CREATED, array(
-                'id' => $criada->getId()
+                'id' => $criada
                 ));
 
         } catch (\RADUFU\DAO\Exception $e) {
