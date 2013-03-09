@@ -11,8 +11,6 @@ CREATE TABLE professor(
 	professor_senha		VARCHAR(40) NOT NULL,
 	UNIQUE(professor_siape),
 	CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
 );
 
 CREATE TABLE categoria(
@@ -23,16 +21,18 @@ CREATE TABLE categoria(
 );
 
 CREATE TABLE tipo(
-	tipo_id 			SERIAL NOT NULL,
-	tipo_categoria 			INTEGER NOT NULL,
-	tipo_descricao 			VARCHAR(750) NOT NULL,
-	tipo_pontuacao 			SMALLINT NOT NULL,
-	tipo_pontuacaoreferencia	SMALLINT,
-	tipo_pontuacaolimite 		SMALLINT,
-	tipo_multiplicador		INTEGER NOT NULL,
-	CONSTRAINT const_tipo_primary PRIMARY KEY(tipo_id),
-	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id),
-	CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador(multiplicador_id)
+	tipo_id serial NOT NULL,
+	tipo_categoria integer NOT NULL,
+	tipo_descricao character varying(750) NOT NULL,
+	tipo_pontuacao smallint NOT NULL,
+	tipo_pontuacaoreferencia smallint,
+	tipo_pontuacaolimite smallint,
+	tipo_multiplicador integer NOT NULL,
+	CONSTRAINT const_tipo_primary PRIMARY KEY (tipo_id ),
+	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria (categoria_id) MATCH SIMPLE
+	ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador (multiplicador_id) MATCH SIMPLE
+	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE multiplicador(
@@ -43,24 +43,25 @@ CREATE TABLE multiplicador(
 );
 
 CREATE TABLE atividade(
-	atividade_id			SERIAL NOT NULL,
-	atividade_tipo			INTEGER NOT NULL,
-	atividade_descricao 		VARCHAR(500) NOT NULL,
-	atividade_datainicio 		DATE,
-	atividade_datafim 		DATE,
-	atividade_multiplicador_valor 	FLOAT(8),
-	atividade_professor	INTEGER NOT NULL,
-	CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-	CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_id),
-	CONSTRAINT const_atividade_foreign2 FOREIGN KEY (atividade_professor) REFERENCES professor(professor_id)
+	atividade_id SERIAl NOT NULL,
+	atividade_tipo INTEGER NOT NULL,
+	atividade_descricao VARCHAR(500) NOT NULL,
+	atividade_datainicio DATE,
+	atividade_datafim DATE,
+	atividade_multiplicador_valor REAL,
+	atividade_professor INTEGER NOT NULL,
+	CONSTRAINT const_atividade_primary PRIMARY KEY (atividade_id),
+	CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo (tipo_id) MATCH SIMPLE
+   	ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT const_atividade_foreign2 FOREIGN KEY (atividade_professor) REFERENCES professor (professor_id) MATCH SIMPLE
+	ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE comprovante(
-	comprovante_id 		SERIAL NOT NULL,
-	comprovante_arquivo 	VARCHAR(500),
-	comprovante_atividade 	INTEGER NOT NULL,
-	CONSTRAINT const_comprovante_primary PRIMARY KEY(comprovante_id),
-	CONSTRAINT const_comprovante_foreign FOREIGN KEY(comprovante_atividade) REFERENCES atividade(atividade_id)
+	comprovante_id SERIAL NOT NULL,
+	comprovante_arquivo VARCHAR(500),
+	comprovante_atividade INTEGER NOT NULL,
+	CONSTRAINT const_comprovante_primary PRIMARY KEY (comprovante_id),
+	CONSTRAINT const_comprovante_foreign FOREIGN KEY (comprovante_atividade) REFERENCES atividade (atividade_id) MATCH SIMPLE
+	ON UPDATE CASCADE ON DELETE CASCADE
 );
