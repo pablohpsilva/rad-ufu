@@ -77,17 +77,15 @@ class AtividadeService{
 	}
 
 	public function delete($input){
-		// Pego todos os comprovantes de Atividade
-		$comprovante = new ComprovanteService();
-		$array = $comprovante->searchAll($input);
+		//$comprovante = new ComprovanteService();
+		//$array = $comprovante->searchAll($input);
 
-		// Deleto os comprovantes
-		$comprovante->deleteCollection($array);
+		//$comprovante->deleteCollection($array);
 
 		// Deleto a atividade
 		$this->dao->delete($input);
 
-		unset($comprovante);
+		//unset($comprovante,$array);
 	}
 
 }

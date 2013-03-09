@@ -65,12 +65,14 @@ class ProfessorService{
 	}
 
 	public function delete($input){
-		$atividade = new AtividadeService();
-		$array = $atividade->searchAll($input);
+		//$atividade = new AtividadeService();
+		//$array = $atividade->searchAll($input);
 
-		$atividade->deleteCollection($array);
+		//$atividade->deleteCollection($array);
 
 		$this->dao->delete($input);
+
+		unset($atividade,$array);
 	}
 
 }

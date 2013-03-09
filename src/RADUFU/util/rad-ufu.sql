@@ -11,6 +11,8 @@ CREATE TABLE professor(
 	professor_senha		VARCHAR(40) NOT NULL,
 	UNIQUE(professor_siape),
 	CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 CREATE TABLE categoria(
@@ -48,7 +50,9 @@ CREATE TABLE atividade(
 	atividade_datafim 		DATE,
 	atividade_multiplicador_valor 	FLOAT(8),
 	atividade_professor	INTEGER NOT NULL,
-	CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id),
+	CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_id),
 	CONSTRAINT const_atividade_foreign2 FOREIGN KEY (atividade_professor) REFERENCES professor(professor_id)
 );

@@ -69,6 +69,7 @@ class ComprovanteService{
 		$this->obj = self::get($input);
 		FileService::remove($this->obj);
 		unset($this->obj);
+		
 		$this->dao->delete($input);
 	}
 
