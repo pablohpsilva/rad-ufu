@@ -20,6 +20,13 @@ CREATE TABLE categoria(
 	CONSTRAINT const_categoria_primary PRIMARY KEY(categoria_id)
 );
 
+CREATE TABLE multiplicador(
+	multiplicador_id 		SERIAL NOT NULL,
+	multiplicador_nome 		VARCHAR (30),
+	UNIQUE(multiplicador_nome),
+	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
+);
+
 CREATE TABLE tipo(
 	tipo_id serial NOT NULL,
 	tipo_categoria integer NOT NULL,
@@ -33,13 +40,6 @@ CREATE TABLE tipo(
 	ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador (multiplicador_id) MATCH SIMPLE
 	ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-CREATE TABLE multiplicador(
-	multiplicador_id 		SERIAL NOT NULL,
-	multiplicador_nome 		VARCHAR (30),
-	UNIQUE(multiplicador_nome),
-	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
 );
 
 CREATE TABLE atividade(
