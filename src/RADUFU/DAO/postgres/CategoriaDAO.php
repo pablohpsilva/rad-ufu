@@ -7,7 +7,7 @@ use \PDO,
     RADUFU\DAO\ICategoriaDAO,
     RADUFU\DAO\Exception,
     RADUFU\DAO\NotFoundException;
-    
+
 class CategoriaDAO implements ICategoriaDAO{
 
     const SQL_POST = 'INSERT INTO Categoria VALUES(DEFAULT, :categoria_nome);';
@@ -51,7 +51,7 @@ class CategoriaDAO implements ICategoriaDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET);
             $stm->bindParam(':categoria_id', $id);
-            
+
             return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
@@ -64,7 +64,7 @@ class CategoriaDAO implements ICategoriaDAO{
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_READ);
             $stm->bindParam(':categoria_nome', $nome);
-            
+
             return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
@@ -88,9 +88,9 @@ class CategoriaDAO implements ICategoriaDAO{
             }
             unset($c);
 
-            if (empty($cat))
-                throw new NotFoundException();
-            else
+            //if (empty($cat))
+                //throw new NotFoundException();
+            //else
                 return $cat;
 
         } catch (PDOException $ex) {
