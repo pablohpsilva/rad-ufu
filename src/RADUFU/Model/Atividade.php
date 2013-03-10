@@ -45,7 +45,7 @@ class Atividade implements JsonSerializable{
             'datafim' => $this->getDataFim(),
             'comprovantes' => $this->getComprovantes(),
             'tipo' => $this->getTipo()->getId(),
-            'valorMult' => $this->getValorMult()
+            'valorMult' => $this->getMultValor()
         ];
     }
   }
