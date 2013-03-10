@@ -20,12 +20,12 @@ class AtividadeResource extends Resource {
      * @return Tonic\Response
      */
     public function buscar($id = null) {
-        if(is_null($id))
-                throw new Tonic\MethodNotAllowedException();
-
         try {
             $this->atividadeService = new AtividadeService();
-            return new Response( Response::OK, $this->atividadeService->search($id) );
+            if(is_null($id))
+                return new Response(Response::OK, $this->atividadeService->searchAll());
+            else
+                return new Response( Response::OK, $this->atividadeService->search($id) );
 
         } catch (\RADUFU\DAO\NotFoundException $e) {
             throw new \Tonic\NotFoundException();
