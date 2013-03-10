@@ -20,12 +20,12 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function buscar($id = null) {
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-
         try {
             $this->professorService = new ProfessorService();
-            return new Response( Response::OK, $this->professorService->search($id) );
+            if (is_null($id))
+                return new Response(Response::OK, $this->professorService->searchAll());
+            else
+                return new Response( Response::OK, $this->professorService->search($id) );
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
