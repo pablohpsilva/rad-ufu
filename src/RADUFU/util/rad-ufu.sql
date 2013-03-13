@@ -28,13 +28,13 @@ CREATE TABLE multiplicador(
 );
 
 CREATE TABLE tipo(
-	tipo_id serial NOT NULL,
-	tipo_categoria integer NOT NULL,
-	tipo_descricao character varying(750) NOT NULL,
-	tipo_pontuacao smallint NOT NULL,
-	tipo_pontuacaoreferencia smallint,
-	tipo_pontuacaolimite smallint,
-	tipo_multiplicador integer NOT NULL,
+	tipo_id serial 			NOT NULL,
+	tipo_categoria 			INTEGER NOT NULL,
+	tipo_descricao 			VARCHAR(750) NOT NULL,
+	tipo_pontuacao 			SMALLINT NOT NULL,
+	tipo_pontuacaoreferencia 	FLOAT,
+	tipo_pontuacaolimite 		SMALLINT,
+	tipo_multiplicador 		INTEGER NOT NULL,
 	CONSTRAINT const_tipo_primary PRIMARY KEY (tipo_id ),
 	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria (categoria_id) MATCH SIMPLE
 	ON UPDATE NO ACTION ON DELETE NO ACTION,
