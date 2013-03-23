@@ -35,8 +35,7 @@ class Professor implements JsonSerializable{
         return [
             'id' => $this->getId(),
             'nome' => $this->getNome(),
-            'login' => $this->getSiape(),
-            'senha' => $this->getSenha(),
+            'siape' => $this->getSiape(),
             'atividades' => $this->getAtividade()
         ];
     }
