@@ -59,7 +59,7 @@ class ProfessorResource extends Resource {
             $criada = $this->professorService->search($this->request->data->usuario)->getId();
 
             return new Response(Response::CREATED, array(
-                'uri' => 'professor/' . $criada
+                'id' => $criada
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {

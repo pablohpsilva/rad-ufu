@@ -62,7 +62,7 @@ class AtividadeResource extends Resource {
                     );
 
             return new Response(Response::CREATED, array(
-                'uri' => $criado
+                'id' => $criado
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {

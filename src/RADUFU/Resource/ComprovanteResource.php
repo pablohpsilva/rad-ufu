@@ -28,7 +28,7 @@ class ComprovanteResource extends Resource {
             throw new Tonic\NotFoundException();
         }
     }
-    
+
     /**
      * @method POST
      * @provides application/json
@@ -43,15 +43,15 @@ class ComprovanteResource extends Resource {
 
             $this->comprovanteService = new ComprovanteService();
             $criado = $this->comprovanteService->getNextId();
-            
-            $this->comprovanteService->post( 
+
+            $this->comprovanteService->post(
                     $this->request->data->professor,
                     $arquivo,
                     $this->request->data->atividade
                     );
 
             return new Response(Response::CREATED, array(
-                'uri' => $criado
+                'id' => $criado
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {
