@@ -18,6 +18,11 @@ class Atividade implements JsonSerializable{
         $this->comprovante = new LazyDelCollection();
     }
 
+    /* Converte a data para o padrão brasileiro */
+    private function converteData ($data) {
+        return implode("/", array_reverse(explode("-", $data)));
+    }
+
     /*GETTERS*/
     public function getId(){return $this->id;}
     public function getTipo(){return $this->tipo;}
@@ -33,8 +38,8 @@ class Atividade implements JsonSerializable{
     public function setId($input){$this->id = $input;}
     public function setTipo(Tipo $input){$this->tipo = $input;}
     public function setDescricao($input){$this->descricao = $input;}
-    public function setDataInicio($input){$this->datainicio = $input;}
-    public function setDataFim($input){$this->datafim = $input;}
+    public function setDataInicio($input){$this->datainicio = $this->converteData($input);}
+    public function setDataFim($input){$this->datafim = $this->converteData($input);}
     public function setMultValor($input){$this->valorMult = $input;}
     public function addComprovante(Comprovante $comprovante){ $this->comprovante->add($comprovante); }
     public function removeComprovante($id){ $this->comprovante->remove($id); }
