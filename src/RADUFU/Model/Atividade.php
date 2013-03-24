@@ -25,7 +25,9 @@ class Atividade implements JsonSerializable{
     public function getDataInicio(){return $this->datainicio;}
     public function getDataFim(){return $this->datafim;}
     public function getMultValor(){ return $this->valorMult;}
-    public function getComprovantes(){ return $this->comprovante->atuais(); }
+    public function getComprovantes(){
+        return array_merge($this->comprovante->atuais(), $this->comprovante->novos());
+    }
 
     /*SETTERS*/
     public function setId($input){$this->id = $input;}
@@ -44,7 +46,7 @@ class Atividade implements JsonSerializable{
             'datainicio' => $this->getDataInicio(),
             'datafim' => $this->getDataFim(),
             'comprovantes' => $this->getComprovantes(),
-            'tipo' => $this->getTipo()->getId(),
+            'tipo' => $this->getTipo(),
             'valorMult' => $this->getMultValor()
         ];
     }
