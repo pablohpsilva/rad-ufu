@@ -1,3 +1,7 @@
 src/lib/Smarty-3.1.12/templates_c/
 # ignorado porque é só instalar usando composer
 vendor/
+public/css/
+public/font/
+public/index.html
+public/js/
