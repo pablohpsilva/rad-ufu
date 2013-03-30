@@ -32,10 +32,13 @@ class ComprovanteResource extends Resource {
     /**
      * @method POST
      * @provides application/json
-     * @json
+     * @multipart
      * @return Tonic\Response
      */
-    public function criar($arquivo = null) {
+    public function criar() {
+        session_start();
+        $professor = $_SESSION["user"];
+
         if(!(isset($this->request->data->arquivo)
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
@@ -45,8 +48,8 @@ class ComprovanteResource extends Resource {
             $criado = $this->comprovanteService->getNextId();
 
             $this->comprovanteService->post(
-                    $this->request->data->professor,
-                    $arquivo,
+                    $professor,
+                    $this->request->data->arquivo["name"],
                     $this->request->data->atividade
                     );
 
@@ -113,6 +116,17 @@ class ComprovanteResource extends Resource {
         }
     }
 
+    protected function multipart () {
+        $this->before(function ($request) {
+            $data = (object) array("arquivo" => array_pop($_FILES), "atividade" => $_POST["id_atividade"]);
+            $request->data = $data;
+        });
+        $this->after(function ($response) {
+            $response->contentType = 'application/json';
+            $response->body = json_encode($response->body);
+        });
+    }
+
     /**
      * Transforma as requisições json para array e as repostas array para json
      */
@@ -125,9 +139,9 @@ class ComprovanteResource extends Resource {
         });
 
         $this->after(function ($response) {
-         $response->contentType = 'application/json';
-         $response->body = json_encode($response->body);
-     });
+            $response->contentType = 'application/json';
+            $response->body = json_encode($response->body);
+        });
     }
 }
 

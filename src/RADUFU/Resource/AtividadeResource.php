@@ -33,44 +33,6 @@ class AtividadeResource extends Resource {
     }
 
     /**
-     * @method POST
-     * @provides application/json
-     * @json
-     * @return Tonic\Response
-     */
-    public function criar($professor = null) {
-        if(is_null($professor))
-            throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->descricao)
-            &&isset($this->request->data->datainicio)
-            &&isset($this->request->data->datafim)
-            &&isset($this->request->data->valorMult)))
-            return new Response(Response::BADREQUEST);
-
-        try {
-            //public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
-            $this->atividadeService = new AtividadeService();
-            $criado = $this->atividadeService->getNextId();
-
-            $this->atividadeService->post(
-                    $this->request->data->tipo,
-                    $$this->request->data->descricao,
-                    $this->request->data->datainicio,
-                    $this->request->data->datafim,
-                    $this->request->data->valorMult,
-                    $professor
-                    );
-
-            return new Response(Response::CREATED, array(
-                'id' => $criado
-                ));
-
-        } catch (RADUFU\DAO\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
-        }
-    }
-
-    /**
      * @method PUT
      * @provides application/json
      * @json

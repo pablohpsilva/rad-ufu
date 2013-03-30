@@ -3,14 +3,17 @@ namespace RADUFU\Service;
 
 use RADUFU\DAO\Factory,
 	RADUFU\DAO\postgres\AtividadeDAO,
-    RADUFU\Model\Atividade;
+    RADUFU\Model\Atividade,
+    RADUFU\Service\TipoService;
 
 class AtividadeService{
 	private $dao;
+	private $tipoService;
 	private $obj;
 
 	public function __construct(){
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getAtividadeDAO();
+		$this->tipoService = new TipoService();
 	}
 
 	private function createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante = null){
@@ -26,7 +29,7 @@ class AtividadeService{
 			foreach ($comprovante as $val) {
 				$this->obj->add($val);
 			}
-		
+
 		return $this->obj;
 	}
 
@@ -42,15 +45,16 @@ class AtividadeService{
 		}
 	}
 
-	public function getNextId(){ 
-		return $this->dao->getNextId(); 
+	public function getNextId(){
+		return $this->dao->getNextId();
 	}
 
 	public function get($input){
 		return $this->dao->get($input);
 	}
-	
+
 	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
+		$tipo = $this->tipoService->get($tipo);
 		$this->dao->post(self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 		unset($this->obj);
 	}
@@ -66,13 +70,13 @@ class AtividadeService{
 			return $this->dao->getAll();
 	}
 
-	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovantes, $professor){
-		$comprovanteservice = new ComprovanteService();
-		LazyUpdater::lazyUpdaterJob(self::get($id)->getComprovantes(), $comprovantes, $comprovanteservice);
-
+	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, /*$comprovantes,*/ $professor){
+		//$comprovanteservice = new ComprovanteService();
+		//LazyUpdater::lazyUpdaterJob(self::get($id)->getComprovantes(), $comprovantes, $comprovanteservice);
+		$tipo = $this->tipoService->get($tipo);
 		self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult);
 		$this->dao->update($this->obj,$professor);
-		
+
 		unset($this->obj,$comprovanteservice);
 	}
 

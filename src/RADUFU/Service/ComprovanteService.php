@@ -33,8 +33,8 @@ class ComprovanteService{
 		}
 	}
 
-	public function getNextId(){ 
-		return $this->dao->getNextId(); 
+	public function getNextId(){
+		return $this->dao->getNextId();
 	}
 
 	public function get($input){
@@ -46,8 +46,8 @@ class ComprovanteService{
 
 	public function post($professor,$arquivo,$atividade,$id = null){
 		$comp = self::createObject($arquivo,$id);
-		echo $comp->getArquivo();
-		FileService::save($professor,$atividade,$comp);
+		//echo $comp->getArquivo();
+		//FileService::save($professor,$atividade,$comp);
 
 		$this->dao->post($comp,$atividade);
 
@@ -67,9 +67,9 @@ class ComprovanteService{
 
 	public function delete($input){
 		$this->obj = self::get($input);
-		FileService::remove($this->obj);
+		//FileService::remove($this->obj);
 		unset($this->obj);
-		
+
 		$this->dao->delete($input);
 	}
 
