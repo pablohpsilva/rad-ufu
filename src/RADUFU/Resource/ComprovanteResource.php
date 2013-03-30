@@ -47,9 +47,11 @@ class ComprovanteResource extends Resource {
             $this->comprovanteService = new ComprovanteService();
             $criado = $this->comprovanteService->getNextId();
 
+            $tmp_file = $this->request->data->arquivo["tmp_name"] . "/" . $this->request->data->arquivo["name"];
+            //echo $tmp_file;
             $this->comprovanteService->post(
                     $professor,
-                    $this->request->data->arquivo["name"],
+                    $tmp_file,
                     $this->request->data->atividade
                     );
 

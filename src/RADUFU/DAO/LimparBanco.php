@@ -3,7 +3,7 @@ namespace RADUFU\DAO;
 
 use \PDO;
 
-//require_once (__DIR__ . '/../Autoloader.php');
+require_once (__DIR__ . '/../Autoloader.php');
 
 class LimparBanco{
 
@@ -35,13 +35,13 @@ class LimparBanco{
 	";
 	const tipo = "
 	CREATE TABLE tipo(
-	tipo_id serial NOT NULL,
-	tipo_categoria integer NOT NULL,
-	tipo_descricao character varying(750) NOT NULL,
-	tipo_pontuacao smallint NOT NULL,
-	tipo_pontuacaoreferencia smallint,
-	tipo_pontuacaolimite smallint,
-	tipo_multiplicador integer NOT NULL,
+	tipo_id serial 			NOT NULL,
+	tipo_categoria 			INTEGER NOT NULL,
+	tipo_descricao 			VARCHAR(750) NOT NULL,
+	tipo_pontuacao 			SMALLINT NOT NULL,
+	tipo_pontuacaoreferencia 	FLOAT,
+	tipo_pontuacaolimite 		SMALLINT,
+	tipo_multiplicador 		INTEGER NOT NULL,
 	CONSTRAINT const_tipo_primary PRIMARY KEY (tipo_id ),
 	CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria (categoria_id) MATCH SIMPLE
 	ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -51,7 +51,7 @@ class LimparBanco{
 	";
 	const ativ = "
 	CREATE TABLE atividade(
-	atividade_id SERIAL NOT NULL,
+	atividade_id SERIAl NOT NULL,
 	atividade_tipo INTEGER NOT NULL,
 	atividade_descricao VARCHAR(500) NOT NULL,
 	atividade_datainicio DATE,
@@ -72,7 +72,7 @@ class LimparBanco{
 	comprovante_atividade INTEGER NOT NULL,
 	CONSTRAINT const_comprovante_primary PRIMARY KEY (comprovante_id),
 	CONSTRAINT const_comprovante_foreign FOREIGN KEY (comprovante_atividade) REFERENCES atividade (atividade_id) MATCH SIMPLE
-	ON UPDATE CASCADE ON DELETE 
+	ON UPDATE CASCADE ON DELETE CASCADE
 	);
 	";
 

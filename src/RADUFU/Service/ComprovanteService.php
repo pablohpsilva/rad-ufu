@@ -45,13 +45,13 @@ class ComprovanteService{
 	}
 
 	public function post($professor,$arquivo,$atividade,$id = null){
-		$comp = self::createObject($arquivo,$id);
-		//echo $comp->getArquivo();
-		//FileService::save($professor,$atividade,$comp);
+		self::createObject($arquivo,$id);
 
-		$this->dao->post($comp,$atividade);
+		FileService::save($professor->getId(),$atividade,$this->obj);
 
-		unset($this->obj,$comp);
+		$this->dao->post($this->obj,$atividade);
+		
+		unset($this->obj);
 	}
 
 	public function search($input){
@@ -67,7 +67,7 @@ class ComprovanteService{
 
 	public function delete($input){
 		$this->obj = self::get($input);
-		//FileService::remove($this->obj);
+		FileService::remove($this->obj);
 		unset($this->obj);
 
 		$this->dao->delete($input);

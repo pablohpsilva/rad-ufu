@@ -22,6 +22,8 @@ class FileService{
 		$finalDir = $profDir.$idAtividade . "/";
 		$lastMile = $finalDir.$comprovante->separaNome();
 
+		$old = \umask();
+		
 		if (!is_dir($root))
 			\mkdir($root,0777);
 
@@ -31,18 +33,24 @@ class FileService{
 		if (!is_dir($finalDir))
 			\mkdir($finalDir,0777);
 
-		//$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
-		$res = copy($comprovante->getArquivo(),$lastMile);
+		$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
 		$comprovante->setArquivo($lastMile);
+
+		\umask($old);
 
 		if(!$res)
 			throw new Exception("Arquivo nao foi salvo:\t");
 	}
 
 	public static function remove(Comprovante $comprovante){
-		$res = unlink($comprovante->getArquivo());
+		//if(file_exists($comprovante->getArquivo()))
+		if (is_writable($comprovante->getArquivo()))
+			unlink($comprovante->getArquivo());
+		/*
+			$res = unlink($comprovante->getArquivo());
 		if(!$res)
 			throw new Exception("Arquivo nao foi apagado:\t");
+		*/
 	}
 
 	public static function move(Comprovante $oldComp, Comprovante $newComp){
