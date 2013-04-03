@@ -1,34 +1,39 @@
 <?php
 namespace RADUFU\Resource;
 
-use RADUFU\Service\ProfessorService,
+use RADUFU\Service\AtividadeService,
     Tonic\Resource,
     Tonic\Response;
-/**
- * @uri /professor
- * @uri /professor/:id
- */
-class ProfessorResource extends Resource {
 
-    private $professorService = null;
+/**
+ * @uri /professor/:id/atividade
+ * @uri /professor/:id/atividade/:id_ativ
+ */
+class ProfessorAtividadeResource extends Resource {
+
+    private $atividadeService = null;
 
     /**
      * @method GET
      * @provides application/json
      * @json
-     * @param int $id
+     * @param int $idProfessor
      * @return Tonic\Response
      */
-    public function buscar($id = null) {
-        try {
-            $this->professorService = new ProfessorService();
-            if (is_null($id))
-                return new Response(Response::OK, $this->professorService->searchAll());
-            else
-                return new Response( Response::OK, $this->professorService->search($id) );
+    public function buscar($idProfessor = null, $idAtividade = null) {
+        if(is_null($idProfessor) && is_null($idAtividade))
+                throw new \Tonic\MethodNotAllowedException();
 
-        } catch (RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
+        try {
+            $this->atividadeService = new AtividadeService();
+
+            if (!is_null($idAtividade))
+                return new Response( Response::OK, $this->atividadeService->get($idAtividade) );
+            else
+                return new Response( Response::OK, $this->atividadeService->searchAll($idProfessor) );
+
+        } catch (\RADUFU\DAO\NotFoundException $e) {
+            throw new \Tonic\NotFoundException();
         }
     }
 
@@ -38,28 +43,34 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function criar($id = null) {
-        /*
-        if(is_null($id))
+    public function criar($professor = null) {
+        if(is_null($professor))
             throw new Tonic\MethodNotAllowedException();
-        */
-        if(!(isset($this->request->data->siape)
-            &&isset($this->request->data->nome)
-            &&isset($this->request->data->senha)))
+
+        if(!(isset($this->request->data->descricao)
+            &&isset($this->request->data->inicio)
+            &&isset($this->request->data->fim)
+            &&isset($this->request->data->valorMult)
+            &&isset($this->request->data->tipo)))
             return new Response(Response::BADREQUEST);
 
         try {
-            $this->professorService = new ProfessorService();
-            $this->professorService->post(
-                    $this->request->data->siape,
-                    $this->request->data->nome,
-                    $this->request->data->senha,
-                    $id
+            //public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
+            $this->atividadeService = new AtividadeService();
+            $criado = $this->atividadeService->getNextId();
+
+            $this->atividadeService->post(
+                    $this->request->data->tipo,
+                    $this->request->data->descricao,
+                    $this->request->data->inicio,
+                    $this->request->data->fim,
+                    $this->request->data->valorMult,
+                    [],
+                    $professor
                     );
-            $criada = $this->professorService->search($this->request->data->usuario)->getId();
 
             return new Response(Response::CREATED, array(
-                'id' => $criada
+                'id' => $criado
                 ));
 
         } catch (RADUFU\DAO\Exception $e) {
@@ -73,28 +84,34 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function atualizar($id = null) {
-        if(is_null($id))
+    public function atualizar($idProfessor = null, $idAtividade = null) {
+        //$tipo, $descricao, $datainicio, $datafim, $valor, $professor
+        if(is_null($idProfessor) || is_null($idAtividade))
             throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->nome)
-            && isset($this->request->data->siape)
-            && isset($this->request->data->senha)))
+        if(!(isset($this->request->data->tipo)
+            &&isset($this->request->data->descricao)
+            &&isset($this->request->data->inicio)
+            &&isset($this->request->data->fim)
+            &&isset($this->request->data->valorMult)))
             return new Response(Response::BADREQUEST);
 
         try {
-            $this->professorService = new ProfessorService();
-            $this->professorService->update(
-                    $id,
-                    $this->request->data->nome,
-                    $this->request->data->siape,
-                    $this->request->data->senha
+            $this->atividadeService = new AtividadeService();
+            $this->atividadeService->update(
+                    $idAtividade,
+                    $this->request->data->tipo,
+                    $this->request->data->descricao,
+                    $this->request->data->inicio,
+                    $this->request->data->fim,
+                    $this->request->data->valorMult,
+                    $idProfessor
                     );
 
             return new Response(Response::OK);
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
-        } catch (RADUFU\DAO\DAO\Exception $e) {
+        } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
         }
 
@@ -106,7 +123,7 @@ class ProfessorResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function remover($idProfessor = null, $id_ativ = null) {
+    public function remover($id_prof = null, $id_ativ = null) {
         if(is_null($id_ativ))
             throw new Tonic\MethodNotAllowedException();
 
