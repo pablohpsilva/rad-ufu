@@ -123,7 +123,7 @@ class ProfessorAtividadeResource extends Resource {
      * @json
      * @return Tonic\Response
      */
-    public function remover($id_ativ = null) {
+    public function remover($idProfessor = null, $id_ativ = null) {
         if(is_null($id_ativ))
             throw new Tonic\MethodNotAllowedException();
 
