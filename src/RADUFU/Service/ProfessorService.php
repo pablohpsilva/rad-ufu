@@ -65,14 +65,11 @@ class ProfessorService{
 	}
 
 	public function delete($input){
-		//$atividade = new AtividadeService();
-		//$array = $atividade->searchAll($input);
-
-		//$atividade->deleteCollection($array);
-
 		$this->dao->delete($input);
+	}
 
-		unset($atividade,$array);
+	public function login($siape,$password){
+		return $this->dao->login($siape,$password);
 	}
 
 }

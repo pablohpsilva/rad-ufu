@@ -3,7 +3,7 @@ namespace RADUFU\DAO;
 
 use \PDO;
 
-require_once (__DIR__ . '/../Autoloader.php');
+//require_once (__DIR__ . '/../Autoloader.php');
 
 class LimparBanco{
 
@@ -76,6 +76,31 @@ class LimparBanco{
 	);
 	";
 
+	const func_login = "
+	CREATE OR REPLACE FUNCTION login(argsiape character varying, argsenha character varying)
+	RETURNS INTEGER AS
+	$BODY$
+	DECLARE 
+		acesso INTEGER;
+		consulta RECORD;
+	BEGIN
+		SELECT COUNT(DISTINCT professor_siape) AS contagem INTO consulta
+		FROM professor WHERE professor_siape = argsiape AND professor_senha = argsenha;
+			
+		IF (consulta.contagem = 0)
+		THEN 
+			acesso := -1;
+		ELSE
+			acesso := 1;
+		END IF;
+		
+		RETURN acesso;
+	END;
+	$BODY$
+	  LANGUAGE plpgsql VOLATILE
+	  COST 100;
+	";
+
 
 	const del = "DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;";
 
@@ -113,8 +138,12 @@ class LimparBanco{
 		$stm->execute();
 		echo $stm->errorInfo()[2];
 
+		$stm = Connection::Instance()->get()->prepare(self::func_login);
+		$stm->execute();
+		echo $stm->errorInfo()[2];
+
 		echo "LimparBanco says: Feito! Banco novinho em folha. Aproveite! <br/><br/><br/>";
 	}
 }
-LimparBanco::limpar();
+//LimparBanco::limpar();
 ?>

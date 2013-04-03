@@ -43,7 +43,7 @@ CREATE TABLE tipo(
 );
 
 CREATE TABLE atividade(
-	atividade_id SERIAl NOT NULL,
+	atividade_id SERIAL NOT NULL,
 	atividade_tipo INTEGER NOT NULL,
 	atividade_descricao VARCHAR(500) NOT NULL,
 	atividade_datainicio DATE,
@@ -65,3 +65,26 @@ CREATE TABLE comprovante(
 	CONSTRAINT const_comprovante_foreign FOREIGN KEY (comprovante_atividade) REFERENCES atividade (atividade_id) MATCH SIMPLE
 	ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE OR REPLACE FUNCTION login(argsiape character varying, argsenha character varying)
+RETURNS INTEGER AS
+$BODY$
+DECLARE 
+	acesso INTEGER;
+	consulta RECORD;
+BEGIN
+	SELECT COUNT(DISTINCT professor_siape) AS contagem INTO consulta
+	FROM professor WHERE professor_siape = argsiape AND professor_senha = argsenha;
+		
+	IF (consulta.contagem = 0)
+	THEN 
+		acesso := -1;
+	ELSE
+		acesso := 1;
+	END IF;
+	
+	RETURN acesso;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
