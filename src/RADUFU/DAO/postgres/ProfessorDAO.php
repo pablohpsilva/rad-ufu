@@ -26,7 +26,7 @@ class ProfessorDAO implements IProfessorDAO{
     const SQL_READ = 'SELECT * FROM Professor WHERE professor_siape = :professor_siape;';
     const SQL_READ_ALL = 'SELECT * FROM Professor;';
     const SQL_DELETE = 'DELETE FROM Professor WHERE professor_id = :professor_id;';
-    const SQL_LOGIN = 'SELECT login(:professor_siape,:professor_senha);'
+    const SQL_LOGIN = 'SELECT login(:professor_siape,:professor_senha);';
 
     private $atividadeDAO;
 
