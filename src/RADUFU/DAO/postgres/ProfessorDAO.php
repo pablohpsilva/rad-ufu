@@ -172,12 +172,13 @@ class ProfessorDAO implements IProfessorDAO{
     public function login($siape,$password){
         try{
             $stm = Connection::Instance()->get()->prepare(self::SQL_LOGIN);
-            $res = $stm->execute(array(
-                ':professor_id' =>$siape,
+            $stm->execute(array(
+                ':professor_siape' =>$siape,
                 ':professor_senha' =>$password
                 ));
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
 
-            if($res == -1)
+            if($result['login'] == -1)
                 throw new Exception("Usuario e/ou senha invalido:\t"
                     . $stm->errorInfo()[2]);
 

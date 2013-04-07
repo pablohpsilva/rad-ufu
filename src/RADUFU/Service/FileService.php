@@ -4,6 +4,8 @@ namespace RADUFU\Service;
 use RADUFU\DAO\Exception,
 	RADUFU\Model\Comprovante;
 
+require_once (__DIR__ . '/../Autoloader.php');
+
 class FileService{
 	private function __construct(){ }
 
@@ -22,35 +24,31 @@ class FileService{
 		$finalDir = $profDir.$idAtividade . "/";
 		$lastMile = $finalDir.$comprovante->separaNome();
 
-		$old = \umask();
-		
 		if (!is_dir($root))
-			\mkdir($root,0777);
+			\mkdir($root,0776);
 
 		if (!is_dir($profDir))
-			\mkdir($profDir,0777);
+			\mkdir($profDir,0776);
 
 		if (!is_dir($finalDir))
-			\mkdir($finalDir,0777);
+			\mkdir($finalDir,0776);
+
+		\chmod($comprovante->separaCaminho(), 0776);
 
 		$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
+		//$res = copy($comprovante->separaCaminho(), $lastMile);
 		$comprovante->setArquivo($lastMile);
 
-		\umask($old);
+		\chmod($comprovante->getArquivo(), 0776);
 
 		if(!$res)
 			throw new Exception("Arquivo nao foi salvo:\t");
 	}
 
 	public static function remove(Comprovante $comprovante){
-		//if(file_exists($comprovante->getArquivo()))
-		if (is_writable($comprovante->getArquivo()))
-			unlink($comprovante->getArquivo());
-		/*
-			$res = unlink($comprovante->getArquivo());
+		$res = unlink($comprovante->getArquivo());
 		if(!$res)
 			throw new Exception("Arquivo nao foi apagado:\t");
-		*/
 	}
 
 	public static function move(Comprovante $oldComp, Comprovante $newComp){
@@ -63,4 +61,28 @@ class FileService{
 	}
 
 }
+####
+####
+#### Retirando o .htaccess os testes abaixo funcionam.
+#### Primeiro, salvo o arquivo descomentando o FileService::save
+#### Checo se o arquivo esta no local que eu mandei ele ir
+#### Depois, rodo o script novamente, porem com as linhas
+#### $comprovante->setArquivo(FileService::getPath() . "2/10/papel.png");
+#### e tambem FileService::remove 
+#### descomentadas. Funciona.
+####
+####
+
+
+/*
+$idprof = 2;
+$idAtiv = 10;
+$comprovante = new Comprovante();
+$comprovante->setArquivo("/var/www/papel.png");
+
+//FileService::save($idprof, $idAtiv, $comprovante);
+//echo $comprovante->getArquivo();
+$comprovante->setArquivo(FileService::getPath() . "2/10/papel.png");
+FileService::remove($comprovante);
+*/
 ?>
