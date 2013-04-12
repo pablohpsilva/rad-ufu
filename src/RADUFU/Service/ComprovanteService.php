@@ -46,8 +46,9 @@ class ComprovanteService{
 
 	public function post($professor,$arquivo,$atividade,$id = null){
 		self::createObject($arquivo,$id);
-
+		
 		FileService::save($professor->getId(),$atividade,$this->obj);
+		echo $this->obj->getArquivo();
 
 		$this->dao->post($this->obj,$atividade);
 		

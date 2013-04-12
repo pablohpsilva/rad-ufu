@@ -195,6 +195,7 @@ class AtividadeDAO implements IAtividadeDAO{
     public function delete($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_DELETE);
+            $id += 0;
             $stm->bindParam(':atividade_id', $id);
             $stm->execute();
 
