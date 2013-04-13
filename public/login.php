@@ -15,7 +15,7 @@
       if(!is_null($professor)){
         session_start();
         $_SESSION['user'] = $professor;
-        header("Location: index.php");
+        header("Location: /rad-ufu/");
         exit();
       }
     } catch(Exception $e){
