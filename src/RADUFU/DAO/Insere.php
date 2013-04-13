@@ -38,8 +38,9 @@ class Insere {
             */
         $insert_professores = "
             INSERT INTO professor (professor_nome, professor_siape, professor_senha) VALUES
-            ('Girafales', '12129idasdas', 'senha');
+            ('Girafales', '1234', '1234');
         ";
+/*
         $insert_atividades = "
             INSERT INTO atividade (
                 atividade_tipo, atividade_descricao, atividade_datainicio,
@@ -60,14 +61,14 @@ class Insere {
             ('/home/yassin/The X files.pdf', 1),
             ('/home/yassin/Top Secret.pdf', 2);
         ";
-
+*/
         echo "###################################<br/>";
         echo "###### InsereDadosTeste v1.0 ######<br/>";
         echo "###################################<br/>";
 
         $inserts = array(/*$insert_categorias, $insert_multiplicadores,
-                         $insert_tipos, */$insert_professores, $insert_atividades,
-                         $insert_comprovantes);
+                         $insert_tipos, */$insert_professores,/* $insert_atividades,
+                         $insert_comprovantes*/);
 
         foreach ($inserts as $key => $ins) {
             $stm = Connection::Instance()->get()->prepare($ins);
