@@ -9,15 +9,14 @@ use \PDO,
     RADUFU\DAO\NotFoundException;
 
 class ComprovanteDAO implements IComprovanteDAO{
-	const SQL_POST = 'INSERT INTO Comprovante VALUES(DEFAULT,:comprovante_arquivo,:comprovante_atividade);';
+	const SQL_POST = 'INSERT INTO Comprovante VALUES(:comprovante_id,:comprovante_arquivo,:comprovante_atividade);';
 	const SQL_UPDATE = 'UPDATE Comprovante SET
         comprovante_arquivo = :comprovante_arquivo,
         comprovante_atividade = :comprovante_atividade
 		WHERE comprovante_id = :comprovante_id;';
 	const SQL_GET = 'SELECT * FROM Comprovante WHERE comprovante_id = :comprovante_id;';
     const SQL_GET_ALL = 'SELECT * FROM Comprovante;';
-    const SQL_GET_NEXT_ID = "SELECT NEXTVAL('comprovante_comprovante_id_seq');";
-    const SQL_RESET_NEXT_ID = "SELECT SETVAL('comprovante_comprovante_id_seq', :next_id);";
+    const SQL_GET_NEXT_ID = "SELECT getNextValue('comprovante');";
     const SQL_READ = 'SELECT * FROM Comprovante WHERE comprovante_atividade = :comprovante_atividade;';
 	const SQL_DELETE = 'DELETE FROM Comprovante WHERE comprovante_id = :comprovante_id;';
 
@@ -26,6 +25,7 @@ class ComprovanteDAO implements IComprovanteDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
+                ':comprovante_id' => $comp->getId(),
                 ':comprovante_arquivo' => $comp->getArquivo(),
                 ':comprovante_atividade' => $idAtividade
             ));
@@ -112,14 +112,8 @@ class ComprovanteDAO implements IComprovanteDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
             $stm->execute();
             $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['nextval'];
-
-            $stm = Connection::Instance()->get()->prepare(self::SQL_RESET_NEXT_ID);
-            $aux = $next-1;
-            $stm->bindParam(':next_id', $aux);
-            $stm->execute();
-
-            unset($aux,$result,$stm);
+            $next = $result['getnextvalue'];
+            unset($result,$stm);
             
             return $next;
 

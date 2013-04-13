@@ -69,6 +69,7 @@ class ProfessorService{
 	}
 
 	public function login($siape,$password){
+		//if true, Professor. Else Exception
 		return $this->dao->login($siape,$password);
 	}
 

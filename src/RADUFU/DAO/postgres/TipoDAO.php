@@ -11,7 +11,7 @@ use \PDO,
 class TipoDAO implements ITipoDAO{
 
     const SQL_POST = 'INSERT INTO Tipo VALUES(
-            DEFAULT,
+            :tipo_id,
             :tipo_categoria,
             :tipo_descricao,
             :tipo_pontuacao,
@@ -31,8 +31,7 @@ class TipoDAO implements ITipoDAO{
 
     const SQL_GET = 'SELECT * FROM Tipo WHERE tipo_id = :tipo_id;';
     const SQL_READ = 'SELECT * FROM Tipo WHERE tipo_categoria = :tipo_categoria;';
-    const SQL_GET_NEXT_ID = "SELECT NEXTVAL('tipo_tipo_id_seq');";
-    const SQL_RESET_NEXT_ID = "SELECT SETVAL('tipo_tipo_id_seq', :next_id);";
+    const SQL_GET_NEXT_ID = "SELECT getNextValue('tipo');";
     const SQL_READ_ALL = 'SELECT * FROM Tipo;';
     const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_id = :tipo_id;';
 
@@ -44,6 +43,7 @@ class TipoDAO implements ITipoDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
+                ':tipo_id' => $tipo->getId(),
                 ':tipo_categoria' => $tipo->getCategoria()->getId(),
                 ':tipo_descricao' => $tipo->getDescricao(),
                 ':tipo_pontuacao' => $tipo->getPontuacao(),
@@ -154,13 +154,9 @@ class TipoDAO implements ITipoDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
             $stm->execute();
             $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['nextval'];
-
-            $stm = Connection::Instance()->get()->prepare(self::SQL_RESET_NEXT_ID);
-            $aux = $next-1;
-            $stm->bindParam(':next_id', $aux);
-            $stm->execute();
-            unset($aux,$result,$stm);
+            $next = $result['getnextvalue'];
+            unset($result,$stm);
+            
             return $next;
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar a Atividade por id:\t"

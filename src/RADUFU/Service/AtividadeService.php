@@ -53,7 +53,7 @@ class AtividadeService{
 		return $this->dao->get($input);
 	}
 
-	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
+	public function post($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
 		$tipo = $this->tipoService->get($tipo);
 		$this->dao->post(self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 		unset($this->obj);

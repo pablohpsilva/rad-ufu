@@ -44,11 +44,10 @@ class ComprovanteService{
 			return $this->dao->read($input);
 	}
 
-	public function post($professor,$arquivo,$atividade,$id = null){
+	public function post($id,$professor,$arquivo,$atividade){
 		self::createObject($arquivo,$id);
 		
 		FileService::save($professor->getId(),$atividade,$this->obj);
-		echo $this->obj->getArquivo();
 
 		$this->dao->post($this->obj,$atividade);
 		

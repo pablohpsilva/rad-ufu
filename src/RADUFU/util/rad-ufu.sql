@@ -1,14 +1,14 @@
 CREATE DATABASE RADUFU;
 
-ALTER DATABASE RADUFU SET datestyle TO "ISO, DMY";
-
 DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;
+
+ALTER DATABASE RADUFU SET datestyle TO "ISO, DMY";
 
 CREATE TABLE professor(
 	professor_id		SERIAL NOT NULL,
 	professor_nome 		VARCHAR(60) NOT NULL,
-	professor_siape		VARCHAR(30) NOT NULL,
-	professor_senha		VARCHAR(40) NOT NULL,
+	professor_siape		VARCHAR(32) NOT NULL,
+	professor_senha		VARCHAR(32) NOT NULL,
 	UNIQUE(professor_siape),
 	CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
 );
@@ -88,3 +88,39 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+
+
+CREATE OR REPLACE FUNCTION getNextValue(tabela VARCHAR)
+RETURNS INTEGER AS 
+$getNextValue$
+DECLARE
+proximo INTEGER;
+aux INTEGER;
+BEGIN
+	IF (tabela = 'atividade') THEN
+		SELECT NEXTVAL('atividade_atividade_id_seq') INTO proximo;
+		IF (proximo = 1) THEN
+			SELECT SETVAL('atividade_atividade_id_seq', 1) INTO proximo;
+		ELSE
+			SELECT SETVAL('atividade_atividade_id_seq', proximo-1) INTO aux;
+		END IF;
+	ELSEIF (tabela = 'comprovante') THEN
+		SELECT NEXTVAL('comprovante_comprovante_id_seq') INTO proximo;
+		IF (proximo = 1) THEN
+			SELECT SETVAL('comprovante_comprovante_id_seq', 1) INTO proximo;
+		ELSE
+			SELECT SETVAL('comprovante_comprovante_id_seq', proximo-1) INTO aux;
+		END IF;
+	ELSEIF (tabela = 'tipo') THEN
+		SELECT NEXTVAL('tipo_tipo_id_seq') INTO proximo;
+		IF (proximo = 1) THEN
+			SELECT SETVAL('tipo_tipo_id_seq', 1) INTO proximo;
+		ELSE
+			SELECT SETVAL('tipo_tipo_id_seq', proximo-1) INTO aux;
+		END IF;
+	END IF;
+	
+	RETURN proximo;
+END;
+$getNextValue$
+LANGUAGE plpgsql;
