@@ -29,7 +29,7 @@ class AtividadeDAO implements IAtividadeDAO{
 	const SQL_GET = 'SELECT * FROM Atividade WHERE atividade_id = :atividade_id;';
     const SQL_GET_NEXT_ID = "SELECT NEXTVAL('atividade_atividade_id_seq');";
     const SQL_RESET_NEXT_ID = "SELECT SETVAL('atividade_atividade_id_seq', :next_id);";
-    const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor;';
+    const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor ORDER BY atividade_datafim DESC;';
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
 

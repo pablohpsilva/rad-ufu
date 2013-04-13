@@ -1,77 +1,13 @@
-﻿
-SET datestyle TO 'dmy';
-DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;
-
-CREATE TABLE professor(
-professor_id	SERIAL NOT NULL,
-professor_nome VARCHAR(60) NOT NULL,
-professor_siape	VARCHAR(30) NOT NULL,
-professor_senha	VARCHAR(40) NOT NULL,
-UNIQUE(professor_siape),
-CONSTRAINT const_professor_primary PRIMARY KEY(professor_id)
-);
-
-CREATE TABLE categoria(
-categoria_id	SERIAL NOT NULL,
-categoria_nome VARCHAR(60),
-UNIQUE(categoria_nome),
-CONSTRAINT const_categoria_primary PRIMARY KEY(categoria_id)
-);
-
-CREATE TABLE multiplicador(
-multiplicador_id SERIAL NOT NULL,
-multiplicador_nome VARCHAR (90),
-UNIQUE(multiplicador_nome),
-CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
-);
-
-CREATE TABLE tipo(
-tipo_id SERIAL NOT NULL,
-tipo_categoria INTEGER NOT NULL,
-tipo_descricao VARCHAR(750) NOT NULL,
-tipo_pontuacao SMALLINT NOT NULL,
-tipo_pontuacaoreferencia	SMALLINT,
-tipo_pontuacaolimite SMALLINT,
-tipo_multiplicador	INTEGER NOT NULL,
-CONSTRAINT const_tipo_primary PRIMARY KEY(tipo_id),
-CONSTRAINT const_tipo_foreign FOREIGN KEY (tipo_categoria) REFERENCES categoria(categoria_id),
-CONSTRAINT const_tipo_mult_foreign FOREIGN KEY (tipo_multiplicador) REFERENCES multiplicador(multiplicador_id)
-);
-
-
-CREATE TABLE atividade(
-atividade_id	SERIAL NOT NULL,
-atividade_tipo	INTEGER NOT NULL,
-atividade_descricao VARCHAR(500) NOT NULL,
-atividade_datainicio DATE,
-atividade_datafim DATE,
-atividade_multiplicador_valor FLOAT(8),
-atividade_professor	INTEGER NOT NULL,
-CONSTRAINT const_atividade_primary PRIMARY KEY(atividade_id),
-CONSTRAINT const_atividade_foreign1 FOREIGN KEY (atividade_tipo) REFERENCES tipo(tipo_id),
-CONSTRAINT const_atividade_foreign2 FOREIGN KEY (atividade_professor) REFERENCES professor(professor_id)
-);
-
-CREATE TABLE comprovante(
-comprovante_id SERIAL NOT NULL,
-comprovante_arquivo VARCHAR(500),
-comprovante_atividade INTEGER NOT NULL,
-CONSTRAINT const_comprovante_primary PRIMARY KEY(comprovante_id),
-CONSTRAINT const_comprovante_foreign FOREIGN KEY(comprovante_atividade) REFERENCES atividade(atividade_id)
-);
-
-
-INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Ensino');
-INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Orientação');
+﻿INSERT INTO categoria (categoria_nome) VALUES ('Ensino');
+INSERT INTO categoria (categoria_nome) VALUES ('Orientação');
 INSERT INTO categoria (categoria_nome) VALUES ('Produção Bibliográfica e Divulgação');
 INSERT INTO categoria (categoria_nome) VALUES ('Produção Artística');
 INSERT INTO categoria (categoria_nome) VALUES ('Produção Técnica');
-INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Pesquisa');
-INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Extensão e Prestação de Serviços');
+INSERT INTO categoria (categoria_nome) VALUES ('Pesquisa');
+INSERT INTO categoria (categoria_nome) VALUES ('Extensão e Prestação de Serviços');
 INSERT INTO categoria (categoria_nome) VALUES ('Licenças, Situações Especiais e Qualificação');
-INSERT INTO categoria (categoria_nome) VALUES ('Atividades Administrativas e Representações');
-INSERT INTO categoria (categoria_nome) VALUES ('Outras Atividades');
-
+INSERT INTO categoria (categoria_nome) VALUES ('Administrativas e Representações');
+INSERT INTO categoria (categoria_nome) VALUES ('Outras');
 
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/semestre por aula dada semanalmente');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/aula dada/semana');
@@ -134,7 +70,7 @@ INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo de
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto/hora-aula; limite de 30 pontos');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto/hora; limite de 30 pontos');
 
---ATIVIDADES DE ENSINO 
+--ATIVIDADES DE ENSINO
 --1
 INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (1,10,1,'Aula teórica ou prática de disciplinas ministradas na Educação Básica, na Educação Profissional, em cursos de graduação ou pós-graduação stricto e lato sensu da UFU, sem remuneração complementar, aprovadas pelo Conselho da Unidade. Para disciplinas ministradas por mais de um docente, a pontuação deverá ser atribuída ao docente de acordo com a carga horária ministrada pelo mesmo. Turmas adicionais da mesma disciplina ministradas pelo docente serão pontuadas nos itens 02 e 03.');
 --2
