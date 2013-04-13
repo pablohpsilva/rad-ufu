@@ -15,14 +15,14 @@ CREATE TABLE professor(
 
 CREATE TABLE categoria(
 	categoria_id	SERIAL NOT NULL,
-	categoria_nome 	VARCHAR(30),
+	categoria_nome 	VARCHAR(60),
 	UNIQUE(categoria_nome),
 	CONSTRAINT const_categoria_primary PRIMARY KEY(categoria_id)
 );
 
 CREATE TABLE multiplicador(
 	multiplicador_id 		SERIAL NOT NULL,
-	multiplicador_nome 		VARCHAR (30),
+	multiplicador_nome 		VARCHAR (90),
 	UNIQUE(multiplicador_nome),
 	CONSTRAINT const_multiplicador_primary PRIMARY KEY(multiplicador_id)
 );
@@ -69,20 +69,20 @@ CREATE TABLE comprovante(
 CREATE OR REPLACE FUNCTION login(argsiape character varying, argsenha character varying)
 RETURNS INTEGER AS
 $BODY$
-DECLARE 
+DECLARE
 	acesso INTEGER;
 	consulta RECORD;
 BEGIN
 	SELECT COUNT(DISTINCT professor_siape) AS contagem INTO consulta
 	FROM professor WHERE professor_siape = argsiape AND professor_senha = argsenha;
-		
+
 	IF (consulta.contagem = 0)
-	THEN 
+	THEN
 		acesso := -1;
 	ELSE
 		acesso := 1;
 	END IF;
-	
+
 	RETURN acesso;
 END;
 $BODY$
