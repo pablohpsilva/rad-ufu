@@ -57,6 +57,7 @@ class TipoResource extends Resource {
             $criado = $this->tipoService->getNextId();
 
             $this->tipoService->post(
+                    $criado,
                     $this->request->data->categoria,
                     $this->request->data->descricao,
                     $this->request->data->pontuacao,

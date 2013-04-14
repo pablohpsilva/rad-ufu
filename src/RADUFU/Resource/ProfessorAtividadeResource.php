@@ -57,9 +57,11 @@ class ProfessorAtividadeResource extends Resource {
         try {
             //public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
             $this->atividadeService = new AtividadeService();
+
             $criado = $this->atividadeService->getNextId();
 
             $this->atividadeService->post(
+                    $criado,
                     $this->request->data->tipo,
                     $this->request->data->descricao,
                     $this->request->data->inicio,
