@@ -11,7 +11,7 @@ use \PDO,
 class TipoDAO implements ITipoDAO{
 
     const SQL_POST = 'INSERT INTO Tipo VALUES(
-            :tipo_id,
+            DEFAULT,
             :tipo_categoria,
             :tipo_descricao,
             :tipo_pontuacao,
@@ -34,6 +34,13 @@ class TipoDAO implements ITipoDAO{
     const SQL_GET_NEXT_ID = "SELECT getNextValue('tipo');";
     const SQL_READ_ALL = 'SELECT * FROM Tipo;';
     const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_id = :tipo_id;';
+    const SQL_READALL = 'SELECT tipo_id FROM Tipo WHERE 
+            tipo_categoria = :tipo_categoria AND 
+            tipo_descricao = :tipo_descricao AND 
+            tipo_pontuacao = :tipo_pontuacao AND 
+            tipo_pontuacaoreferencia = :tipo_pontuacaoreferencia AND 
+            tipo_pontuacaolimite = :tipo_pontuacaolimite AND 
+            tipo_multiplicador = :tipo_multiplicador;';
 
     private $multiplicadorDAO;
     private $categoriaDAO;
@@ -43,7 +50,6 @@ class TipoDAO implements ITipoDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
-                ':tipo_id' => $tipo->getId(),
                 ':tipo_categoria' => $tipo->getCategoria()->getId(),
                 ':tipo_descricao' => $tipo->getDescricao(),
                 ':tipo_pontuacao' => $tipo->getPontuacao(),
@@ -203,5 +209,27 @@ class TipoDAO implements ITipoDAO{
                 . $ex->getMessage(), 0, $ex);
         }
     }
+
+    public function readAll(Tipo $tipo){
+        try{
+            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
+            $stm->execute(array(
+                ':tipo_categoria' =>$tipo->getCategoria()->getId(),
+                ':tipo_descricao' =>$tipo->getDescricao(),
+                ':tipo_pontuacao' =>$tipo->getPontuacao(),
+                ':tipo_pontuacaoreferencia' =>$tipo->getPontuacaoReferencia(),
+                ':tipo_pontuacaolimite' =>$tipo->getPontuacaoLimite(),
+                ':tipo_multiplicador' => $tipo->getMultiplicador()->getId()
+                ));
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
+            unset($result,$stm);
+            
+            return $result['tipo_id'];
+        } catch (PDOException $ex) {
+            throw new Exception("Ao procurar a Atividade por id:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
+
 }
 ?>

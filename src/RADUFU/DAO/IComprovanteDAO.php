@@ -58,6 +58,13 @@ interface IComprovanteDAO {
      * @throws DAOException
      */
     public function delete($arquivo);
+
+    /**
+     * Atualiza os atributos do comprovante no BD
+     * @param Comprovante $prof
+     * @throws DAOException
+     */
+    public function readAll(Comprovante $comp,$idAtividade);
 }
 
 ?>

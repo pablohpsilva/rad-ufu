@@ -44,14 +44,16 @@ class ComprovanteService{
 			return $this->dao->read($input);
 	}
 
-	public function post($id,$professor,$arquivo,$atividade){
-		self::createObject($arquivo,$id);
+	public function post($professor,$arquivo,$atividade){
+		self::createObject($arquivo,$id = null);
 		
-		FileService::save($professor->getId(),$atividade,$this->obj);
+		$lastMile = FileService::save($professor->getId(),$atividade,$this->obj);
 
 		$this->dao->post($this->obj,$atividade);
 		
 		unset($this->obj);
+
+		return $lastMile;
 	}
 
 	public function search($input){
@@ -63,6 +65,10 @@ class ComprovanteService{
 			return $this->dao->read($idAtividade);
 		else
 			return $this->dao->getAll();
+	}
+
+	public function readAll($arquivo,$idAtividade){
+		return $this->dao->readAll(self::createObject($arquivo,$id = null), $idAtividade);
 	}
 
 	public function delete($input){

@@ -60,6 +60,13 @@ interface IAtividadeDAO {
      * @throws DAOException
      */
     public function delete($id);
+
+    /**
+     * Removeo Atividade do BD
+     * @param type Atividade $ativ
+     * @throws DAOException
+     */
+    public function readAll(Atividade $ativ, $idProfessor);
 }
 
 ?>

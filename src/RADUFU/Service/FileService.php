@@ -43,6 +43,8 @@ class FileService{
 
 		if(!$res)
 			throw new Exception("Arquivo nao foi salvo:\t");
+
+		return $lastMile;
 	}
 
 	public static function remove(Comprovante $comprovante){

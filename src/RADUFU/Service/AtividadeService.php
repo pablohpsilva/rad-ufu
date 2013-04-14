@@ -53,9 +53,9 @@ class AtividadeService{
 		return $this->dao->get($input);
 	}
 
-	public function post($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
+	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
 		$tipo = $this->tipoService->get($tipo);
-		$this->dao->post(self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
+		$this->dao->post(self::createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 		unset($this->obj);
 	}
 
@@ -68,6 +68,11 @@ class AtividadeService{
 			return $this->dao->read($idProfessor);
 		else
 			return $this->dao->getAll();
+	}
+
+	public function readAll($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
+		$tipo = $this->tipoService->get($tipo);
+		return $this->dao->readAll(self::createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 	}
 
 	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, /*$comprovantes,*/ $professor){
