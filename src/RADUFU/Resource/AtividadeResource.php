@@ -39,7 +39,6 @@ class AtividadeResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
-        //$tipo, $descricao, $datainicio, $datafim, $valor, $professor
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->tipo)

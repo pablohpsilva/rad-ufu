@@ -53,11 +53,6 @@ class ComprovanteDAO implements IComprovanteDAO{
             $comp[] = $c;
         }
         unset($c);
-        /*
-        if (empty($comp))
-            throw new NotFoundException();
-        else
-        */
         return $comp;
     }
 
@@ -175,7 +170,7 @@ class ComprovanteDAO implements IComprovanteDAO{
             return $result['comprovante_id'];
 
         } catch (PDOException $ex) {
-            throw new Exception("Ao procurar Comprovante:\t"
+            throw new Exception("Ao procurar id por Comprovante:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }

@@ -9,10 +9,6 @@ require_once (__DIR__ . '/../Autoloader.php');
 class FileService{
 	private function __construct(){ }
 
-	/*
-	 *$file = $_FILES['file']
-	 *@type: FILE
-	 */
 	public static function getPath(){
 		$defaultPath = __DIR__."/../../../../FileService/";
 		return $defaultPath;
@@ -36,7 +32,6 @@ class FileService{
 		\chmod($comprovante->separaCaminho(), 0776);
 
 		$res = move_uploaded_file($comprovante->separaCaminho(),$lastMile);
-		//$res = copy($comprovante->separaCaminho(), $lastMile);
 		$comprovante->setArquivo($lastMile);
 
 		\chmod($comprovante->getArquivo(), 0776);
@@ -64,7 +59,7 @@ class FileService{
 
 	private static function readfile_chunked($filename) { 
 		\chmod($filename, 0777);
-        $chunksize = 1*(1024*1024); // how many bytes per chunk 
+        $chunksize = 1*(1024*1024);
         $buffer = ''; 
         $handle = fopen($filename, 'rb');
         echo $handle;
@@ -81,48 +76,18 @@ class FileService{
     }
 
     public static function downloadFile($filePath,$fileName,$fileExt){
-    	///*
         header('Content-Description: File Transfer');
-        // We'll be outputting a MP3
         header('Content-type: application/'.$fileExt);
-        // It will be called file.mp3
         header('Content-Disposition: attachment; filename=' .$fileName);
         header('Content-Length: '.filesize($filePath));
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
-        // The MP3 source is in somefile.pdf
-        //readfile("somefile.mp3");
-        //echo $filePath;
-        //*/
+
         self::readfile_chunked($filePath);
 
         \chmod($filePath, 0776);
     }
 }
-####
-####
-#### Retirando o .htaccess os testes abaixo funcionam.
-#### Primeiro, salvo o arquivo descomentando o FileService::save
-#### Checo se o arquivo esta no local que eu mandei ele ir
-#### Depois, rodo o script novamente, porem com as linhas
-#### $comprovante->setArquivo(FileService::getPath() . "2/10/papel.png");
-#### e tambem FileService::remove 
-#### descomentadas. Funciona.
-####
-####
-
-
-/*
-$idprof = 2;
-$idAtiv = 10;
-$comprovante = new Comprovante();
-$comprovante->setArquivo("/var/www/papel.png");
-
-//FileService::save($idprof, $idAtiv, $comprovante);
-//echo $comprovante->getArquivo();
-$comprovante->setArquivo(FileService::getPath() . "2/10/papel.png");
-FileService::remove($comprovante);
-*/
 ?>

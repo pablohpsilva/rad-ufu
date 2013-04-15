@@ -230,7 +230,7 @@ class AtividadeDAO implements IAtividadeDAO{
             return $result['atividade_id'];
 
         } catch (PDOException $ex) {
-            throw new Exception("Ao procurar Atividade:\t"
+            throw new Exception("Ao procurar id por Atividade:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }

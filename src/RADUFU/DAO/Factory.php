@@ -3,7 +3,6 @@
 namespace RADUFU\DAO;
 
 abstract class Factory {
-    // Lista de factories existentes (1 - postgres)
 
     const PGSQL = 1;
 
@@ -19,7 +18,6 @@ abstract class Factory {
 
     public abstract function getTipoDAO();
 
-    //escolha do dao factory
     public static function getFactory($factory) {
         switch ($factory)
         {

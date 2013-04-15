@@ -68,39 +68,6 @@ class ComprovanteResource extends Resource {
         }
     }
 
-    /*//*
-     * @method PUT
-     * @provides application/json
-     * @json
-     * @return Tonic\Response
-     */
-/*
-    public function atualizar($id = null) {
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->professor)
-            &&isset($this->request->data->atividade)
-            &&isset($this->request->data->arquivo)))
-            return new Response(Response::BADREQUEST);
-        try {
-            $this->comprovanteService = new ComprovanteService();
-            $this->comprovanteService->update(
-                    $id,
-                    $this->request->data->professor,
-                    $this->request->data->arquivo,
-                    $this->request->data->atividade
-                    );
-
-            return new Response(Response::OK);
-
-        } catch (RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
-        } catch (RADUFU\DAO\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
-        }
-
-    }
-*/
     /**
      * @method DELETE
      * @provides application/json

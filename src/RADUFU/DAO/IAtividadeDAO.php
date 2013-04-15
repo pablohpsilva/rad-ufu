@@ -3,7 +3,6 @@ namespace RADUFU\DAO;
 
 use RADUFU\Model\Atividade;
 
-//require_once(__DIR__ . '/../model/Atividade.php');
 /**
  * Interface para CRUD basico
  */
@@ -23,14 +22,6 @@ interface IAtividadeDAO {
      * @throws DAOException
      */
     public function get($id);
-
-    /**
-     * Recupera o proximo id da Atividade
-     * @param type $id
-     * @return id da Proxima Atividade
-     * @throws DAOException
-     */
-    public function getNextId();
 
     /**
      * Recupera o Atividade a partir do id
@@ -62,8 +53,8 @@ interface IAtividadeDAO {
     public function delete($id);
 
     /**
-     * Removeo Atividade do BD
-     * @param type Atividade $ativ
+     * Busca uma atividade usando um Atividade e idProfessor
+     * @param type Atividade $ativ, type $idProfessor
      * @throws DAOException
      */
     public function readAll(Atividade $ativ, $idProfessor);

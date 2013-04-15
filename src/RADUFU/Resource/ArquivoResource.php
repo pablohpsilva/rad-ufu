@@ -21,7 +21,7 @@ class ArquivoResource extends Resource {
      */
     public function download($id = null) {
         try {
-        	if(!(isset($this->request->data->arquivo)))
+        	if(!(isset($id)))
             	return new Response(Response::BADREQUEST);
 
             $this->comprovanteService = new ComprovanteService();

@@ -75,9 +75,7 @@ class AtividadeService{
 		return $this->dao->readAll(self::createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 	}
 
-	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, /*$comprovantes,*/ $professor){
-		//$comprovanteservice = new ComprovanteService();
-		//LazyUpdater::lazyUpdaterJob(self::get($id)->getComprovantes(), $comprovantes, $comprovanteservice);
+	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $professor){
 		$tipo = $this->tipoService->get($tipo);
 		self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult);
 		$this->dao->update($this->obj,$professor);

@@ -23,14 +23,6 @@ interface IComprovanteDAO {
     public function get($id);
 
     /**
-     * Recupera o proximo id do proximo
-     * @param type $id
-     * @return id do Proximo Comprovante
-     * @throws DAOException
-     */
-    public function getNextId();
-
-    /**
      * Recupera o comprovante a partir do arquivo
      * @param type $arquivo
      * @return Comprovante O comprovante encontrado
@@ -60,8 +52,8 @@ interface IComprovanteDAO {
     public function delete($arquivo);
 
     /**
-     * Atualiza os atributos do comprovante no BD
-     * @param Comprovante $prof
+     * Busca um comprovante usando um Comprovante e idAtividade
+     * @param type Comprovante $comp, type $idAtividade
      * @throws DAOException
      */
     public function readAll(Comprovante $comp,$idAtividade);

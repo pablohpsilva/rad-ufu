@@ -42,9 +42,7 @@ class ProfessorService{
 	public function search($input){
 		return self::get($input);
 	}
-	
-	// Unica excessao. Aqui pode-se usar a pesquisa por SIAPE. O retorno sera um unico objeto...
-	// Contrariando o restante das funcoes searchAll() dos outros Services.
+
 	public function searchAll($siape = null){
 		if(!is_null($siape))
 			return $this->dao->read($siape);
@@ -69,7 +67,6 @@ class ProfessorService{
 	}
 
 	public function login($siape,$password){
-		//if true, Professor. Else Exception
 		return $this->dao->login($siape,$password);
 	}
 

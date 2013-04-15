@@ -226,7 +226,7 @@ class TipoDAO implements ITipoDAO{
             
             return $result['tipo_id'];
         } catch (PDOException $ex) {
-            throw new Exception("Ao procurar a Atividade por id:\t"
+            throw new Exception("Ao procurar o id por Tipo:\t"
                 . $ex->getMessage(), 0, $ex);
         }
     }

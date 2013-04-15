@@ -55,7 +55,6 @@ class ProfessorAtividadeResource extends Resource {
             return new Response(Response::BADREQUEST);
 
         try {
-            //public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
             $this->atividadeService = new AtividadeService();
 
             $this->atividadeService->post(
@@ -94,7 +93,6 @@ class ProfessorAtividadeResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($idProfessor = null, $idAtividade = null) {
-        //$tipo, $descricao, $datainicio, $datafim, $valor, $professor
         if(is_null($idProfessor) || is_null($idAtividade))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->tipo)
