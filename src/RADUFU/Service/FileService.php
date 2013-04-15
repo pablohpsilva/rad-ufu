@@ -62,6 +62,44 @@ class FileService{
 		self::save($idProfessor,$idAtividade,$newComp);
 	}
 
+	private static function readfile_chunked($filename) { 
+		\chmod($filename, 0777);
+        $chunksize = 1*(1024*1024); // how many bytes per chunk 
+        $buffer = ''; 
+        $handle = fopen($filename, 'rb');
+        echo $handle;
+
+        if ($handle === false)
+            return false;
+
+        while (!feof($handle)) { 
+            $buffer = fread($handle, $chunksize); 
+            print $buffer; 
+        }
+
+        return fclose($handle); 
+    }
+
+    public static function downloadFile($filePath,$fileName,$fileExt){
+    	///*
+        header('Content-Description: File Transfer');
+        // We'll be outputting a MP3
+        header('Content-type: application/'.$fileExt);
+        // It will be called file.mp3
+        header('Content-Disposition: attachment; filename=' .$fileName);
+        header('Content-Length: '.filesize($filePath));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        // The MP3 source is in somefile.pdf
+        //readfile("somefile.mp3");
+        //echo $filePath;
+        //*/
+        self::readfile_chunked($filePath);
+
+        \chmod($filePath, 0776);
+    }
 }
 ####
 ####
