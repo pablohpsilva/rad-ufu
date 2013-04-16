@@ -79,12 +79,6 @@ class ComprovanteService{
 		$this->dao->delete($input);
 	}
 
-	public function download($idComprovante){
-		$this->obj = self::get($idComprovante);
-		FileService::downloadFile($this->obj->getArquivo(), $this->obj->separaNome(), $this->obj->separaExtensao());
-		unset($this->obj);
-	} 
-
 }
 
 ?>

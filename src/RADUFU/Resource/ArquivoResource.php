@@ -14,8 +14,6 @@ class ArquivoResource extends Resource {
 
     /**
      * @method GET
-     * @provides application/json
-     * @json
      * @param int $id
      * @return Tonic\Response
      */
@@ -25,25 +23,29 @@ class ArquivoResource extends Resource {
             	return new Response(Response::BADREQUEST);
 
             $this->comprovanteService = new ComprovanteService();
-            return new Response( Response::OK, $this->comprovanteService->download($id) );
+            $comp = $this->comprovanteService->get($id);
+            
+            $fHandle = fopen($comp->getArquivo(),'rb');
+            $body = fread($fHandle, filesize($comp->getArquivo()));
+            fclose($fHandle);
+
+            $headers = array(
+                'Content-Description' => 'File Transfer',
+                'Content-type' => 'application/'.$comp->separaExtensao(),
+                'Content-Disposition' => 'attachment; filename=' .$comp->separaNome(),
+                'Content-Length' => filesize($comp->getArquivo()),
+                'Content-Transfer-Encoding' => ' binary',
+                'Expires' => ' 0',
+                'Cache-Control' => ' must-revalidate, post-check=0, pre-check=0',
+                'Pragma' => ' public'
+                );
+
+            return new Response(Response::OK, $body, $headers);
+
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
-    }
-
-    protected function json() {
-
-        $this->before(function ($request) {
-            if ($request->contentType == 'application/json') {
-                $request->data = json_decode($request->data);
-            }
-        });
-
-        $this->after(function ($response) {
-            $response->contentType = 'application/json';
-            $response->body = json_encode($response->body);
-        });
-    }
+    }   
 }
 ?>
