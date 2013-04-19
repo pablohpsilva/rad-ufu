@@ -24,7 +24,11 @@ class RelatorioResource extends Resource {
             #$this->prof = new Professor();
         }
 
-    public function GerarRelatorio($id){
+    public function GerarRelatorio($id,
+                $dataI,
+                $dataF,
+                $classe,
+                $nivel){
         /**
            $id, $dataI, $dataF,$classe,$nivel 
         */
@@ -46,6 +50,7 @@ class RelatorioResource extends Resource {
             $pont_ref["associado"][2] = 238;
         #limitacao de ensino sera igual para todos
             $lim_ensi = 0.85;
+        /*
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
 
@@ -56,24 +61,24 @@ class RelatorioResource extends Resource {
             &&isset($this->request->data->nivel)))
             return new Response(Response::BADREQUEST);
         
-        try {
+        try {*/
             $data_inicio = $this->data($dataI);
             $data_final = $this->data($dataF);
             $this->relatorioService = new RelatorioService(
-                $this->request->data->id,
-                $this->request->data->dataI,
-                $this->request->data->dataF,
-                $this->request->data->classe,
-                $this->request->data->nivel
+                $id,
+                $dataI,
+                $dataF,
+                $classe,
+                $nivel
                 );
             $this->relatorioService->GerarRelatorio();
-            return new Response(Response::OK);
+        /*    return new Response(Response::OK);
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         } catch (RADUFU\DAO\Exception $e) {
             throw new Tonic\Exception($e->getMessage());
-        }
+        }*/
     }
     #funcao para formatar a data
     private function data($data)
