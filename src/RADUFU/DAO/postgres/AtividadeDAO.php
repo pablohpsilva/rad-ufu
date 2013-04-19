@@ -38,6 +38,8 @@ class AtividadeDAO implements IAtividadeDAO{
         atividade_datafim = :atividade_datafim AND 
         atividade_multiplicador_valor = :atividade_multiplicador_valor AND 
         atividade_professor = :atividade_professor;';
+    const SQL_ENTRE_DATAS = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor AND atividade_datainicio >= :atividade_datainicio AND atividade_datafim <= :atividade_datafim ORDER BY (atividade_datainicio)';
+
 
     private $comprovanteDAO;
     private $tipoDAO;
@@ -232,6 +234,20 @@ class AtividadeDAO implements IAtividadeDAO{
         } catch (PDOException $ex) {
             throw new Exception("Ao procurar id por Atividade:\t"
                 . $ex->getMessage(), 0, $ex);
+        }
+    }
+    
+    public function getEntreDatas($id,$inicio,$fim){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_ENTRE_DATAS);
+            $stm->bindParam(':atividade_professor', $id);
+            $stm->bindParam(':atividade_datainicio', $inicio);
+            $stm->bindParam(':atividade_datafim', $fim);
+            return $this->getAllTemplate($stm);
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos as Atividade:\t'
+                . $ex->getMessage());
         }
     }
 }
