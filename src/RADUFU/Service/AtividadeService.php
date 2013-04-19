@@ -86,6 +86,13 @@ class AtividadeService{
 	public function delete($input){
 		$this->dao->delete($input);
 	}
+	
+	public function getEntreDatas($idProfessor,$inicio,$fim=null)
+	{
+		if(!is_null($idProfessor))
+			return $this->dao->getEntreDatas($idProfessor,$inicio,$fim);
+	}
+
 
 }
 ?>
