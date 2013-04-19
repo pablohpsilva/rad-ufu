@@ -7,8 +7,8 @@ use \PDO;
 class Connection {
 
     private static $DSN = 'pgsql:dbname=radufu;host=localhost';
-    private static $USERNAME = 'postgres';
-    private static $PASSWORD = 'postgres';
+    private static $USERNAME = 'radufu';
+    private static $PASSWORD = 'radufu';
     private static $instance = null;
     private $con = null;
 
