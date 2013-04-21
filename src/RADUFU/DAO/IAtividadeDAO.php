@@ -58,6 +58,13 @@ interface IAtividadeDAO {
      * @throws DAOException
      */
     public function readAll(Atividade $ativ, $idProfessor);
+
+    /**
+     * Busca resultados e cria uma paginacao
+     * @param type $idProfessor, type $linhaMinima, type $linhaMaxima, type $ordenacao
+     * @throws DAOException
+     */
+    public function getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao);
 }
 
 ?>

@@ -39,6 +39,9 @@ class AtividadeDAO implements IAtividadeDAO{
         atividade_multiplicador_valor = :atividade_multiplicador_valor AND 
         atividade_professor = :atividade_professor;';
     const SQL_ENTRE_DATAS = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor AND atividade_datainicio >= :atividade_datainicio AND atividade_datafim <= :atividade_datafim ORDER BY (atividade_datainicio)';
+    const SQL_PAGINACAO = 'SELECT * FROM
+        (SELECT ROW_NUMBER() OVER ( ORDER BY atividade_datainicio :ordenacao ) AS RowNum, * FROM Atividade WHERE atividade_professor = :atividade_professor) AS Pagination
+        WHERE Pagination.RowNum >= :linha_minima AND Pagination.RowNum <= :linha_maxima';
 
 
     private $comprovanteDAO;
@@ -243,6 +246,24 @@ class AtividadeDAO implements IAtividadeDAO{
             $stm->bindParam(':atividade_professor', $id);
             $stm->bindParam(':atividade_datainicio', $inicio);
             $stm->bindParam(':atividade_datafim', $fim);
+            return $this->getAllTemplate($stm);
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos as Atividade:\t'
+                . $ex->getMessage());
+        }
+    }
+
+    public function getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao = 'DESC'){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_PAGINACAO);
+            $stm->execute(array(
+                ':atividade_professor' => $idProfessor,
+                ':ordenacao' => $ordenacao,
+                ':linha_minima' => $linhaMinima,
+                ':linha_maxima' => $linhaMaxima
+                ));
+
             return $this->getAllTemplate($stm);
 
         } catch (PDOException $ex) {
