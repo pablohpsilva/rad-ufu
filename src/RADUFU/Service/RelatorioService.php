@@ -1,7 +1,7 @@
 <?php 
 namespace RADUFU\Service;
 use \FPDI,
-  RADUFU\DAO\Factory,
+	RADUFU\DAO\Factory,
 	RADUFU\DAO\postgres\ProfessorDAO,
     RADUFU\Service\ProfessorService,
   # RADUFU\Service\ComprovanteService;
@@ -43,7 +43,7 @@ class RelatorioService extends FPDI{
      * @param int $idProfessor
      * @return Tonic\Response
      */
-    public function __construct($id,$dataI,$dataF,$pont_ref,$lim_ensi)
+    public function __construct($id,$dataI,$dataF,$pont_ref)
         {
            $this->pdf = new FPDI("P","cm","A4");
            $this->atividades = array();
@@ -52,7 +52,7 @@ class RelatorioService extends FPDI{
            $this->categoriaService = new CategoriaService();
            $this->prof = $this->GetProf($id);
            $this->pontuacaoDeReferencia = $pont_ref;
-           $this->limitacaoDeEnsino = $lim_ensi;
+           $this->limitacaoDeEnsino = 0.85;
            $this->limiteEnsino = $this->pontuacaoDeReferencia * $this->limitacaoDeEnsino;
            $this->dataI = $dataI;
            $this->dataF = $dataF;
@@ -86,7 +86,14 @@ class RelatorioService extends FPDI{
 			$this->RelatorioAtividade($periodo);
 		}
 		$this->Comprovantes();
-		$this->relatorio->Output($this->prof->getNome().'.pdf','F');
+        $data = date("d-m-Y");
+        $arquivo = "../".$this->prof->getNome().'-'.$data.'.pdf';
+		$this->relatorio->Output($arquivo,'F');     
+        header("Content-Type: pdf"); // informa o tipo do arquivo ao navegador
+        header("Content-Length: ".filesize($arquivo)); // informa o tamanho do arquivo ao navegador
+        header("Content-Disposition: attachment; filename=".basename($arquivo)); // informa ao navegador que é tipo anexo e faz abrir a janela de download, tambem informa o nome do arquivo
+        readfile("../".$this->prof->getNome().'-'.$data.'.pdf'); // lê o arquivo
+        exit; // aborta pós-ações
     }
 
     public function PrimeiraPagina()
@@ -295,7 +302,7 @@ class RelatorioService extends FPDI{
             {
                 $nivel = 0;
                 $this->relatorio->SetFont('Times','',14);
-                $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].'Atividades de '.utf8_decode($categoriasDicionario).': '.$this->CalcularBruto($ativs).' pontos');
+                $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' Atividades de '.utf8_decode($categoriasDicionario).': '.$this->CalcularBruto($ativs).' pontos');
                 $this->relatorio->Ln(1);
 
                 $this->relatorio->SetFont('Times','',12);
@@ -303,7 +310,33 @@ class RelatorioService extends FPDI{
                     {
                         $nivel = 1;
                         $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
-                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].utf8_decode(' Disciplinas no Curso de Bacharelado de Ciência da Computação ').$nivel);
+                        $this->relatorio->MultiCell(16,0.4,$bullets[$nivel].' '.utf8_decode($atvdd->getDescricao()));
+                        #$this->relatorio->Ln(1);
+
+                        $nivel = 2;
+                        #mostrar tipo
+                        #$this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        #$this->relatorio->Cell(6.5,0.4,$bullets[$nivel].utf8_decode($atvdd->getTipo()));
+                        $this->relatorio->Ln(0.5);
+                        #mostrar data de inicio
+                        $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.utf8_decode('Inicio: '.$atvdd->getDataInicio()));
+                        $this->relatorio->Ln(0.5);
+                        #mostrar data de fim
+                        $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.utf8_decode('Fim: '.$atvdd->getDataFim()));
+                        $this->relatorio->Ln(0.5);
+                        #Item
+                        $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.utf8_decode('Item: '.$atvdd->getTipo()->getId()));
+                        $this->relatorio->Ln(0.5);
+                        #Quantidade
+                        $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.utf8_decode('Quantidade de '.$atvdd->getTipo()->getMultiplicador()->getNome().': '.$atvdd->getMultValor() ));
+                        $this->relatorio->Ln(0.5);
+                        #Pontos
+                        $this->relatorio->Cell(1 * $nivel,0.5,'',0,0,'C',0);
+                        $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.utf8_decode('Pontos: '.$this->pontosAtividade($atvdd)));
                         $this->relatorio->Ln(1);
                     }   
             }      
