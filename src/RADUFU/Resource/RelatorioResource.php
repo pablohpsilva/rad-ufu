@@ -66,7 +66,7 @@ class RelatorioResource extends Resource {
                 $this->request->data->dataI,
                 $this->request->data->dataF,
                 $pont_ref[$this->request->data->classe][$this->request->data->nivel],
-                $this->request->data->categorias,
+                $this->request->data->categorias
                 );
             $this->relatorioService->GerarRelatorio();
             return new Response(Response::OK);
