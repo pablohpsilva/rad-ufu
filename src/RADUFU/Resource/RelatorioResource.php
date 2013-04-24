@@ -26,7 +26,7 @@ class RelatorioResource extends Resource {
 
     public function GerarRelatorio($id){
         /**
-           $id, $dataI, $dataF,$classe,$nivel 
+           $id, $dataI, $dataF,$classe,$nivel,$categorias
         */
         #Criando o dicionario com as opcoes possiveis(classe,nivel[0,1,2])
             $pont_ref["auxiliar"][0] = 120;
@@ -54,7 +54,8 @@ class RelatorioResource extends Resource {
             &&isset($this->request->data->dataI)
             &&isset($this->request->data->dataF)
             &&isset($this->request->data->classe)
-            &&isset($this->request->data->nivel)))
+            &&isset($this->request->data->nivel)
+            &&isset($this->request->data->categorias)))
             return new Response(Response::BADREQUEST);
         
         try {
@@ -64,7 +65,8 @@ class RelatorioResource extends Resource {
                 $this->request->data->id,
                 $this->request->data->dataI,
                 $this->request->data->dataF,
-                $pont_ref[$this->request->data->classe][$this->request->data->nivel]
+                $pont_ref[$this->request->data->classe][$this->request->data->nivel],
+                $this->request->data->categorias,
                 );
             $this->relatorioService->GerarRelatorio();
             return new Response(Response::OK);
