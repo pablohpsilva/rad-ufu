@@ -1,74 +1,75 @@
-﻿INSERT INTO categoria (categoria_nome) VALUES ('Ensino');
-INSERT INTO categoria (categoria_nome) VALUES ('Orientação');
+INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Ensino');
+INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Orientação');
 INSERT INTO categoria (categoria_nome) VALUES ('Produção Bibliográfica e Divulgação');
 INSERT INTO categoria (categoria_nome) VALUES ('Produção Artística');
 INSERT INTO categoria (categoria_nome) VALUES ('Produção Técnica');
-INSERT INTO categoria (categoria_nome) VALUES ('Pesquisa');
-INSERT INTO categoria (categoria_nome) VALUES ('Extensão e Prestação de Serviços');
+INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Pesquisa');
+INSERT INTO categoria (categoria_nome) VALUES ('Atividades de Extensão e Prestação de Serviços');
 INSERT INTO categoria (categoria_nome) VALUES ('Licenças, Situações Especiais e Qualificação');
-INSERT INTO categoria (categoria_nome) VALUES ('Administrativas e Representações');
-INSERT INTO categoria (categoria_nome) VALUES ('Outras');
+INSERT INTO categoria (categoria_nome) VALUES ('Atividades Administrativas e Representações');
+INSERT INTO categoria (categoria_nome) VALUES ('Outras Atividades');
 
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/semestre por aula dada semanalmente');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/aula dada/semana');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/disciplina');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo completo de 5 alunos acima de 45');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo completo de 4 alunos acima de 12');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo completo de 3 alunos acima de 9');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo completo de 2 alunos acima de 6');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo completo de 3 alunos acima de 8');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada aluno por aula dada/semana');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/aluno');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/orientação');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/evento');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/trabalho');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/resumo');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/publicação');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/tema');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/tema limitado a 20 pontos/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/premiação/trabalho ou evento');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/publicação limitado a um por ano');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/publicação limitado em 120 pontos/ano');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/obra');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/capítulo ou artigo');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/exposição');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/direção');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/autoria');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/adaptação ou trabalho');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/ópera ou musical');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/hora - máx. de 30 horas/obra');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/maquete');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/participação');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/parecer');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/registro');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/patente');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/relatório');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto/hora-aula; limite de 40 pontos por semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('1/180 da pontuação de referência  por dia de afastamento');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('1/180 da pontuação de referência  por dia de readaptação');
+
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('aulas/semana');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('aulas/semana');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('disciplinas');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupos completos de 5 alunos acima de 45');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupos completos de 4 alunos acima de 12');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupos completos de 3 alunos acima de 9');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupos completos de 2 alunos acima de 6');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupos completos de 3 alunos acima de 8');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('alunos por aula dada/semana');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('alunos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('orientações');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('eventos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('semestres');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('trabalhos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('resumos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('publicações');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('temas');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('temas (limitado a 20 pontos/semestre)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('premiação/trabalho ou evento');
+INSERT INTO multiplicador (multiplicador_nome) VALUES (' ');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('publicações (limitado a um por ano)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('publicações (limitado em 120 pontos/ano)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('obras');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('capítulos ou artigos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('exposições');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('direções');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('autorias');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('adaptações ou trabalhos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('óperas ou musicais');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('horas (máx. de 30 horas/obra)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('maquetes');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('participações');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('pareceres');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('registros');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('patente(s)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('relatório(s)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('horas-aula (limite de 40 pontos por semestre)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('dia(s) de afastamento');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('dia(s) de readaptação');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('100% da pontuação de referência');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('50% da pontuação de referência');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('100% pontuação referência/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('70% pontuação referência/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('50% pontuação referência/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('40% pontuação referência/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('60% pontuação referência/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/coordenadoria-curadoria/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/coordenação/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/Curso');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/semestre/projeto');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/comissão/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/participação/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/representação/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/Conselho/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/presidência');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('1/180 da pontuação do cargo/dia/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('pontos/aula dada/semana/semestre');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto para cada grupo de 3 alunos acima de 8');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto/hora-aula; limite de 30 pontos');
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('ponto/hora; limite de 30 pontos');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('100% da pontuação referência/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('70% da pontuação referência/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('50% da pontuação referência/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('40% da pontuação referência/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('60% da pontuação referência/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('coordenadorias-curadorias');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('coordenações/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('curso(s)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('projeto(s)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('comissões/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('participações/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('representações/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('Conselho(s)/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('presidência(s)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('dia(s)/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('aula(s) dadas/semana/semestre');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupo(s) de 3 alunos acima de 8');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('hora(s)-aula (limite de 30 pontos)');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('hora(s) (limite de 30 pontos)');
 
 --ATIVIDADES DE ENSINO
 --1
@@ -108,7 +109,7 @@ INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descr
 --17
 INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (2,10,10,'Co-orientação de Tese de Doutorado. É permitida a contagem até o limite de oito semestres de co-orientação a um mesmo aluno. A comprovação deverá ser feita pela Coordenação do Programa de Pós-graduação no qual o aluno encontra-se matriculado.');
 --18
-INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (2,5,11,'Orientação de graduados em Cursos de Educação profissional ou permanente. As atividades deverão ser comprovadas pela Pró-Reitoria de Pesquisa e Pósgraduação – PROPP. Somente serão pontuadas as atividades de orientação com duração superior a quatro meses.');
+INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (2,5,11,'Orientação de graduados em Cursos de Educação profissional ou permanente. As atividades deverão ser comprovadas pela Pró-Reitoria de Pesquisa e Pósgraduação  PROPP. Somente serão pontuadas as atividades de orientação com duração superior a quatro meses.');
 --19
 INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (2,5,10,'Orientação de Monografia de Curso de Especialização. Somente serão pontuadas as atividades de orientação com duração superior a quatro meses. A atividade será comprovada por declaração do Coordenador de Curso ou do Diretor da Unidade.');
 --20
@@ -260,7 +261,7 @@ INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descr
 
 --ATIVIDADES DE EXTENSÃO E PRESTAÇÃO DE SERVIÇOS
 --89
-INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (7,1,37,'Curso de extensão ministrado com aprovação do Conselho da Unidade e registrado na Pró-Reitoria de Extensão, Cultura e Assuntos Estudantis – PROEX, sem remuneração complementar.');
+INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (7,1,37,'Curso de extensão ministrado com aprovação do Conselho da Unidade e registrado na Pró-Reitoria de Extensão, Cultura e Assuntos Estudantis  PROEX, sem remuneração complementar.');
 --90
 INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (7,0.5,37,'Consultoria, assessoria, perícia ou sindicância realizada e aprovada pela Unidade, sem remuneração complementar.');
 --91

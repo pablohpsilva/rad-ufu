@@ -56,5 +56,32 @@ class FileService{
 		$idAtividade = $aux[$aux-1];
 		self::save($idProfessor,$idAtividade,$newComp);
 	}
+
+	public static function createDownload($pathToFile){
+		$comp = new Comprovante();
+		$comp->setArquivo($pathToFile);
+        $fHandle = fopen($comp->getArquivo(),'rb');
+        $body = fread($fHandle, filesize($comp->getArquivo()));
+        fclose($fHandle);
+
+        $headers = array(
+            'Content-Description' => 'File Transfer',
+            'Content-type' => 'application/'.$comp->separaExtensao(),
+            'Content-Disposition' => 'attachment; filename=' .$comp->separaNome(),
+            'Content-Length' => filesize($comp->getArquivo()),
+            'Content-Transfer-Encoding' => ' binary',
+            'Expires' => ' 0',
+            'Cache-Control' => ' must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => ' public'
+            );
+
+        $headersBody = array(
+        	"body" => $body,
+        	"headers" => $headers
+        	);
+
+        return $headersBody;
+
+	}
 }
 ?>

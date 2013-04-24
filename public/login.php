@@ -19,7 +19,7 @@
         exit();
       }
     } catch(Exception $e){
-      header("Location: login.php");
+      header("Location: login.php?erro");
       exit();
     }
   }
@@ -67,6 +67,10 @@
       margin-top: 20px;
       margin-bottom: -10px;
     }
+
+    .erro{
+      color:Red;
+    }
   </style>
 </head>
 
@@ -75,11 +79,15 @@
     <form class="form-signin" action="?" method="POST">
     <h1 class="form-signin-heading" align="center">RAD / UFU</h1>
     <h3 class="form-signin-heading" align="center">Favor fazer login</h3>
+    <h4 class="form-signin-heading erro" align="center">
+      <?php if(isset($_GET['erro'])) echo "Usuario e/ou senha errados"; ?>
+    </h4>
     <input type="text" class="input-block-level" placeholder="Siape" name="login">
     <input type="password" class="input-block-level" placeholder="Senha" name="senha">
     <button class="btn btn-primary" type="submit" name="botao">Logar</button>
     <button class="btn btn-danger btn-primary" type="reset" name="reset">Limpar</button>
-    <h5 class="form-signin-heading development" align="justify">Desenvolvido por: <a href="http://www.comppet.ufu.br" target="_blank">CompPET</a></h5>
+    <h5 class="form-signin-heading development" align="justify"><a href="cadastra.php">Criar Conta</a></h5>
+    <h5 class="form-signin-heading development" align="justify">Desenvolvido por: <a href="http://www.comppet.ufu.br/content/page/rad-ufu" target="_blank">CompPET</a></h5>
     </form>
   </div>
 </body>

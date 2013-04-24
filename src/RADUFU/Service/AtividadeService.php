@@ -87,12 +87,14 @@ class AtividadeService{
 		$this->dao->delete($input);
 	}
 	
-	public function getEntreDatas($idProfessor,$inicio,$fim=null)
-	{
+	public function getEntreDatas($idProfessor,$inicio,$fim=null){
 		if(!is_null($idProfessor))
 			return $this->dao->getEntreDatas($idProfessor,$inicio,$fim);
 	}
 
+	public function getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao = 'DESC'){
+		return $this->dao->getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao);
+	}
 
 }
 ?>
