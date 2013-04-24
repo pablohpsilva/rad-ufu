@@ -425,7 +425,7 @@ class RelatorioService extends FPDI{
 	    	foreach ($this->atividades as $ativ) {
                 foreach ($this->categorias as $cat)
                 {
-                    if($ativ->getTipo()->getCategoria()->getNome() == $cat)
+                    if($ativ->getTipo()->getCategoria()->getId() == $cat)
                     {
         	    		$data_i = explode("/",$ativ->getDataInicio());
         	    		$ano = $data_i[2];
