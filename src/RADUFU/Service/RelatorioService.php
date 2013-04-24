@@ -24,6 +24,7 @@ class RelatorioService extends FPDI{
 	private $atividadeService;
 
 	#variaveis da classe
+    private $categorias;
     private $pdf;
 	private $relatorio;
 	private $prof; #Professor que requisitou o relatorio
@@ -43,8 +44,9 @@ class RelatorioService extends FPDI{
      * @param int $idProfessor
      * @return Tonic\Response
      */
-    public function __construct($id,$dataI,$dataF,$pont_ref)
+    public function __construct($id,$dataI,$dataF,$pont_ref,$categorias)
         {
+           $this->categorias = $categorias;
            $this->pdf = new FPDI("P","cm","A4");
            $this->atividades = array();
            $this->ativPeriodos = array();
@@ -87,13 +89,18 @@ class RelatorioService extends FPDI{
 		}
 		$this->Comprovantes();
         $data = date("d-m-Y");
-        $arquivo = "../".$this->prof->getNome().'-'.$data.'.pdf';
-		$this->relatorio->Output($arquivo,'F');     
+        $arquivo = "/tmp/".$this->prof->getNome().'-'.$data.'.pdf';
+		$this->relatorio->Output($arquivo,'F');    
+        /*
+        // Codigo para forçar o download
         header("Content-Type: pdf"); // informa o tipo do arquivo ao navegador
         header("Content-Length: ".filesize($arquivo)); // informa o tamanho do arquivo ao navegador
         header("Content-Disposition: attachment; filename=".basename($arquivo)); // informa ao navegador que é tipo anexo e faz abrir a janela de download, tambem informa o nome do arquivo
-        readfile("../".$this->prof->getNome().'-'.$data.'.pdf'); // lê o arquivo
+        readfile($arquivo); // lê o arquivo
+
         exit; // aborta pós-ações
+        */
+        return $arquivo;
     }
 
     public function PrimeiraPagina()
@@ -192,7 +199,14 @@ class RelatorioService extends FPDI{
 	    #--- Parte Final
         $this->relatorio->Cell(11.5,0.5,'',0,0,'C',0);//espaco em branco
         $this->relatorio->Cell(2.5,0.5,'Media:',0,0,'C',0);
-        $this->relatorio->Cell(2.5,0.5,$TotalLT/count($this->ativPeriodos),1,0,'C');
+        if(count($this->ativPeriodos)==0)
+        {
+            $this->relatorio->Cell(2.5,0.5,$TotalLT,1,0,'C');
+        }
+        else
+        {
+            $this->relatorio->Cell(2.5,0.5,$TotalLT/count($this->ativPeriodos),1,0,'C');
+        }
         $this->relatorio->Ln();
         $this->relatorio->Cell(4,0.5,utf8_decode('Pontos de referência'),1,0,'C',1);
         $this->relatorio->Cell(4,0.5,$this->pontuacaoDeReferencia,1,0,'C');
@@ -409,54 +423,60 @@ class RelatorioService extends FPDI{
 	    	}
 	    	#adicionando as atividades ao dicionario
 	    	foreach ($this->atividades as $ativ) {
-	    		$data_i = explode("/",$ativ->getDataInicio());
-	    		$ano = $data_i[2];
-	    		$periodo = ((int)$data_i[1]<7)?'1':'2';
-				#tratando a greve
-	    		if (2012 == (int)$data_i[2])
-		    		{
-		    			$ano = '2012';
-		 	   			$periodo = ((int)$data_i[1] < 10)? '1' : '2';
-		 	   		}	
-	 	   		elseif (2013 == (int)$data_i[2])
-		 	   		{
-		 	   			if ((int)$data_i<5)
-			 	   			{
-			 	   				$ano = '2012';
-			 	   				$periodo = '2';
-			 	   			}
-		 	   			elseif((int)$data_i < 11)
-			 	   			{
-			 	   				$ano = '2013';
-			 	   				$periodo = '1';
-			 	   			}
-		 	   			else
-			 	   			{
-			 	   				$ano = '2013';
-			 	   				$periodo = '2';	
-			 	   			}
-		 	   		}
-	 	   		elseif(2014 == (int)$data_i[2])
-		    		{
-		    			if ((int)$data_i<3)
-			 	   			{
-			 	   				$ano = '2013';
-			 	   				$periodo = '1';
-			 	   			}
-		 	   			elseif((int)$data_i < 8)
-			 	   			{
-			 	   				$ano = '2014';
-			 	   				$periodo = '1';
-			 	   			}
-		 	   			else
-			 	   			{
-			 	   				$ano = '2014';
-			 	   				$periodo = '2';	
-			 	   			}
-		    		}
-		    	$per = $ano.'-'.$periodo;		
-				$this->ativPeriodos[$per][$ativ->getTipo()->getCategoria()->getNome()][] = $ativ;	    	
-	    	}
+                foreach ($this->categorias as $cat)
+                {
+                    if($ativ->getTipo()->getCategoria()->getNome() == $cat)
+                    {
+        	    		$data_i = explode("/",$ativ->getDataInicio());
+        	    		$ano = $data_i[2];
+        	    		$periodo = ((int)$data_i[1]<7)?'1':'2';
+        				#tratando a greve
+        	    		if (2012 == (int)$data_i[2])
+        		    		{
+        		    			$ano = '2012';
+        		 	   			$periodo = ((int)$data_i[1] < 10)? '1' : '2';
+        		 	   		}	
+        	 	   		elseif (2013 == (int)$data_i[2])
+        		 	   		{
+        		 	   			if ((int)$data_i<5)
+        			 	   			{
+        			 	   				$ano = '2012';
+        			 	   				$periodo = '2';
+        			 	   			}
+        		 	   			elseif((int)$data_i < 11)
+        			 	   			{
+        			 	   				$ano = '2013';
+        			 	   				$periodo = '1';
+        			 	   			}
+        		 	   			else
+        			 	   			{
+        			 	   				$ano = '2013';
+        			 	   				$periodo = '2';	
+        			 	   			}
+        		 	   		}
+        	 	   		elseif(2014 == (int)$data_i[2])
+        		    		{
+        		    			if ((int)$data_i<3)
+        			 	   			{
+        			 	   				$ano = '2013';
+        			 	   				$periodo = '1';
+        			 	   			}
+        		 	   			elseif((int)$data_i < 8)
+        			 	   			{
+        			 	   				$ano = '2014';
+        			 	   				$periodo = '1';
+        			 	   			}
+        		 	   			else
+        			 	   			{
+        			 	   				$ano = '2014';
+        			 	   				$periodo = '2';	
+        			 	   			}
+        		    		}
+        		    	$per = $ano.'-'.$periodo;		
+        				$this->ativPeriodos[$per][$ativ->getTipo()->getCategoria()->getNome()][] = $ativ;	    	
+	    	        }
+                }
+            }
 	    	#limpando as partes vazias do dicionario
 	    	foreach ($this->ativPeriodos as $key => $ativs) {
 	    		if(count($ativs) == 0)
