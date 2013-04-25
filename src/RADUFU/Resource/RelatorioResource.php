@@ -71,21 +71,8 @@ $id, $dataI, $dataF,$classe,$nivel,$categorias
                 $this->request->data->categorias
                 );
             $arquivo = $this->relatorioService->GerarRelatorio();
-            $fHandle = fopen($arquivo,'rb');
-            $body = fread($fHandle, filesize($arquivo));
-            fclose($fHandle);
-
-            $headers = array(
-                'Content-Description' => 'File Transfer',
-                'Content-type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename=' .basename($arquivo),
-                'Content-Length' => filesize($arquivo),
-                'Content-Transfer-Encoding' => ' binary',
-                'Expires' => ' 0',
-                'Cache-Control' => ' must-revalidate, post-check=0, pre-check=0',
-                'Pragma' => ' public'
-                );
-            return new Response(Response::OK, $body, $headers);
+    
+            return new Response(Response::OK, array("dloadLink" => $arquivo)););
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
