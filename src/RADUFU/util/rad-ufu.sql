@@ -67,60 +67,21 @@ CREATE TABLE comprovante(
 );
 
 CREATE OR REPLACE FUNCTION login(argsiape character varying, argsenha character varying)
-RETURNS INTEGER AS
+  RETURNS integer AS
 $BODY$
 DECLARE
-	acesso INTEGER;
 	consulta RECORD;
 BEGIN
-	SELECT COUNT(DISTINCT professor_siape) AS contagem INTO consulta
-	FROM professor WHERE professor_siape = argsiape AND professor_senha = argsenha;
+	SELECT COUNT(DISTINCT professor_siape) AS contagem, professor_siape AS siape, professor_senha AS senha INTO consulta
+	FROM professor WHERE professor_siape = argsiape AND professor_senha = argsenha
+	GROUP BY professor_siape,professor_senha;
 
-	IF (consulta.contagem = 0)
-	THEN
-		acesso := -1;
+	IF (consulta.contagem = 1 AND consulta.siape = argsiape AND consulta.senha = argsenha) THEN
+		RETURN  1;
 	ELSE
-		acesso := 1;
+		RETURN -1;
 	END IF;
-
-	RETURN acesso;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-
-
-CREATE OR REPLACE FUNCTION getNextValue(tabela VARCHAR)
-RETURNS INTEGER AS 
-$getNextValue$
-DECLARE
-proximo INTEGER;
-aux INTEGER;
-BEGIN
-	IF (tabela = 'atividade') THEN
-		SELECT NEXTVAL('atividade_atividade_id_seq') INTO proximo;
-		IF (proximo = 1) THEN
-			SELECT SETVAL('atividade_atividade_id_seq', 1) INTO proximo;
-		ELSE
-			SELECT SETVAL('atividade_atividade_id_seq', proximo-1) INTO aux;
-		END IF;
-	ELSEIF (tabela = 'comprovante') THEN
-		SELECT NEXTVAL('comprovante_comprovante_id_seq') INTO proximo;
-		IF (proximo = 1) THEN
-			SELECT SETVAL('comprovante_comprovante_id_seq', 1) INTO proximo;
-		ELSE
-			SELECT SETVAL('comprovante_comprovante_id_seq', proximo-1) INTO aux;
-		END IF;
-	ELSEIF (tabela = 'tipo') THEN
-		SELECT NEXTVAL('tipo_tipo_id_seq') INTO proximo;
-		IF (proximo = 1) THEN
-			SELECT SETVAL('tipo_tipo_id_seq', 1) INTO proximo;
-		ELSE
-			SELECT SETVAL('tipo_tipo_id_seq', proximo-1) INTO aux;
-		END IF;
-	END IF;
-	
-	RETURN proximo;
-END;
-$getNextValue$
-LANGUAGE plpgsql;

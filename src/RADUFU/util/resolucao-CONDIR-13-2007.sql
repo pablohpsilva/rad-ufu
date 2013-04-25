@@ -10,7 +10,7 @@ INSERT INTO categoria (categoria_nome) VALUES ('Atividades Administrativas e Rep
 INSERT INTO categoria (categoria_nome) VALUES ('Outras Atividades');
 
 
-INSERT INTO multiplicador (multiplicador_nome) VALUES ('aulas/semana');
+INSERT INTO multiplicador (multiplicador_nome) VALUES ('semestre/aulas/semana');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('aulas/semana');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('disciplinas');
 INSERT INTO multiplicador (multiplicador_nome) VALUES ('grupos completos de 5 alunos acima de 45');
@@ -417,3 +417,23 @@ INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descr
 INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (7,15,13,'Coordenação de projetos de extensão com financiamento interno e registrado na PROEX e com remuneração complementar. Serão pontuadas as coordenações com duração igual ou superior a três meses.');
 --161
 INSERT INTO tipo (tipo_categoria, tipo_pontuacao, tipo_multiplicador, tipo_descricao) VALUES (7,5,13,'Membro de equipe de projetos de extensão com financiamento externo ou interno e com remuneração complementar. Serão pontuadas as participações comprovadas por declaração do Coordenador do projeto ou Diretor da Unidade Acadêmica.');
+
+CREATE OR REPLACE FUNCTION login(argsiape character varying, argsenha character varying)
+  RETURNS integer AS
+$BODY$
+DECLARE
+	consulta RECORD;
+BEGIN
+	SELECT COUNT(DISTINCT professor_siape) AS contagem, professor_siape AS siape, professor_senha AS senha INTO consulta
+	FROM professor WHERE professor_siape = argsiape AND professor_senha = argsenha
+	GROUP BY professor_siape,professor_senha;
+
+	IF (consulta.contagem = 1 AND consulta.siape = argsiape AND consulta.senha = argsenha) THEN
+		RETURN  1;
+	ELSE
+		RETURN -1;
+	END IF;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
