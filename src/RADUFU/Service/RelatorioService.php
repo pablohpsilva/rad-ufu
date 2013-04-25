@@ -88,10 +88,12 @@ class RelatorioService extends FPDI{
             $this->RelatorioAtividade($periodo);
         }
         $this->Comprovantes();
-        $data = date("d-m-Y");
-        $arquivo = "/tmp/".$this->prof->getNome().'-'.$data.'.pdf';
+        $data = time();
+        if(!file_exists('/tmp/'.$this->prof->getId()))
+            mkdir('/tmp/'.$this->prof->getId());
+        $arquivo = "/tmp/".$this->prof->getId().'/'.$data.'.pdf';
         $this->relatorio->Output($arquivo,'F');    
-        /*
+  /*      
         // Codigo para forçar o download
         header("Content-Type: pdf"); // informa o tipo do arquivo ao navegador
         header("Content-Length: ".filesize($arquivo)); // informa o tamanho do arquivo ao navegador
