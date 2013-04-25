@@ -5,8 +5,8 @@ use RADUFU\Service\ComprovanteService,
     Tonic\Resource,
     Tonic\Response;
 /**
- * @uri /arquivo
- * @uri /arquivo/:id
+ * @uri /arquivo/:tipo/:id
+ * @uri /arquivo/:tipo/:id/:tStamp
  */
 class ArquivoResource extends Resource {
 
@@ -17,35 +17,64 @@ class ArquivoResource extends Resource {
      * @param int $id
      * @return Tonic\Response
      */
-    public function download($id = null) {
+    public function download($tipo = null, $id = null, $tStamp = null) {
+        $caminho = "";
+        $relDirPrefix = "/tmp";
+        $relFileSufix = ".pdf";
+
         try {
-        	if(!(isset($id)))
+        	if( !(isset($tipo) && isset($id)) )
             	return new Response(Response::BADREQUEST);
 
-            $this->comprovanteService = new ComprovanteService();
-            $comp = $this->comprovanteService->get($id);
-            
-            $fHandle = fopen($comp->getArquivo(),'rb');
-            $body = fread($fHandle, filesize($comp->getArquivo()));
-            fclose($fHandle);
+            if ($tipo === "comprovante") {
+                $this->comprovanteService = new ComprovanteService();
+                $caminho = $this->comprovanteService->get($id)->getArquivo();
 
-            $headers = array(
-                'Content-Description' => 'File Transfer',
-                'Content-type' => 'application/'.$comp->separaExtensao(),
-                'Content-Disposition' => 'attachment; filename=' .$comp->separaNome(),
-                'Content-Length' => filesize($comp->getArquivo()),
-                'Content-Transfer-Encoding' => ' binary',
-                'Expires' => ' 0',
-                'Cache-Control' => ' must-revalidate, post-check=0, pre-check=0',
-                'Pragma' => ' public'
-                );
+            } else if ($tipo === "relatorio" && isset($tStamp)) {
+                $caminho = $relDirPrefix . "/" . $id . "/" . $tStamp . $relFileSufix;
 
-            return new Response(Response::OK, $body, $headers);
+            } else {
+                return new Response(Response::BADREQUEST);
+            }
+
+            return $this->fileResponse($caminho);
 
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
         }
-    }   
+    }
+
+    private function fileResponse ($caminho) {
+
+        $fHandle = fopen($caminho,'rb');
+
+        if (!$fHandle)
+            return new Response(Response::INTERNALSERVERERROR);
+
+        $body = fread($fHandle, filesize($caminho));
+        fclose($fHandle);
+
+        $headers = array(
+            'Content-Description' => 'File Transfer',
+            'Content-type' => 'application/'.$this->getFileExtension($caminho),
+            'Content-Disposition' => 'attachment; filename=' .$this->getFileName($caminho),
+            'Content-Length' => filesize($caminho),
+            'Content-Transfer-Encoding' => ' binary',
+            'Expires' => ' 0',
+            'Cache-Control' => ' must-revalidate, post-check=0, pre-check=0',
+            'Pragma' => ' public'
+            );
+
+        return new Response(Response::OK, $body, $headers);
+    }
+
+    private function getFileName ($caminho) {
+        return array_pop(explode("/", $caminho));
+    }
+
+    private function getFileExtension ($caminho) {
+        return explode(".", $this->getFileName($caminho))[1];
+    }
 }
 ?>

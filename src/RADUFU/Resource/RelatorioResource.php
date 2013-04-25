@@ -71,8 +71,8 @@ $id, $dataI, $dataF,$classe,$nivel,$categorias
                 $this->request->data->categorias
                 );
             $arquivo = $this->relatorioService->GerarRelatorio();
-    
-            return new Response(Response::OK, array("dloadLink" => $arquivo)););
+
+            return new Response(Response::OK, array("dloadLink" => $arquivo));
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
