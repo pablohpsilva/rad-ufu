@@ -14,11 +14,9 @@ class MultiplicadorDAO implements IMultiplicadorDAO{
              DEFAULT,
             :multiplicador_nome
             );';
-
     const SQL_UPDATE = 'UPDATE Multiplicador SET
             multiplicador_nome =:multiplicador_nome
             WHERE multiplicador_id = :multiplicador_id;';
-
     const SQL_GET = 'SELECT * FROM Multiplicador WHERE multiplicador_id = :multiplicador_id;';
     const SQL_READ = 'SELECT * FROM Multiplicador WHERE multiplicador_nome = :multiplicador_nome;';
     const SQL_READ_ALL = 'SELECT * FROM Multiplicador;';

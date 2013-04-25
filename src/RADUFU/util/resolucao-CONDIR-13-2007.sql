@@ -437,3 +437,17 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+
+/*
+ *TUNNING DO BANCO
+*/
+
+CREATE INDEX index_categoria_nome ON categoria USING hash (categoria_nome);
+CREATE INDEX index_comprovante_atividade ON comprovante USING hash (comprovante_atividade);
+CREATE INDEX index_multiplicador_nome ON multiplicador USING hash (multiplicador_nome);
+CREATE INDEX index_professor_siape ON professor USING hash (professor_siape);
+CREATE INDEX index_professor_senha ON professor USING hash (professor_senha);
+CREATE INDEX index_tipo_categoria ON tipo USING hash (tipo_categoria);
+CREATE INDEX index_atividade_professor ON atividade USING hash (atividade_professor);
+CREATE INDEX index_atividade_datainicio ON atividade USING btree (atividade_datainicio);
+CREATE INDEX index_atividade_datafim ON atividade USING btree (atividade_datafim);

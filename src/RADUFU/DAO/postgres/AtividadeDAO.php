@@ -27,7 +27,6 @@ class AtividadeDAO implements IAtividadeDAO{
 		atividade_professor = :atividade_professor
 		WHERE atividade_id = :atividade_id;';
 	const SQL_GET = 'SELECT * FROM Atividade WHERE atividade_id = :atividade_id;';
-    const SQL_GET_NEXT_ID = "SELECT getNextValue('atividade');";
     const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor ORDER BY atividade_datafim DESC;';
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
@@ -105,21 +104,6 @@ class AtividadeDAO implements IAtividadeDAO{
         }
     }
 
-    public function getNextId(){
-        try{
-            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['getnextvalue'];
-            unset($result,$stm);
-
-            return $next;
-        } catch (PDOException $ex) {
-            throw new Exception("Ao procurar a Atividade por id:\t"
-                . $ex->getMessage(), 0, $ex);
-        }
-    }
-
     private function getAllTemplate($stm){
         $stm->execute();
 
@@ -143,12 +127,7 @@ class AtividadeDAO implements IAtividadeDAO{
             $ativ[] = $a;
         }
         unset($a,$this->comprovanteDAO,$val,$this->tipoDAO);
-        /*
-        if (empty($ativ))
-            throw new NotFoundException();
-        else
-        */
-            return $ativ;
+        return $ativ;
     }
 
     public function read($idProfessor){

@@ -16,7 +16,6 @@ class ComprovanteDAO implements IComprovanteDAO{
 		WHERE comprovante_id = :comprovante_id;';
 	const SQL_GET = 'SELECT * FROM Comprovante WHERE comprovante_id = :comprovante_id;';
     const SQL_GET_ALL = 'SELECT * FROM Comprovante;';
-    const SQL_GET_NEXT_ID = "SELECT getNextValue('comprovante');";
     const SQL_READ = 'SELECT * FROM Comprovante WHERE comprovante_atividade = :comprovante_atividade;';
 	const SQL_DELETE = 'DELETE FROM Comprovante WHERE comprovante_id = :comprovante_id;';
     const SQL_READALL = 'SELECT comprovante_id FROM Comprovante WHERE
@@ -101,22 +100,6 @@ class ComprovanteDAO implements IComprovanteDAO{
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos os Comprovantes:\t'
                 . $ex->getMessage());
-        }
-    }
-
-    public function getNextId(){
-        try{
-            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['getnextvalue'];
-            unset($result,$stm);
-            
-            return $next;
-
-        } catch (PDOException $ex) {
-            throw new Exception("Ao procurar a Atividade por id:\t"
-                . $ex->getMessage(), 0, $ex);
         }
     }
     

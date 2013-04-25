@@ -31,7 +31,6 @@ class TipoDAO implements ITipoDAO{
 
     const SQL_GET = 'SELECT * FROM Tipo WHERE tipo_id = :tipo_id;';
     const SQL_READ = 'SELECT * FROM Tipo WHERE tipo_categoria = :tipo_categoria;';
-    const SQL_GET_NEXT_ID = "SELECT getNextValue('tipo');";
     const SQL_READ_ALL = 'SELECT * FROM Tipo;';
     const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_id = :tipo_id;';
     const SQL_READALL = 'SELECT tipo_id FROM Tipo WHERE 
@@ -152,21 +151,6 @@ class TipoDAO implements ITipoDAO{
         } catch (PDOException $ex) {
             throw new Exception('Erro ao listar todos os Tipos:\t'
                 . $ex->getMessage());
-        }
-    }
-
-    public function getNextId(){
-        try{
-            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['getnextvalue'];
-            unset($result,$stm);
-            
-            return $next;
-        } catch (PDOException $ex) {
-            throw new Exception("Ao procurar a Atividade por id:\t"
-                . $ex->getMessage(), 0, $ex);
         }
     }
 

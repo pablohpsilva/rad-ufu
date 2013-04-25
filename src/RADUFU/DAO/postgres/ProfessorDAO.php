@@ -16,12 +16,10 @@ class ProfessorDAO implements IProfessorDAO{
             :professor_siape,
             :professor_senha
             );';
-
     const SQL_UPDATE = 'UPDATE Professor SET 
             professor_nome = :professor_nome, 
             professor_senha = :professor_senha 
             WHERE professor_id = :professor_id;';
-
     const SQL_GET = 'SELECT * FROM Professor WHERE professor_id = :professor_id;';
     const SQL_READ = 'SELECT * FROM Professor WHERE professor_siape = :professor_siape;';
     const SQL_READ_ALL = 'SELECT * FROM Professor;';
