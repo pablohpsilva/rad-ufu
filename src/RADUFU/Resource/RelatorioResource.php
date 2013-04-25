@@ -7,23 +7,23 @@ use RADUFU\Service\RelatorioService,
     Tonic\Response,
     RADUFU\Model\Professor;
 /**
- * @uri /relatorio
- */
+* @uri /relatorio
+*/
 class RelatorioResource extends Resource {
 /*
-    Esta classe esta destinada a gerar o relatorio final, de acordo com as datas informadas utilizando o framework FPDF e FPDI.
+Esta classe esta destinada a gerar o relatorio final, de acordo com as datas informadas utilizando o framework FPDF e FPDI.
 */
     private $relatorioService;
 
     /**
-     * @method POST
-     * @provides application/json
-     * @json
-     */
+* @method POST
+* @provides application/json
+* @json
+*/
     public function GerarRelatorio(){
         /*
-           $id, $dataI, $dataF,$classe,$nivel,$categorias
-        */
+$id, $dataI, $dataF,$classe,$nivel,$categorias
+*/
         #Criando o dicionario com as opcoes possiveis(classe,nivel[0,1,2])
             // Classe auxiliar
             $pont_ref[0][0] = 120;
@@ -70,8 +70,22 @@ class RelatorioResource extends Resource {
                 $pont_ref[$this->request->data->classe][$this->request->data->nivel],
                 $this->request->data->categorias
                 );
-            $this->relatorioService->GerarRelatorio();
-            return new Response(Response::OK);
+            $arquivo = $this->relatorioService->GerarRelatorio();
+            $fHandle = fopen($arquivo,'rb');
+            $body = fread($fHandle, filesize($arquivo));
+            fclose($fHandle);
+
+            $headers = array(
+                'Content-Description' => 'File Transfer',
+                'Content-type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename=' .basename($arquivo),
+                'Content-Length' => filesize($arquivo),
+                'Content-Transfer-Encoding' => ' binary',
+                'Expires' => ' 0',
+                'Cache-Control' => ' must-revalidate, post-check=0, pre-check=0',
+                'Pragma' => ' public'
+                );
+            return new Response(Response::OK, $body, $headers);
 
         } catch (RADUFU\DAO\NotFoundException $e) {
             throw new Tonic\NotFoundException();
@@ -84,42 +98,6 @@ class RelatorioResource extends Resource {
         {
             $aux = explode("/",$data);
             return $aux[2].'-'.$aux[1].'-'.$aux[0];
-        }
-
-    private function download($arquivo)
-        {
-            // Define o tempo máximo de execução em 0 para as conexões lentas
-            set_time_limit(0);
-            // Arqui você faz as validações e/ou pega os dados do banco de dados
-            $aquivoNome = 'imagem.jpg'; // nome do arquivo que será enviado p/ download
-            $arquivoLocal = '/pasta/do/arquivo/'.$aquivoNome; // caminho absoluto do arquivo
-
-            // Verifica se o arquivo não existe
-
-            if (!file_exists($arquivoLocal)) {
-                // Exiba uma mensagem de erro caso ele não exista
-                exit;
-            }
-            $novoNome = 'imagem_nova.jpg';
-            // Configuramos os headers que serão enviados para o browser
-
-            header('Content-Description: File Transfer');
-
-            header('Content-Disposition: attachment; filename="'.$novoNome.'"');
-
-            header('Content-Type: application/octet-stream');
-
-            header('Content-Transfer-Encoding: binary');
-
-            header('Content-Length: ' . filesize($aquivoNome));
-
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-
-            header('Pragma: public');
-
-            header('Expires: 0');
-
-            readfile($arquivo);
         }
 
     protected function json() {
