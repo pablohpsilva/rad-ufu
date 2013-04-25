@@ -1,12 +1,12 @@
 <?php 
 namespace RADUFU\Service;
 use \FPDI,
-	RADUFU\DAO\Factory,
-	RADUFU\DAO\postgres\ProfessorDAO,
+    RADUFU\DAO\Factory,
+    RADUFU\DAO\postgres\ProfessorDAO,
     RADUFU\Service\ProfessorService,
   # RADUFU\Service\ComprovanteService;
     RADUFU\Service\AtividadeService,
-    RADUFU\Service\TipoService,	
+    RADUFU\Service\TipoService, 
     RADUFU\Model\Professor,
     RADUFU\Model\Relatorio,
     RADUFU\Model\Atividade,
@@ -17,25 +17,25 @@ require_once(__DIR__.'/Relatorio/src/FPDI-1.4.3/fpdi.php');
 #require_once(__DIR__ . '/../../../Relatorio/src/FPDI-1.4.3/fpdi.php');
 
 class RelatorioService extends FPDI{
-	#services usados
-	private $relatorioService;
-	private $categoriaService;
-	private $professorService;
-	private $atividadeService;
+    #services usados
+    private $relatorioService;
+    private $categoriaService;
+    private $professorService;
+    private $atividadeService;
 
-	#variaveis da classe
+    #variaveis da classe
     private $categorias;
     private $pdf;
-	private $relatorio;
-	private $prof; #Professor que requisitou o relatorio
+    private $relatorio;
+    private $prof; #Professor que requisitou o relatorio
     private $dataI;
     private $dataF;
     private $pontuacaoDeReferencia;
     private $limitacaoDeEnsino; #apenas a % de limitacao do ensino (% do valor de base)
     private $limiteEnsino; #o valor de $limitacaoDeEnsino * pontuacao de referencia
     private $pontuacoes;
-	private $atividades; #atividades do professor entre as datas
-	private $ativPeriodos; #Array de array. um array de periodos onde para cada periodo temos um arrray com as atividades presentes nele
+    private $atividades; #atividades do professor entre as datas
+    private $ativPeriodos; #Array de array. um array de periodos onde para cada periodo temos um arrray com as atividades presentes nele
 
     /**
      * @method GET
@@ -80,17 +80,17 @@ class RelatorioService extends FPDI{
 
         $this->relatorio = new Relatorio("P","cm","A4");
         $this->relatorio->SetMargins(3,1.5,2);
-		$this->relatorio->AliasNbPages();
-		$this->PrimeiraPagina();
+        $this->relatorio->AliasNbPages();
+        $this->PrimeiraPagina();
 
-		foreach ($this->ativPeriodos as $periodo => $ativs) {
-			$this->QuadroPontuacao($periodo);
-			$this->RelatorioAtividade($periodo);
-		}
-		$this->Comprovantes();
+        foreach ($this->ativPeriodos as $periodo => $ativs) {
+            $this->QuadroPontuacao($periodo);
+            $this->RelatorioAtividade($periodo);
+        }
+        $this->Comprovantes();
         $data = date("d-m-Y");
         $arquivo = "/tmp/".$this->prof->getNome().'-'.$data.'.pdf';
-		$this->relatorio->Output($arquivo,'F');    
+        $this->relatorio->Output($arquivo,'F');    
         /*
         // Codigo para forçar o download
         header("Content-Type: pdf"); // informa o tipo do arquivo ao navegador
@@ -99,7 +99,7 @@ class RelatorioService extends FPDI{
         readfile($arquivo); // lê o arquivo
 
         exit; // aborta pós-ações
-        */
+  */      
         return $arquivo;
     }
 
@@ -120,83 +120,83 @@ class RelatorioService extends FPDI{
             10. Imprimir Limiração de ensino = max(LE)
         Saida: Constroi a primeira pagina do PDF
         */
-	    $this->relatorio->AddPage();
-	    #-- Cabeçalho
-	        $this->relatorio->SetFont('Times','B',16);
-	        $this->relatorio->MultiCell(0,0.4,utf8_decode('Quadro Geral de Pontução'));
-	        $this->relatorio->SetFont('Times','B',12);
-	        $this->relatorio->Cell(1.25,0.5,'',0,0,'C',0);
-	        $this->relatorio->Cell(2,0.4,'Professor: ');
-	        $this->relatorio->SetFont('Times','',12);
-	        $this->relatorio->Cell(0,0.4,utf8_decode($this->prof->getNome()));
-	        $this->relatorio->SetFont('Times','B',12);
-	        $this->relatorio->Ln(1);
-	    #-- Construindo a tabela
-		    #--- Cabecalho da tabela
-		        $this->relatorio->SetFillColor(200,200,200);
-		        $this->relatorio->Cell(2.5,0.5,'',0,0,'C',0);//espaco em branco
-		        $this->relatorio->Cell(5,0.5,'Ensino',1,0,'C',1);
-		        $this->relatorio->Cell(4,1,'Outras atividades',1,0,'C',1);
-		        $this->relatorio->Cell(5,0.5,'Total',1,0,'C',1);
-		        $this->relatorio->Cell(4,0.5,'',0,0,'C',0);
-		        $this->relatorio->Ln(0.5);
-		        $this->relatorio->Cell(2.5,0.5,utf8_decode('Período'),1,0,'C',1);
-		        $this->relatorio->Cell(2.5,0.5,'Bruto',1,0,'C',1);
-		        $this->relatorio->Cell(2.5,0.5,'Limitado',1,0,'C',1);
-		        $this->relatorio->Cell(4,0.5,'',0,0,'C',0);
-		        $this->relatorio->Cell(2.5,0.5,'Bruto',1,0,'C',1);
-		        $this->relatorio->Cell(2.5,0.5,'Limitado',1,0,'C',1);
-		        $this->relatorio->Ln();
-		    #--- Construindo o resto
-		        $TotalLT = 0;
-		        $pontuacoes = array();
-		        foreach ($this->ativPeriodos as $periodo => $categoriasDicionario)
-		        {
-		        	
-		        	$BE = $this->CalcularBruto($categoriasDicionario['Ensino']);
-		        	$LE = $this->CalcularLimitadoEnsino($categoriasDicionario['Ensino'],$BE);
-		        	$O = $this->CalcularOutrasAtividades($categoriasDicionario);
-			        $BT = $BE+$O;
-		        	$LT = $LE+$O;
-		        	$MTP = $LT; //Media total por periodo
-		        	$TotalLT += $MTP;		
-				    $this->pontuacoes[$periodo]['BE'] = $BE;
-				    $this->pontuacoes[$periodo]['LE'] = $LE;
-				    $this->pontuacoes[$periodo]['O'] = $O;
-				    $this->pontuacoes[$periodo]['BT'] = $BT;
-				    $this->pontuacoes[$periodo]['LT'] = $LT;
+        $this->relatorio->AddPage();
+        #-- Cabeçalho
+            $this->relatorio->SetFont('Times','B',16);
+            $this->relatorio->MultiCell(0,0.4,utf8_decode('Quadro Geral de Pontução'));
+            $this->relatorio->SetFont('Times','B',12);
+            $this->relatorio->Cell(1.25,0.5,'',0,0,'C',0);
+            $this->relatorio->Cell(2,0.4,'Professor: ');
+            $this->relatorio->SetFont('Times','',12);
+            $this->relatorio->Cell(0,0.4,utf8_decode($this->prof->getNome()));
+            $this->relatorio->SetFont('Times','B',12);
+            $this->relatorio->Ln(1);
+        #-- Construindo a tabela
+            #--- Cabecalho da tabela
+                $this->relatorio->SetFillColor(200,200,200);
+                $this->relatorio->Cell(2.5,0.5,'',0,0,'C',0);//espaco em branco
+                $this->relatorio->Cell(5,0.5,'Ensino',1,0,'C',1);
+                $this->relatorio->Cell(4,1,'Outras atividades',1,0,'C',1);
+                $this->relatorio->Cell(5,0.5,'Total',1,0,'C',1);
+                $this->relatorio->Cell(4,0.5,'',0,0,'C',0);
+                $this->relatorio->Ln(0.5);
+                $this->relatorio->Cell(2.5,0.5,utf8_decode('Período'),1,0,'C',1);
+                $this->relatorio->Cell(2.5,0.5,'Bruto',1,0,'C',1);
+                $this->relatorio->Cell(2.5,0.5,'Limitado',1,0,'C',1);
+                $this->relatorio->Cell(4,0.5,'',0,0,'C',0);
+                $this->relatorio->Cell(2.5,0.5,'Bruto',1,0,'C',1);
+                $this->relatorio->Cell(2.5,0.5,'Limitado',1,0,'C',1);
+                $this->relatorio->Ln();
+            #--- Construindo o resto
+                $TotalLT = 0;
+                $pontuacoes = array();
+                foreach ($this->ativPeriodos as $periodo => $categoriasDicionario)
+                {
+                    
+                    $BE = $this->CalcularBruto($categoriasDicionario[1]);//id do ensino
+                    $LE = $this->CalcularLimitadoEnsino($categoriasDicionario[1],$BE);//id do ensino
+                    $O = $this->CalcularOutrasAtividades($categoriasDicionario);
+                    $BT = $BE+$O;
+                    $LT = $LE+$O;
+                    $MTP = $LT; //Media total por periodo
+                    $TotalLT += $MTP;       
+                    $this->pontuacoes[$periodo]['BE'] = $BE;
+                    $this->pontuacoes[$periodo]['LE'] = $LE;
+                    $this->pontuacoes[$periodo]['O'] = $O;
+                    $this->pontuacoes[$periodo]['BT'] = $BT;
+                    $this->pontuacoes[$periodo]['LT'] = $LT;
 
-				    for($j = 0; $j<6; $j++)
-			            {
-			            	switch ($j) {
-			            		case 0:
-			            			$this->relatorio->Cell(2.5,0.5,$periodo,1,0,'C',1);
-			            			break;
-		            			
-		            			case 1:
-		            				$this->relatorio->Cell(2.5,0.5,$BE,1,0,'C');
-		            				break;
-		            			
-		            			case 2:
-		            				$this->relatorio->Cell(2.5,0.5,$LE,1,0,'C');
-		            				break;
-		            			
-		            			case 3:
-		            				$this->relatorio->Cell(4,0.5,$O,1,0,'C');
-		            				break;
-		            			
-		            			case 4:
-		            				$this->relatorio->Cell(2.5,0.5,$BT,1,0,'C');
-		            				break;
+                    for($j = 0; $j<6; $j++)
+                        {
+                            switch ($j) {
+                                case 0:
+                                    $this->relatorio->Cell(2.5,0.5,$periodo,1,0,'C',1);
+                                    break;
+                                
+                                case 1:
+                                    $this->relatorio->Cell(2.5,0.5,$BE,1,0,'C');
+                                    break;
+                                
+                                case 2:
+                                    $this->relatorio->Cell(2.5,0.5,$LE,1,0,'C');
+                                    break;
+                                
+                                case 3:
+                                    $this->relatorio->Cell(4,0.5,$O,1,0,'C');
+                                    break;
+                                
+                                case 4:
+                                    $this->relatorio->Cell(2.5,0.5,$BT,1,0,'C');
+                                    break;
 
-		            			case 5:
-		            				$this->relatorio->Cell(2.5,0.5,$LT,1,0,'C');
-		            				break;
-			            		}
-			    		}
-		        	$this->relatorio->Ln();
-		        }
-	    #--- Parte Final
+                                case 5:
+                                    $this->relatorio->Cell(2.5,0.5,$LT,1,0,'C');
+                                    break;
+                                }
+                        }
+                    $this->relatorio->Ln();
+                }
+        #--- Parte Final
         $this->relatorio->Cell(11.5,0.5,'',0,0,'C',0);//espaco em branco
         $this->relatorio->Cell(2.5,0.5,'Media:',0,0,'C',0);
         if(count($this->ativPeriodos)==0)
@@ -233,8 +233,8 @@ class RelatorioService extends FPDI{
         $this->relatorio->Cell(0,0.4,utf8_decode($this->prof->getNome()));
         $this->relatorio->SetFont('Times','B',12);
         $this->relatorio->Ln(1);
-	#-- Tabela
-		#--- Cabeçalho da tabela
+    #-- Tabela
+        #--- Cabeçalho da tabela
         $this->relatorio->Cell(1.5,0.5,'Item',1,0,'C',1);
         $this->relatorio->Cell(1.5,0.5,'Qtd',1,0,'C',1); 
         $this->relatorio->Cell(9,0.5,utf8_decode('Descrição da atividade'),1,0,'C',1);      
@@ -245,14 +245,14 @@ class RelatorioService extends FPDI{
 
         $this->relatorio->SetWidths(array(1.5,1.5,9,2,3));
 
-   		#--- Tabela em si
-   		foreach ($this->ativPeriodos[$periodo] as $categoriasDicionario => $ativs)
-	   		{
-	   			foreach ($ativs as $atvdd)
-	   				{
-	   					$this->relatorio->Row(array($atvdd->getTipo()->getId(),$atvdd->getMultValor(),utf8_decode($atvdd->getDescricao()),$this->pontosAtividade($atvdd),''));
-	   				}	
-	   		}
+        #--- Tabela em si
+        foreach ($this->ativPeriodos[$periodo] as $categoriasDicionario => $ativs)
+            {
+                foreach ($ativs as $atvdd)
+                    {
+                        $this->relatorio->Row(array($atvdd->getTipo()->getId(),$atvdd->getMultValor(),utf8_decode($atvdd->getDescricao()),$this->pontosAtividade($atvdd),''));
+                    }   
+            }
     #-- Resumo das Atividades
         $this->relatorio->Ln();
         $this->relatorio->Cell(1.25,0.5,'',0,0,'C',0);
@@ -316,7 +316,7 @@ class RelatorioService extends FPDI{
             {
                 $nivel = 0;
                 $this->relatorio->SetFont('Times','',14);
-                $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' Atividades de '.utf8_decode($categoriasDicionario).': '.$this->CalcularBruto($ativs).' pontos');
+                $this->relatorio->Cell(6.5,0.4,$bullets[$nivel].' '.utf8_decode($ativs[0]->getTipo()->getCategoria()->getNome()).': '.$this->CalcularBruto($ativs).' pontos');
                 $this->relatorio->Ln(1);
 
                 $this->relatorio->SetFont('Times','',12);
@@ -359,169 +359,170 @@ class RelatorioService extends FPDI{
     # Anexa ao fim do documento os certificados das atividades
     public function Comprovantes(){
 
-    	#Desabilitando o Header:
-    	$this->relatorio->header_flag = false;
-    	#Para cada atividade
-    	foreach ($this->ativPeriodos as $periodo => $categoriasDicionario) {
-    		foreach ($categoriasDicionario as $categoria => $atividadesPorCategoria) {
-    			foreach ($atividadesPorCategoria as $atividade) {
-    				if($atividade->getComprovantes())
-    				{
-    					foreach ($atividade->getComprovantes() as $comprovante)
-    					{
-    						//echo $comprovante->getArquivo().'                ';
-    						$pagecount = $this->relatorio->setSourceFile($comprovante->getArquivo());
-    						//echo $pagecount. '------------';
-    						if (!empty($pagecount))
-    						{
-				            for($i = 1; $i <= $pagecount; $i++) 
-					            {
-					                
-					                $tplidx = $this->relatorio->ImportPage($i);
+        #Desabilitando o Header:
+        $this->relatorio->header_flag = false;
+        #Para cada atividade
+        foreach ($this->ativPeriodos as $periodo => $categoriasDicionario) {
+            foreach ($categoriasDicionario as $categoria => $atividadesPorCategoria) {
+                foreach ($atividadesPorCategoria as $atividade) {
+                    if($atividade->getComprovantes())
+                    {
+                        foreach ($atividade->getComprovantes() as $comprovante)
+                        {
+                            //echo $comprovante->getArquivo().'                ';
+                            $pagecount = $this->relatorio->setSourceFile($comprovante->getArquivo());
+                            //echo $pagecount. '------------';
+                            if (!empty($pagecount))
+                            {
+                            for($i = 1; $i <= $pagecount; $i++) 
+                                {
+                                    
+                                    $tplidx = $this->relatorio->ImportPage($i);
 
-					                $s = $this->relatorio->getTemplatesize($tplidx);
-					                #Mega bug! Nao sei pq isso funciona asism, so sei que apenas funciona assim!
-					                #Nao mecher! haeuhueahuaehe
-					                #O correto seria: $this->AddPage($s['w'] > $s['h'] ? 'L': 'P', array($s['w'], $s['h']));
-					                if ($s['w']>$s['h']) 
-					                {
-					                	$this->relatorio->AddPage('L', array($s['h'], $s['w']));
-					                }
-					                else 
-					                {
-					                	$this->relatorio->AddPage('P', array($s['w'], $s['h']));
-					                }
-					                $this->relatorio->useTemplate($tplidx);
-					            }
-					        }	
-    					}
-    				}
-    			}
-    		}
-    	}
-		$this->relatorio->header_flag = true;
+                                    $s = $this->relatorio->getTemplatesize($tplidx);
+                                    #Mega bug! Nao sei pq isso funciona asism, so sei que apenas funciona assim!
+                                    #Nao mecher! haeuhueahuaehe
+                                    #O correto seria: $this->AddPage($s['w'] > $s['h'] ? 'L': 'P', array($s['w'], $s['h']));
+                                    if ($s['w']>$s['h']) 
+                                    {
+                                        $this->relatorio->AddPage('L', array($s['h'], $s['w']));
+                                    }
+                                    else 
+                                    {
+                                        $this->relatorio->AddPage('P', array($s['w'], $s['h']));
+                                    }
+                                    $this->relatorio->useTemplate($tplidx);
+                                }
+                            }   
+                        }
+                    }
+                }
+            }
+        }
+        $this->relatorio->header_flag = true;
     }
 
 #---------------------- FUNCOES AUXILIARES ----------------------#
     private function PeriodosAtividades()
-	    {
-	    	$ano = '';
-	    	$periodo = '';
-	    	$categorias = $this->categoriaService->searchAll();
-	    	#iniciando todas as possiveis entradas ao dicionario
-	    	foreach ($this->atividades as $ativ) {
-	    		$data_i = explode("/",$ativ->getDataInicio());
-	    		$ano = $data_i[2];
-	    		$periodo = ((int)$data_i[1]<7)?'1':'2';
-	    		
-	    		$periodo2 = ($periodo == '1') ? '2':'1';
-	    		$ano2 = ((int)$ano - 1).'';
-	    		$ano2 =  ($periodo2 == '1') ? ($ano) : ($ano2);
-		
-	    		$this->ativPeriodos[$ano2.'-'.$periodo2] = array();
-	    		$this->ativPeriodos[$ano.'-'.$periodo] = array();
-	    	}
-	    	#adicionando as atividades ao dicionario
-	    	foreach ($this->atividades as $ativ) {
+        {
+            $ano = '';
+            $periodo = '';
+            $categorias = $this->categoriaService->searchAll();
+            #iniciando todas as possiveis entradas ao dicionario
+            foreach ($this->atividades as $ativ) {
+                $data_i = explode("/",$ativ->getDataInicio());
+                $ano = $data_i[2];
+                $periodo = ((int)$data_i[1]<7)?'1':'2';
+                
+                $periodo2 = ($periodo == '1') ? '2':'1';
+                $ano2 = ((int)$ano - 1).'';
+                $ano2 =  ($periodo2 == '1') ? ($ano) : ($ano2);
+        
+                $this->ativPeriodos[$ano2.'-'.$periodo2] = array();
+                $this->ativPeriodos[$ano.'-'.$periodo] = array();
+            }
+            #adicionando as atividades ao dicionario
+            foreach ($this->atividades as $ativ) {
                 foreach ($this->categorias as $cat)
                 {
                     if($ativ->getTipo()->getCategoria()->getId() == $cat)
                     {
-        	    		$data_i = explode("/",$ativ->getDataInicio());
-        	    		$ano = $data_i[2];
-        	    		$periodo = ((int)$data_i[1]<7)?'1':'2';
-        				#tratando a greve
-        	    		if (2012 == (int)$data_i[2])
-        		    		{
-        		    			$ano = '2012';
-        		 	   			$periodo = ((int)$data_i[1] < 10)? '1' : '2';
-        		 	   		}	
-        	 	   		elseif (2013 == (int)$data_i[2])
-        		 	   		{
-        		 	   			if ((int)$data_i<5)
-        			 	   			{
-        			 	   				$ano = '2012';
-        			 	   				$periodo = '2';
-        			 	   			}
-        		 	   			elseif((int)$data_i < 11)
-        			 	   			{
-        			 	   				$ano = '2013';
-        			 	   				$periodo = '1';
-        			 	   			}
-        		 	   			else
-        			 	   			{
-        			 	   				$ano = '2013';
-        			 	   				$periodo = '2';	
-        			 	   			}
-        		 	   		}
-        	 	   		elseif(2014 == (int)$data_i[2])
-        		    		{
-        		    			if ((int)$data_i<3)
-        			 	   			{
-        			 	   				$ano = '2013';
-        			 	   				$periodo = '1';
-        			 	   			}
-        		 	   			elseif((int)$data_i < 8)
-        			 	   			{
-        			 	   				$ano = '2014';
-        			 	   				$periodo = '1';
-        			 	   			}
-        		 	   			else
-        			 	   			{
-        			 	   				$ano = '2014';
-        			 	   				$periodo = '2';	
-        			 	   			}
-        		    		}
-        		    	$per = $ano.'-'.$periodo;		
-        				$this->ativPeriodos[$per][$ativ->getTipo()->getCategoria()->getNome()][] = $ativ;	    	
-	    	        }
+                        $data_i = explode("/",$ativ->getDataInicio());
+                        $ano = $data_i[2];
+                        $periodo = ((int)$data_i[1]<7)?'1':'2';
+                        #tratando a greve
+                        if (2012 == (int)$data_i[2])
+                            {
+                                $ano = '2012';
+                                $periodo = ((int)$data_i[1] < 10)? '1' : '2';
+                            }   
+                        elseif (2013 == (int)$data_i[2])
+                            {
+                                if ((int)$data_i<5)
+                                    {
+                                        $ano = '2012';
+                                        $periodo = '2';
+                                    }
+                                elseif((int)$data_i < 11)
+                                    {
+                                        $ano = '2013';
+                                        $periodo = '1';
+                                    }
+                                else
+                                    {
+                                        $ano = '2013';
+                                        $periodo = '2'; 
+                                    }
+                            }
+                        elseif(2014 == (int)$data_i[2])
+                            {
+                                if ((int)$data_i<3)
+                                    {
+                                        $ano = '2013';
+                                        $periodo = '1';
+                                    }
+                                elseif((int)$data_i < 8)
+                                    {
+                                        $ano = '2014';
+                                        $periodo = '1';
+                                    }
+                                else
+                                    {
+                                        $ano = '2014';
+                                        $periodo = '2'; 
+                                    }
+                            }
+                        $per = $ano.'-'.$periodo;       
+                        $this->ativPeriodos[$per][$ativ->getTipo()->getCategoria()->getId()][] = $ativ;           
+                    }
                 }
             }
-	    	#limpando as partes vazias do dicionario
-	    	foreach ($this->ativPeriodos as $key => $ativs) {
-	    		if(count($ativs) == 0)
-	    			{
-	    				unset($this->ativPeriodos[$key]);
-	    			}
-	    	}
-	    }
+            #limpando as partes vazias do dicionario
+            foreach ($this->ativPeriodos as $key => $ativs) {
+                if(count($ativs) == 0)
+                    {
+                        unset($this->ativPeriodos[$key]);
+                    }
+            }
+        }
     private function CalcularBruto(array $atividades)
-	    {
-	    	$bruto = 0;
-	    	foreach ($atividades as $ativ)
-		    	{
-		    			$bruto += $this->pontosAtividade($ativ);
-		    	}
-		    return $bruto;
-	    }
+        {
+            $bruto = 0;
+            foreach ($atividades as $ativ)
+                {
+                        $bruto += $this->pontosAtividade($ativ);
+                }
+            return $bruto;
+        }
     private function CalcularLimitadoEnsino(array $atividadesEnsino, $bruto)
-    	{
-    		return ($bruto > $this->limiteEnsino) ? $this->limiteEnsino : $bruto;
-    	}
+        {
+            return ($bruto > $this->limiteEnsino) ? $this->limiteEnsino : $bruto;
+        }
     private function CalcularOutrasAtividades(array $categoriasDicionario)
-    	{
-    		
-    		$outras = 0;
-    		foreach ($categoriasDicionario as $cat => $atividadesDaCategoria)
-	    		{
-	    			if ($cat != 'Ensino') {
-	    				foreach ($atividadesDaCategoria as $ativ)
-					    	{
-					    		$outras += $this->pontosAtividade($ativ);
-					    	}
-	    			}
-	    		}
-    		return $outras;
-    	}
+        {
+            
+            $outras = 0;
+            foreach ($categoriasDicionario as $cat => $atividadesDaCategoria)
+                {
+                    if ($cat != 1)//id do ensino
+                    {
+                        foreach ($atividadesDaCategoria as $ativ)
+                            {
+                                $outras += $this->pontosAtividade($ativ);
+                            }
+                    }
+                }
+            return $outras;
+        }
     private function pontosAtividade($atividade)
-    	{
-    		$pontuacaoLimite = $atividade->getTipo()->getPontuacaoLimite();
-    		$pontuacaoReferencia = $atividade->getTipo()->getPontuacaoReferencia();
-    		$pontuacao = $atividade->getTipo()->getPontuacao();
-    		$pontos = $atividade->getMultValor() * $pontuacao;
-    		
-	    	return (!is_null($pontuacaoLimite) && $pontos > $pontuacaoLimite) ? $pontuacaoLimite : $pontos;
-    	}     	    
+        {
+            $pontuacaoLimite = $atividade->getTipo()->getPontuacaoLimite();
+            $pontuacaoReferencia = $atividade->getTipo()->getPontuacaoReferencia();
+            $pontuacao = $atividade->getTipo()->getPontuacao();
+            $pontos = $atividade->getMultValor() * $pontuacao;
+            
+            return (!is_null($pontuacaoLimite) && $pontos > $pontuacaoLimite) ? $pontuacaoLimite : $pontos;
+        }           
     public function GetProf($id)
         {
             #Argumentos: Id do professor
