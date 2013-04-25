@@ -102,7 +102,7 @@ class RelatorioService extends FPDI{
 
         exit; // aborta pós-ações
   */      
-        return $arquivo;
+        return $this->prof->getId().'/'.$data.'.pdf';
     }
 
     public function PrimeiraPagina()
