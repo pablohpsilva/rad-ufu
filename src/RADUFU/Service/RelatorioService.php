@@ -90,7 +90,7 @@ class RelatorioService extends FPDI{
         $this->Comprovantes();
         $data = time();
         if(!file_exists('/tmp/'.$this->prof->getId()))
-            mkdir('/tmp/'.$this->prof->getId());
+            mkdir('/tmp/'.$this->prof->getId(),0777);
         $arquivo = "/tmp/".$this->prof->getId().'/'.$data.'.pdf';
         $this->relatorio->Output($arquivo,'F');    
   /*      
