@@ -103,13 +103,17 @@ class ProfessorAtividadeResource extends Resource {
             return new Response(Response::BADREQUEST);
 
         try {
+
+            $inicio = date("d/m/Y", strtotime($this->request->data->inicio));
+            $fim = date("d/m/Y", strtotime($this->request->data->fim));
+
             $this->atividadeService = new AtividadeService();
             $this->atividadeService->update(
                     $idAtividade,
                     $this->request->data->tipo,
                     $this->request->data->descricao,
-                    $this->request->data->inicio,
-                    $this->request->data->fim,
+                    $inicio,
+                    $fim,
                     $this->request->data->valorMult,
                     $idProfessor
                     );
