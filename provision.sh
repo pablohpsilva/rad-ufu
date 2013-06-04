@@ -92,8 +92,16 @@ apt-get install -y curl
 curl -sS --proxy $PROXY_UFU https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
+#
+# RAD
+#
+
 # Instala dependências do RAD
 cd /vagrant && composer install
+
+# Cria diretório para comprovantes
+mkdir -p /home/rad/comprovantes
+chown --recursive www-data /home/rad
 
 # Sinaliza que este script já foi executado
 date > /etc/bootstraped
