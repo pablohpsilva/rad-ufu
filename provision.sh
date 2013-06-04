@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 # Proxy da UFU :/
-# export http_proxy=http://proxy.ufu.br:3128/
+PROXY_UFU="http://proxy.ufu.br:3128/"
+export http_proxy=$PROXY_UFU
+
+# testa se o script já foi executado e termina a execução caso se verdadeiro
+test -f /etc/bootstraped && exit
 
 apt-get update
 
@@ -85,8 +89,11 @@ sudo apt-get install -y git
 
 # Baixa e instala o Composer
 apt-get install -y curl
-curl -sS https://getcomposer.org/installer | php
+curl -sS --proxy $PROXY_UFU https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
 # Instala dependências do RAD
 cd /vagrant && composer install
+
+# Sinaliza que este script já foi executado
+date > /etc/bootstraped
