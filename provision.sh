@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
+# testa se o script já foi executado e termina a execução caso se verdadeiro
+test -f /etc/bootstraped && exit
+
 # Proxy da UFU :/
 PROXY_UFU="http://proxy.ufu.br:3128/"
 export http_proxy=$PROXY_UFU
-
-# testa se o script já foi executado e termina a execução caso se verdadeiro
-test -f /etc/bootstraped && exit
 
 apt-get update
 
