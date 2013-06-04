@@ -97,7 +97,7 @@ mv composer.phar /usr/local/bin/composer
 #
 
 # Instala dependências do RAD
-cd /vagrant && composer install
+cd /vagrant && composer install --prefer-source
 
 # Cria diretório para comprovantes
 mkdir -p /home/rad/comprovantes
