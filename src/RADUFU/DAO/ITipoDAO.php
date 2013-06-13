@@ -32,14 +32,6 @@ interface ITipoDAO {
     public function read($idCategoria);
 
     /**
-     * Recupera o proximo id do Tipo
-     * @param type $id
-     * @return id do Proximo Tipo
-     * @throws DAOException
-     */
-    public function getNextId();
-
-    /**
      * Recupera todas os Tipos
      * @return array tipoes encontradas
      * @throws DAOException
@@ -54,11 +46,18 @@ interface ITipoDAO {
     public function update(Tipo $tipo);
 
     /**
-     * Removeo tipo do BD
+     * Remove o Tipo do BD
      * @param type $id
      * @throws DAOException
      */
     public function delete($id);
+
+    /**
+     * Busca um tipo usando um Tipo
+     * @param type Tipo $tipo
+     * @throws DAOException
+     */
+    public function readAll(Tipo $tipo);
 }
 
 ?>

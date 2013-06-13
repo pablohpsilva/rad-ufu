@@ -32,21 +32,30 @@ class ComprovanteResource extends Resource {
     /**
      * @method POST
      * @provides application/json
-     * @json
+     * @multipart
      * @return Tonic\Response
      */
-    public function criar($arquivo = null) {
+    public function criar() {
+        session_start();
+        $professor = $_SESSION["user"];
+
         if(!(isset($this->request->data->arquivo)
             &&isset($this->request->data->atividade)))
             return new Response(Response::BADREQUEST);
         try {
 
             $this->comprovanteService = new ComprovanteService();
-            $criado = $this->comprovanteService->getNextId();
 
-            $this->comprovanteService->post(
-                    $this->request->data->professor,
-                    $arquivo,
+            $tmp_file = $this->request->data->arquivo["tmp_name"] . "/" . $this->request->data->arquivo["name"];
+
+            $path = $this->comprovanteService->post(
+                    $professor,
+                    $tmp_file,
+                    $this->request->data->atividade
+                    );
+
+            $criado = $this->comprovanteService->readAll(
+                    $path,
                     $this->request->data->atividade
                     );
 
@@ -59,39 +68,6 @@ class ComprovanteResource extends Resource {
         }
     }
 
-    /*//*
-     * @method PUT
-     * @provides application/json
-     * @json
-     * @return Tonic\Response
-     */
-/*
-    public function atualizar($id = null) {
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        if(!(isset($this->request->data->professor)
-            &&isset($this->request->data->atividade)
-            &&isset($this->request->data->arquivo)))
-            return new Response(Response::BADREQUEST);
-        try {
-            $this->comprovanteService = new ComprovanteService();
-            $this->comprovanteService->update(
-                    $id,
-                    $this->request->data->professor,
-                    $this->request->data->arquivo,
-                    $this->request->data->atividade
-                    );
-
-            return new Response(Response::OK);
-
-        } catch (RADUFU\DAO\NotFoundException $e) {
-            throw new Tonic\NotFoundException();
-        } catch (RADUFU\DAO\Exception $e) {
-            throw new Tonic\Exception($e->getMessage());
-        }
-
-    }
-*/
     /**
      * @method DELETE
      * @provides application/json
@@ -113,6 +89,17 @@ class ComprovanteResource extends Resource {
         }
     }
 
+    protected function multipart () {
+        $this->before(function ($request) {
+            $data = (object) array("arquivo" => array_pop($_FILES), "atividade" => $_POST["id_atividade"]);
+            $request->data = $data;
+        });
+        $this->after(function ($response) {
+            $response->contentType = 'application/json';
+            $response->body = json_encode($response->body);
+        });
+    }
+
     /**
      * Transforma as requisições json para array e as repostas array para json
      */
@@ -125,9 +112,9 @@ class ComprovanteResource extends Resource {
         });
 
         $this->after(function ($response) {
-         $response->contentType = 'application/json';
-         $response->body = json_encode($response->body);
-     });
+            $response->contentType = 'application/json';
+            $response->body = json_encode($response->body);
+        });
     }
 }
 

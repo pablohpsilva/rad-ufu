@@ -39,10 +39,6 @@ class ProfessorResource extends Resource {
      * @return Tonic\Response
      */
     public function criar($id = null) {
-        /*
-        if(is_null($id))
-            throw new Tonic\MethodNotAllowedException();
-        */
         if(!(isset($this->request->data->siape)
             &&isset($this->request->data->nome)
             &&isset($this->request->data->senha)))

@@ -16,16 +16,15 @@ class ProfessorDAO implements IProfessorDAO{
             :professor_siape,
             :professor_senha
             );';
-
     const SQL_UPDATE = 'UPDATE Professor SET 
             professor_nome = :professor_nome, 
             professor_senha = :professor_senha 
             WHERE professor_id = :professor_id;';
-
     const SQL_GET = 'SELECT * FROM Professor WHERE professor_id = :professor_id;';
     const SQL_READ = 'SELECT * FROM Professor WHERE professor_siape = :professor_siape;';
     const SQL_READ_ALL = 'SELECT * FROM Professor;';
     const SQL_DELETE = 'DELETE FROM Professor WHERE professor_id = :professor_id;';
+    const SQL_LOGIN = 'SELECT login(:professor_siape,:professor_senha);';
 
     private $atividadeDAO;
 
@@ -168,6 +167,26 @@ class ProfessorDAO implements IProfessorDAO{
         }
     }
     
+    public function login($siape,$password){
+        try{
+            $stm = Connection::Instance()->get()->prepare(self::SQL_LOGIN);
+            $stm->execute(array(
+                ':professor_siape' =>$siape,
+                ':professor_senha' =>$password
+                ));
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
+
+            if($result['login'] == -1)
+                throw new Exception("Usuario e/ou senha invalido:\t"
+                    . $stm->errorInfo()[2]);
+
+            return self::read($siape);
+                
+        }catch(PDOException $ex){
+            throw new Exception("Ao tentar logar o Professor:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
 }
 
 ?>

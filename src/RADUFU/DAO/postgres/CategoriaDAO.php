@@ -87,11 +87,7 @@ class CategoriaDAO implements ICategoriaDAO{
                 $cat[] = $c;
             }
             unset($c);
-
-            //if (empty($cat))
-                //throw new NotFoundException();
-            //else
-                return $cat;
+            return $cat;
 
         } catch (PDOException $ex) {
             throw new Exception("Erro ao listar todas as categorias:\t"
