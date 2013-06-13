@@ -1,4 +1,4 @@
-CREATE DATABASE RADUFU;
+--CREATE DATABASE RADUFU;
 
 DROP TABLE IF EXISTS comprovante, atividade, multiplicador, tipo, categoria, professor;
 
