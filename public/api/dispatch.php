@@ -3,6 +3,18 @@ require_once (__DIR__ . '/../../src/RADUFU/Autoloader.php');
 
 use Tonic\Response;
 
+session_start();
+if (isset($_SESSION["user"]))
+	$user = $_SESSION["user"];
+else {
+	//header("Location: index.php");
+	//exit();
+	//return new Response(Response::UNAUTHORIZED, "Nao e permitido.");
+	$response = new Response(Response::UNAUTHORIZED, '{ERRO: "Cliente nao logado."}', array('content-type' => 'application/json'));
+	$response->output();
+	die;
+}
+
 $config = array(
     'load' => array('../../src/RADUFU/Resource/*.php')
 );

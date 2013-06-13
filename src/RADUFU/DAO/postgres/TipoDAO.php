@@ -31,10 +31,15 @@ class TipoDAO implements ITipoDAO{
 
     const SQL_GET = 'SELECT * FROM Tipo WHERE tipo_id = :tipo_id;';
     const SQL_READ = 'SELECT * FROM Tipo WHERE tipo_categoria = :tipo_categoria;';
-    const SQL_GET_NEXT_ID = "SELECT NEXTVAL('tipo_tipo_id_seq');";
-    const SQL_RESET_NEXT_ID = "SELECT SETVAL('tipo_tipo_id_seq', :next_id);";
     const SQL_READ_ALL = 'SELECT * FROM Tipo;';
     const SQL_DELETE = 'DELETE FROM Tipo WHERE tipo_id = :tipo_id;';
+    const SQL_READALL = 'SELECT tipo_id FROM Tipo WHERE 
+            tipo_categoria = :tipo_categoria AND 
+            tipo_descricao = :tipo_descricao AND 
+            tipo_pontuacao = :tipo_pontuacao AND 
+            tipo_pontuacaoreferencia = :tipo_pontuacaoreferencia AND 
+            tipo_pontuacaolimite = :tipo_pontuacaolimite AND 
+            tipo_multiplicador = :tipo_multiplicador;';
 
     private $multiplicadorDAO;
     private $categoriaDAO;
@@ -149,25 +154,6 @@ class TipoDAO implements ITipoDAO{
         }
     }
 
-    public function getNextId(){
-        try{
-            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['nextval'];
-
-            $stm = Connection::Instance()->get()->prepare(self::SQL_RESET_NEXT_ID);
-            $aux = $next-1;
-            $stm->bindParam(':next_id', $aux);
-            $stm->execute();
-            unset($aux,$result,$stm);
-            return $next;
-        } catch (PDOException $ex) {
-            throw new Exception("Ao procurar a Atividade por id:\t"
-                . $ex->getMessage(), 0, $ex);
-        }
-    }
-
     public function update(Tipo $tipo){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_UPDATE);
@@ -207,5 +193,27 @@ class TipoDAO implements ITipoDAO{
                 . $ex->getMessage(), 0, $ex);
         }
     }
+
+    public function readAll(Tipo $tipo){
+        try{
+            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
+            $stm->execute(array(
+                ':tipo_categoria' =>$tipo->getCategoria()->getId(),
+                ':tipo_descricao' =>$tipo->getDescricao(),
+                ':tipo_pontuacao' =>$tipo->getPontuacao(),
+                ':tipo_pontuacaoreferencia' =>$tipo->getPontuacaoReferencia(),
+                ':tipo_pontuacaolimite' =>$tipo->getPontuacaoLimite(),
+                ':tipo_multiplicador' => $tipo->getMultiplicador()->getId()
+                ));
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
+            unset($result,$stm);
+            
+            return $result['tipo_id'];
+        } catch (PDOException $ex) {
+            throw new Exception("Ao procurar o id por Tipo:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
+
 }
 ?>

@@ -48,15 +48,12 @@ class TipoResource extends Resource {
             &&isset($this->request->data->pontuacaolimite)
             &&isset($this->request->data->multiplicador)))
             return new Response(Response::BADREQUEST);
-        /*
-        if(!is_null($id))
-            throw new \Tonic\MethodNotAllowedException();
-        */
         try {
             $this->tipoService = new TipoService();
             $criado = $this->tipoService->getNextId();
 
             $this->tipoService->post(
+                    $criado,
                     $this->request->data->categoria,
                     $this->request->data->descricao,
                     $this->request->data->pontuacao,
@@ -82,7 +79,6 @@ class TipoResource extends Resource {
      * @return Tonic\Response
      */
     public function atualizar($id = null) {
-        //$id, $categoria, $descricao, $pontuacao, $pontuacaoreferencia, $pontuacaolimite
         if(is_null($id))
             throw new Tonic\MethodNotAllowedException();
         if(!(isset($this->request->data->categoria)

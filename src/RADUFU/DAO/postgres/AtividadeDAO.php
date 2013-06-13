@@ -27,11 +27,21 @@ class AtividadeDAO implements IAtividadeDAO{
 		atividade_professor = :atividade_professor
 		WHERE atividade_id = :atividade_id;';
 	const SQL_GET = 'SELECT * FROM Atividade WHERE atividade_id = :atividade_id;';
-    const SQL_GET_NEXT_ID = "SELECT NEXTVAL('atividade_atividade_id_seq');";
-    const SQL_RESET_NEXT_ID = "SELECT SETVAL('atividade_atividade_id_seq', :next_id);";
-    const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor;';
+    const SQL_READ = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor ORDER BY atividade_datafim DESC;';
 	const SQL_GET_ALL = 'SELECT * FROM Atividade;';
 	const SQL_DELETE = 'DELETE FROM Atividade WHERE atividade_id = :atividade_id;';
+    const SQL_READALL = 'SELECT atividade_id FROM Atividade WHERE 
+        atividade_tipo = :atividade_tipo AND 
+        atividade_descricao = :atividade_descricao AND 
+        atividade_datainicio = :atividade_datainicio AND 
+        atividade_datafim = :atividade_datafim AND 
+        atividade_multiplicador_valor = :atividade_multiplicador_valor AND 
+        atividade_professor = :atividade_professor;';
+    const SQL_ENTRE_DATAS = 'SELECT * FROM Atividade WHERE atividade_professor = :atividade_professor AND atividade_datainicio >= :atividade_datainicio AND atividade_datafim <= :atividade_datafim ORDER BY (atividade_datainicio)';
+    const SQL_PAGINACAO = 'SELECT * FROM
+        (SELECT ROW_NUMBER() OVER ( ORDER BY atividade_datainicio :ordenacao ) AS RowNum, * FROM Atividade WHERE atividade_professor = :atividade_professor) AS Pagination
+        WHERE Pagination.RowNum >= :linha_minima AND Pagination.RowNum <= :linha_maxima';
+
 
     private $comprovanteDAO;
     private $tipoDAO;
@@ -41,6 +51,7 @@ class AtividadeDAO implements IAtividadeDAO{
             $stm = Connection::Instance()->get()->prepare(self::SQL_POST);
 
             $res = $stm->execute(array(
+                //':atividade_id' => $ativ->getId(),
                 ':atividade_tipo' => $ativ->getTipo()->getId(),
                 ':atividade_descricao' => $ativ->getDescricao(),
                 ':atividade_datainicio' => $ativ->getDataInicio(),
@@ -93,25 +104,6 @@ class AtividadeDAO implements IAtividadeDAO{
         }
     }
 
-    public function getNextId(){
-        try{
-            $stm = Connection::Instance()->get()->prepare(self::SQL_GET_NEXT_ID);
-            $stm->execute();
-            $result = $stm->fetch(PDO::FETCH_ASSOC);
-            $next = $result['nextval'];
-
-            $stm = Connection::Instance()->get()->prepare(self::SQL_RESET_NEXT_ID);
-            $aux = $next-1;
-            $stm->bindParam(':next_id', $aux);
-            $stm->execute();
-            unset($aux,$result,$stm);
-            return $next;
-        } catch (PDOException $ex) {
-            throw new Exception("Ao procurar a Atividade por id:\t"
-                . $ex->getMessage(), 0, $ex);
-        }
-    }
-
     private function getAllTemplate($stm){
         $stm->execute();
 
@@ -135,12 +127,7 @@ class AtividadeDAO implements IAtividadeDAO{
             $ativ[] = $a;
         }
         unset($a,$this->comprovanteDAO,$val,$this->tipoDAO);
-        /*
-        if (empty($ativ))
-            throw new NotFoundException();
-        else
-        */
-            return $ativ;
+        return $ativ;
     }
 
     public function read($idProfessor){
@@ -195,6 +182,7 @@ class AtividadeDAO implements IAtividadeDAO{
     public function delete($id){
         try {
             $stm = Connection::Instance()->get()->prepare(self::SQL_DELETE);
+            $id += 0;
             $stm->bindParam(':atividade_id', $id);
             $stm->execute();
 
@@ -205,6 +193,61 @@ class AtividadeDAO implements IAtividadeDAO{
         } catch (PDOException $ex) {
             throw new Exception("Ao deletar Atividade:\t"
                 . $ex->getMessage(), 0, $ex);
+        }
+    }
+
+    public function readAll(Atividade $ativ, $idProfessor){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_READALL);
+
+            $stm->execute(array(
+                ':atividade_tipo' =>$ativ->getTipo()->getId(),
+                ':atividade_descricao' =>$ativ->getDescricao(),
+                ':atividade_datainicio' =>$ativ->getDataInicio(),
+                ':atividade_datafim' =>$ativ->getDataFim(),
+                ':atividade_multiplicador_valor' =>$ativ->getMultValor(),
+                ':atividade_professor' => $idProfessor
+                ));
+
+            $result = $stm->fetch(PDO::FETCH_ASSOC);
+            
+            return $result['atividade_id'];
+
+        } catch (PDOException $ex) {
+            throw new Exception("Ao procurar id por Atividade:\t"
+                . $ex->getMessage(), 0, $ex);
+        }
+    }
+    
+    public function getEntreDatas($id,$inicio,$fim){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_ENTRE_DATAS);
+            $stm->bindParam(':atividade_professor', $id);
+            $stm->bindParam(':atividade_datainicio', $inicio);
+            $stm->bindParam(':atividade_datafim', $fim);
+            return $this->getAllTemplate($stm);
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos as Atividade:\t'
+                . $ex->getMessage());
+        }
+    }
+
+    public function getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao = 'DESC'){
+        try {
+            $stm = Connection::Instance()->get()->prepare(self::SQL_PAGINACAO);
+            $stm->execute(array(
+                ':atividade_professor' => $idProfessor,
+                ':ordenacao' => $ordenacao,
+                ':linha_minima' => $linhaMinima,
+                ':linha_maxima' => $linhaMaxima
+                ));
+
+            return $this->getAllTemplate($stm);
+
+        } catch (PDOException $ex) {
+            throw new Exception('Erro ao listar todos as Atividade:\t'
+                . $ex->getMessage());
         }
     }
 }

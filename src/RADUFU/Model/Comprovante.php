@@ -23,7 +23,12 @@ class Comprovante implements JsonSerializable{
 
 	public function separaCaminho(){
 		$aux = self::separaNome();
-		return explode($aux,$this->getArquivo())[0];
+		return explode("/".$aux,$this->getArquivo())[0];
+	}
+
+	public function separaExtensao(){
+		$aux = self::separaNome();
+		return explode(".",$aux)[1];
 	}
 
 	public function JsonSerialize() {

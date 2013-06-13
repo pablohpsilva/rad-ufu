@@ -42,9 +42,7 @@ class ProfessorService{
 	public function search($input){
 		return self::get($input);
 	}
-	
-	// Unica excessao. Aqui pode-se usar a pesquisa por SIAPE. O retorno sera um unico objeto...
-	// Contrariando o restante das funcoes searchAll() dos outros Services.
+
 	public function searchAll($siape = null){
 		if(!is_null($siape))
 			return $this->dao->read($siape);
@@ -65,14 +63,11 @@ class ProfessorService{
 	}
 
 	public function delete($input){
-		//$atividade = new AtividadeService();
-		//$array = $atividade->searchAll($input);
-
-		//$atividade->deleteCollection($array);
-
 		$this->dao->delete($input);
+	}
 
-		unset($atividade,$array);
+	public function login($siape,$password){
+		return $this->dao->login($siape,$password);
 	}
 
 }

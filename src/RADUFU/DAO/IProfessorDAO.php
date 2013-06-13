@@ -51,6 +51,13 @@ interface IProfessorDAO {
      * @throws DAOException
      */
     public function delete($id);
+
+    /**
+     * Removeo professor do BD
+     * @param type $siape,$password
+     * @throws DAOException
+     */
+    public function login($siape, $password);
 }
 
 ?>

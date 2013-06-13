@@ -3,14 +3,17 @@ namespace RADUFU\Service;
 
 use RADUFU\DAO\Factory,
 	RADUFU\DAO\postgres\AtividadeDAO,
-    RADUFU\Model\Atividade;
+    RADUFU\Model\Atividade,
+    RADUFU\Service\TipoService;
 
 class AtividadeService{
 	private $dao;
+	private $tipoService;
 	private $obj;
 
 	public function __construct(){
 		$this->dao = Factory::getFactory(Factory::PGSQL)->getAtividadeDAO();
+		$this->tipoService = new TipoService();
 	}
 
 	private function createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante = null){
@@ -26,7 +29,7 @@ class AtividadeService{
 			foreach ($comprovante as $val) {
 				$this->obj->add($val);
 			}
-		
+
 		return $this->obj;
 	}
 
@@ -42,16 +45,17 @@ class AtividadeService{
 		}
 	}
 
-	public function getNextId(){ 
-		return $this->dao->getNextId(); 
+	public function getNextId(){
+		return $this->dao->getNextId();
 	}
 
 	public function get($input){
 		return $this->dao->get($input);
 	}
-	
-	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor, $id = null){
-		$this->dao->post(self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
+
+	public function post($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
+		$tipo = $this->tipoService->get($tipo);
+		$this->dao->post(self::createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
 		unset($this->obj);
 	}
 
@@ -66,26 +70,30 @@ class AtividadeService{
 			return $this->dao->getAll();
 	}
 
-	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovantes, $professor){
-		$comprovanteservice = new ComprovanteService();
-		LazyUpdater::lazyUpdaterJob(self::get($id)->getComprovantes(), $comprovantes, $comprovanteservice);
+	public function readAll($tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante, $professor){
+		$tipo = $this->tipoService->get($tipo);
+		return $this->dao->readAll(self::createObject($id = null, $tipo, $descricao, $datainicio, $datafim, $valorMult, $comprovante), $professor);
+	}
 
+	public function update($id, $tipo, $descricao, $datainicio, $datafim, $valorMult, $professor){
+		$tipo = $this->tipoService->get($tipo);
 		self::createObject($id, $tipo, $descricao, $datainicio, $datafim, $valorMult);
 		$this->dao->update($this->obj,$professor);
-		
+
 		unset($this->obj,$comprovanteservice);
 	}
 
 	public function delete($input){
-		//$comprovante = new ComprovanteService();
-		//$array = $comprovante->searchAll($input);
-
-		//$comprovante->deleteCollection($array);
-
-		// Deleto a atividade
 		$this->dao->delete($input);
+	}
+	
+	public function getEntreDatas($idProfessor,$inicio,$fim=null){
+		if(!is_null($idProfessor))
+			return $this->dao->getEntreDatas($idProfessor,$inicio,$fim);
+	}
 
-		//unset($comprovante,$array);
+	public function getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao = 'DESC'){
+		return $this->dao->getPaginacao($idProfessor, $linhaMinima, $linhaMaxima, $ordenacao);
 	}
 
 }
