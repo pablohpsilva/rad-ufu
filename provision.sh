@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# testa se o script já foi executado e termina a execução caso se verdadeiro
+# testa se o script já foi executado e termina a execução se true
 test -f /etc/bootstraped && exit
 
 # Proxy da UFU :/
 PROXY_UFU="http://proxy.ufu.br:3128/"
-export http_proxy=$PROXY_UFU
+PROXY=$PROXY_UFU # use PROXY="" para tirar o proxy
+export http_proxy=$PROXY
 
 apt-get update
 
@@ -65,7 +66,7 @@ service apache2 restart
 #
 
 PHP_PPA="ppa:ondrej/php5"
-PHP_VERSION="5.4.15-1~precise+1"
+PHP_VERSION="5.4.*"
 
 # Instala o 'add-apt-repository'
 apt-get install -y python-software-properties
@@ -89,7 +90,10 @@ sudo apt-get install -y git
 
 # Baixa e instala o Composer
 apt-get install -y curl
-curl -sS --proxy $PROXY_UFU https://getcomposer.org/installer | php
+
+[[ $PROXY = "" ]] && proxy_option="" || proxy_option="--proxy $PROXY"
+
+curl -sS $proxy_option https://getcomposer.org/installer | php
 mv composer.phar /usr/local/bin/composer
 
 #
