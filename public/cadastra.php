@@ -13,7 +13,7 @@
     $senha = $_POST['senha'];
     try{
     	$service->post($siape,$nome,$senha);
-      	$professor = $service->login($siape,$senha);
+      $professor = $service->login($siape,$senha);
       if(!is_null($professor)){
         session_start();
         $_SESSION['user'] = $professor;
