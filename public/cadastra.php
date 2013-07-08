@@ -80,7 +80,7 @@
     <input type="text" class="input-block-level" placeholder="Nome" name="nome">
     <input type="text" class="input-block-level" placeholder="Siape" name="siape">
     <input type="password" class="input-block-level" placeholder="Senha" name="senha">
-    <button class="btn btn-primary" type="submit" name="botao">Logar</button>
+    <button class="btn btn-primary" type="submit" name="botao">Criar</button>
     <button class="btn btn-danger btn-primary" type="reset" name="reset">Limpar</button>
     <h5 class="form-signin-heading development" align="justify">Desenvolvido por: <a href="http://www.comppet.ufu.br/content/page/rad-ufu" target="_blank">CompPET</a></h5>
     </form>
