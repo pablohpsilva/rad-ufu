@@ -81,8 +81,8 @@ class ProfessorResource extends Resource {
             $this->professorService = new ProfessorService();
             $this->professorService->update(
                     $id,
-                    $this->request->data->nome,
                     $this->request->data->siape,
+                    $this->request->data->nome,
                     $this->request->data->senha
                     );
 

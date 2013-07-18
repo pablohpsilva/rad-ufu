@@ -10,7 +10,8 @@ class FileService{
 	private function __construct(){ }
 
 	public static function getPath(){
-		$defaultPath = "/home/rad/comprovantes/";
+		//$defaultPath = "/home/rad/comprovantes/";
+		$defaultPath = "/var/www/comprovantes/";
 		return $defaultPath;
 	}
 
