@@ -25,7 +25,10 @@ class Security{
 	public static function preventXSS($input){
 		//return htmlspecialchars(strip_tags($input));
 		//return strip_tags(htmlspecialchars($input));
-		return strip_tags($input);
+		//return strip_tags($input);
+		//return htmlspecialchars(str_replace(array(">","</"), array(">'","'</"), $input), ENT_QUOTES, 'UTF-8');
+		//return str_replace(array(">","</"), array(">'","'</"), $input);
+		return htmlspecialchars(strip_tags($input), ENT_QUOTES, 'UTF-8');
 	}
 
 	public static function filterLetters($input){		
