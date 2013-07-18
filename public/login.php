@@ -15,7 +15,10 @@
       if(!is_null($professor)){
         session_start();
         $_SESSION['user'] = $professor;
-        header("Location: /");
+        if ($_SERVER["SERVER_NAME"] == "localhost")
+          header("Location: /");
+        else
+          header("Location: /rad-ufu/");
         exit();
       }
     } catch(Exception $e){
