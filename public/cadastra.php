@@ -32,7 +32,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>RAD / UFU - Cadastramento de novo professor</title>
-  <link href="css/style.css" rel="stylesheet">
+  <link href="bootstrap-custom.min.css" rel="stylesheet">
   <style type="text/css">
     body {
       padding-top: 10%;
