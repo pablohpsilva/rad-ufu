@@ -30,7 +30,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>RAD / UFU - login</title>
-  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style-9ecb4be376dc26e6db08c95ff720486aad47223f.css">
   <style type="text/css">
     body {
       padding-top: 10%;
