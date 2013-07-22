@@ -20,7 +20,7 @@ class AtividadeService{
 		$this->obj = new Atividade();
 		$this->obj->setId($id);
 		$this->obj->setTipo($tipo);
-		$this->obj->setDescricao($descricao);
+		$this->obj->setDescricao(Security::preventXSS($descricao));
 		$this->obj->setDataInicio($datainicio);
 		$this->obj->setDataFim($datafim);
 		$this->obj->setMultValor($valorMult);

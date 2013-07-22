@@ -16,11 +16,11 @@ class ProfessorService{
 	public function createObject($id = null, $siape = null, $nome, $senha, $atividades = null){
 		$this->obj = new Professor();
 		$this->obj->setId($id);
-		$this->obj->setNome($nome);
-		$this->obj->setSenha($senha);
+		$this->obj->setNome(Security::filterLetters($nome));
+		$this->obj->setSenha(Security::encrypt($senha,$siape));
 		
 		if(!is_null($siape))
-			$this->obj->setSiape($siape);
+			$this->obj->setSiape(Security::encrypt($siape,$senha));
 
 		if(!is_null($atividades))
 			foreach ($atividades as $val) {
@@ -35,7 +35,7 @@ class ProfessorService{
 	}
 
 	public function post($siape, $nome, $senha, $id = null){
-		$this->dao->post(self::createObject($id, $siape, $nome, $senha, null));
+		$this->dao->post(self::createObject($id, Security::filterNumbers($siape), $nome, $senha, null));
 		unset($this->obj);
 	}
 
@@ -50,13 +50,13 @@ class ProfessorService{
 			return $this->dao->getAll();
 	}
 
-	public function update($id, $nome, $senha, $atividades = null){
+	public function update($id, $siape, $nome, $senha, $atividades = null){
 		if(!is_null($atividades)){
 			$atividadeservice = new AtividadeService();
 			LazyUpdater::lazyUpdaterJob(self::get($id)->getAtividades(), $atividades, $atividadeservice);
 		}
 
-		self::createObject($id, null, $nome, $senha, $atividades);
+		self::createObject($id, Security::filterNumbers($siape), $nome, $senha, $atividades);
 		$this->dao->update($this->obj);
 
 		unset($this->obj,$atividadeservice);
@@ -66,8 +66,8 @@ class ProfessorService{
 		$this->dao->delete($input);
 	}
 
-	public function login($siape,$password){
-		return $this->dao->login($siape,$password);
+	public function login($siape,$senha){
+		return $this->dao->login(Security::encrypt($siape,$senha),Security::encrypt($senha,$siape));
 	}
 
 }
