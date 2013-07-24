@@ -74,7 +74,8 @@ class ArquivoResource extends Resource {
     }
 
     private function getFileExtension ($caminho) {
-        return explode(".", $this->getFileName($caminho))[1];
+        $output = explode(".", $this->getFileName($caminho))[1];
+        return $output;
     }
 }
 ?>
