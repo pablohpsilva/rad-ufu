@@ -6,6 +6,10 @@
     RewriteRule ^(.*)$ public/$0 [L]
 </IfModule>
 
+# habilita o log de erros do php
+php_flag log_errors on
+php_value error_log /home/rad/log/PHP_errors.log
+
 #
 # Para poder usar o redirect em /etc/apache2/sites-available/default colocar:
 #
