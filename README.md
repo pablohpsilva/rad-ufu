@@ -14,7 +14,7 @@ Equipe
 
 Instalacao
 -------
-1. git clone https://github.com/pablohenrique/rad-ufu.git
+1. cd /var/www/ && git clone https://github.com/pablohenrique/rad-ufu.git
 2. apt-get install curl
 3. cd /var/www/rad-ufu/
 4. curl -sS https://getcomposer.org/installer | php
