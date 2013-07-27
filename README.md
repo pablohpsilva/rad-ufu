@@ -5,12 +5,12 @@ Desenvolvido por: PET Computacao, Universidade Federal de Uberlandia (UFU), Facu
 
 Equipe
 -------
-Orientador: Renan G. Cattelan.
-Desenvolvedores:
-    Backend: Pablo Henrique P. Silva (@pablohenrique)
-    Frontend: Yassin G. Nurmahomed (@yass-n)
-    Gerador de Relatorios: Guilherme B. Oliveira (@GuilhermeBorges) e Andressa F. Abreu (@andressafinzi).
-Cliente: FAGEN, UFU
+* Orientador: Renan G. Cattelan.
+* Desenvolvedores:
+    ** Backend: Pablo Henrique P. Silva (@pablohenrique)
+    ** Frontend: Yassin G. Nurmahomed (@yass-n)
+    ** Gerador de Relatorios: Guilherme B. Oliveira (@GuilhermeBorges) e Andressa F. Abreu (@andressafinzi).
+* Cliente: FAGEN, UFU
 
 Instalacao
 -------
