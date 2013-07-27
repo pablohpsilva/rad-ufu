@@ -7,7 +7,7 @@ Equipe
 -------
 Orientador: Renan G. Cattelan.
 Desenvolvedores:
-    Backend: Pablo Henrique Penha Silva (@pablohenrique)
+    Backend: Pablo Henrique P. Silva (@pablohenrique)
     Frontend: Yassin G. Nurmahomed (@yass-n)
     Gerador de Relatorios: Guilherme B. Oliveira e Andressa Finzi.
 Cliente: FAGEN, UFU
@@ -19,4 +19,5 @@ Instalacao
 3. cd /var/www/rad-ufu/
 4. curl -sS https://getcomposer.org/installer | php
 5. php composer.phar install --dev
-6. Va ate o repositorio yass-n/rad-ufu-client e siga as instrucoes la descritas.
+6. Va ate o repositorio yass-n/rad-ufu-client e siga as instrucoes do arquivo README.
+
