@@ -70,7 +70,8 @@ class ArquivoResource extends Resource {
     }
 
     private function getFileName ($caminho) {
-        return array_pop(explode("/", $caminho));
+        $partes = explode("/", $caminho);
+        return array_pop($partes);
     }
 
     private function getFileExtension ($caminho) {
